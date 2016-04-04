@@ -1,1 +1,1 @@
-# StudentEnrollment
+# Student Enrollment
