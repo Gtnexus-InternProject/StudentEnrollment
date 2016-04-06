@@ -1,0 +1,11 @@
+{
+  "subjectId" : "COMP1002",
+  "subjectName"  : "Maths",
+  "departmentId" : "1",
+  "credits" : "30",
+  "coordinatorId" : "1",
+  "semster" : "1",
+  "discription" : "This is a maths subject.",
+  "preRequestSubject" : "COMP1002",
+  "subjectId" : "COMP1002",
+}
