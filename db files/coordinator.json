@@ -1,0 +1,16 @@
+{ "userId" : "C0001",
+    "userName" : "Jhon",
+    "firstName" : "Jhon",
+    "lastName" : "Samuals",
+    "password" : "123",
+    "userLevel" : "2",
+    "email" : "abc@mm.com",
+    "adddress" : "colombo3",
+    "contactNumber" : "1238765432",
+    "departmentID" : "1234",
+    "subject" : [ 
+        "subject1", 
+        "subject2", 
+        "subject3"
+    ]
+}

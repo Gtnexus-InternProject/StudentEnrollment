@@ -1,0 +1,12 @@
+{
+    "_id" : ObjectId("5704cfdf4dfcb7c5e27c6e91"),
+    "userId" : "C0001",
+    "userName" : "Jhon",
+    "firstName" : "Jhon",
+    "lastName" : "Samuals",
+    "password" : "123",
+    "userLevel" : "2",
+    "email" : "abc@mm.com",
+    "adddress" : "colombo3",
+    "contactNumber" : "1238765432"
+}

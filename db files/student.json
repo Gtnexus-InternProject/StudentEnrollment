@@ -1,0 +1,24 @@
+{
+    "userId" : "C0001",
+    "userName" : "Jhon",
+    "firstName" : "Jhon",
+    "lastName" : "Samuals",
+    "password" : "123",
+    "userLevel" : "2",
+    "email" : "abc@mm.com",
+    "adddress" : "colombo3",
+    "contactNumber" : "1238765432",
+    "dateOfBirth" : "12,3,4444",
+    "gender" : "Male",
+    "alStream" : "Maths",
+    "Z_Score" : "1.2222",
+    "department" : "HR",
+    "registeredDate" : "12.3.4676",
+    "profileImage" : "11101010101010100000.0000000000000000",
+    "startDate" : "23.23.2333",
+    "endDate" : "4.4.3333",
+    "subject" : [ 
+        "subject1", 
+        "subject2"
+    ]
+}
