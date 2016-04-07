@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+    h1.
+         #{title}
+    ul
+        - each admin, i in admins
+            li
+                = admin.userId
+                = admin.userName
+                = admin.firstName
+                = admin.lastName
+                = admin.password
+                = admin.adddress
+                = admin.contactNumber
+                = admin.userLevel
+                form(action='/admins/#{admin.userId}/edit',method='post',enctype='application/x-www-form-urlencoded')
+                    input(type='hidden',value='DELETE',name='_method')
+                    button(type='submit').
+                        Delete
+                p
+                    a(href='/admins/#{admin.userId}/edit') Edit
+                p
+                    a(href='/admins/#{admin.userId}') Show
