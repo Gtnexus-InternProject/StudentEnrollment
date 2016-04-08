@@ -10,6 +10,9 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var student = require('./routes/student');
 
+var db = require('./model/db');
+var   studentm = require('./model/student');
+
 var app = express();
 
 // view engine setup
