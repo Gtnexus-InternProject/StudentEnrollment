@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+    h1.
+        #{title}
+    form#formAddSubject(name="addSubject",method="post",action="/subjects")
+        P Module Code:
+            input#inputmoduleCode(type="text" ,name="moduleCode")
+        P Module Name:
+            input#inputmoduleName(type="text" ,name="moduleName")
+        p Department :
+            input#inputdepartment(type="text", name="department")
+        p Coordinator Name:
+            input#inputcoordinator(type="text", name="coordinator")
+        p Credits:
+            input#inputcredits(type="text", name="credits")
+        p Semester:
+            input#inputsemester(type="text", name="semester")
+        p Day:
+            input#inputday(type="text", name="day")
+        p Description:
+            input#inputdescription(type="text", name="description")
+        p Pre Requested Subjects :
+            input#inputpreRequestSubjects(type="number", name="preRequestSubjects")
+
+        p
+            button#btnSubmit(type="submit") submit
