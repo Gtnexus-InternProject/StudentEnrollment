@@ -25,17 +25,17 @@ router.route('/')
                   return console.error(err);
               } else {
                   //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
-                  res.format({
+                  res.format( {
                       //HTML response will render the index.jade file in the views/blobs folder. We are also setting "blobs" to be an accessible variable in our jade view
-                    html: function(){
-                        res.render('admins/index', {
-                              title: 'All my admins',
-                              "admins" : admins
-                          });
-                    },
+                      html: function(){
+                          res.render('admins/index', {
+                                title: 'All my admins',
+                                "admins" : admins
+                            });
+                      },
                     //JSON response will show all blobs in JSON format
                     json: function(){
-                        res.json(infophotos);
+                        res.json(admins);
                     }
                 });
               }
