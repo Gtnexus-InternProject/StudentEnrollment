@@ -23,7 +23,7 @@ router.route('/')
     //GET all blobs
     .get(function(req, res, next) {
         //retrieve all blobs from Monogo
-        mongoose.model('subject').find({}, function (err, admins) {
+        mongoose.model('subject').find({}, function (err, subjects) {
             if (err) {
                 return console.error(err);
             } else {
@@ -49,6 +49,7 @@ router.route('/')
         // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
         var moduleCode = req.body.moduleCode;
         var moduleName = req.body.moduleName;
+        var department=req.body.department;
         var coordinator = req.body.coordinator;
         var credits = req.body.credits;
         var semester = req.body.semester;

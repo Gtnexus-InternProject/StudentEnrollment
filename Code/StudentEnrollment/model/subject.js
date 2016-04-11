@@ -9,7 +9,18 @@ var subjectSchema = new mongoose.Schema({
     day:String,
     description:String,
     preRequestSubjects:Array,
-    status:String,
+    status:String
 
+});
+mongoose.model('subject', subjectSchema);
+
+var semesterSchema = new mongoose.Schema({
+
+    semesterId:Number,
+    semesterName:String,
+    startDate:Date,
+    EndDate:Date
+
+  
 });
 mongoose.model('subject', subjectSchema);
