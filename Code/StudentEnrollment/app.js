@@ -13,6 +13,8 @@ var subjects = require('./routes/subjects');
 var db = require('./model/db');
 var admin = require('./model/admin');
 var subject = require('./model/subject');
+var semester =require('./model/semester');
+var timeSlot=require('./model/timeSlot');
 
 var app = express();
 

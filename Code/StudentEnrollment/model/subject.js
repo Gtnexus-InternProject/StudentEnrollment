@@ -14,13 +14,3 @@ var subjectSchema = new mongoose.Schema({
 });
 mongoose.model('subject', subjectSchema);
 
-var semesterSchema = new mongoose.Schema({
-
-    semesterId:Number,
-    semesterName:String,
-    startDate:Date,
-    EndDate:Date
-
-  
-});
-mongoose.model('subject', subjectSchema);
