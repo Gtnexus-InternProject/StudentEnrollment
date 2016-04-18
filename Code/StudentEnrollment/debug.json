@@ -1,0 +1,10 @@
+{
+  "web-port": 4000,
+  "web-host": null,
+  "debug-port": 5858,
+  "save-live-edit": true,
+  "preload": false,
+  "hidden": [ "node_modules/"],
+  "nodejs": ["--harmony_proxies"],
+  "stack-trace-limit": 50
+}

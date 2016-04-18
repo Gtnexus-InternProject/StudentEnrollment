@@ -31,9 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-<<<<<<< HEAD
-app.use('/admins', admins);
 app.use('/subjects', subjects);
+
 
 
 
@@ -60,11 +59,12 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
+//error: {}
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
-    error: {}
+    error: err
   });
 });
 
