@@ -35,3 +35,8 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+Code/StudentEnrollment/model/semester.js
+
+Code/StudentEnrollment/model/timeSlot.js
+Code/StudentEnrollment/.idea
