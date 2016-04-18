@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var extend = require('mongoose-schema-extend');
 var adminSchema = new mongoose.Schema({
   userId: String,
   userName: String,
@@ -10,4 +11,4 @@ var adminSchema = new mongoose.Schema({
   contactNumber: Number,
   userLevel: Number,
 });
-mongoose.model('admin', adminSchema);
+mongoose.model('user_model', adminSchema);
