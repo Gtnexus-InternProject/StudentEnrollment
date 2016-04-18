@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var extend = require('mongoose-schema-extend');
 var adminSchema = new mongoose.Schema({
   userId: String,
   userName: String,
