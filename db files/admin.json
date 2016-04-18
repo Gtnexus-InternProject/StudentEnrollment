@@ -8,5 +8,11 @@
     "userLevel" : "2",
     "email" : "abc@mm.com",
     "adddress" : "colombo3",
-    "contactNumber" : "1238765432"
+    "contactNumber" : "1238765432",
+    "departmentID" : "1234",
+    "subject" : [
+        "subject1",
+        "subject2",
+        "subject3"
+    ]
 }
