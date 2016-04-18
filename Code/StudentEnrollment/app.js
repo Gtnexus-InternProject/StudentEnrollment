@@ -7,21 +7,13 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-<<<<<<< HEAD
-var admins = require('./routes/admins');
 var subjects = require('./routes/subjects');
 
 var db = require('./model/db');
-var admin = require('./model/admin');
 var subject = require('./model/subject');
-var semester =require('./model/semester');
-var timeSlot=require('./model/timeSlot');
-=======
-
-var db = require('./model/db');
 var admin = require('./model/user_model');
 
->>>>>>> TKDev
+
 
 var app = express();
 
@@ -43,8 +35,7 @@ app.use('/users', users);
 app.use('/admins', admins);
 app.use('/subjects', subjects);
 
-=======
->>>>>>> TKDev
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
