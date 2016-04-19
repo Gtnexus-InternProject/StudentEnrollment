@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var extend = require('mongoose-schema-extend');
-var adminSchema = new mongoose.Schema({
+
+var userSchema = new mongoose.Schema({
   userId: String,
   userName: String,
   firstName: String,
@@ -8,7 +9,28 @@ var adminSchema = new mongoose.Schema({
   password: String,
   email: String,
   adddress: String,
-  contactNumber: Number,
-  userLevel: Number,
+  contactNumber: Number
+
 });
-mongoose.model('user_model', adminSchema);
+
+var admin = userSchema.extend({
+
+});
+
+var student = userSchema.extend({
+    dob: Date,
+    gender: String,
+    alStream: String,
+    zScore: Number,
+    Department: Number,
+    registeredDate: Date,
+    profileImage: String,
+    subjects:[String]
+
+});
+
+
+
+mongoose.model('user_model', userSchema);
+mongoose.model('admin_model',admin );
+mongoose.model('student_model',student );

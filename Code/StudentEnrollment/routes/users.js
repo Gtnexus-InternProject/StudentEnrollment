@@ -20,7 +20,7 @@ router.route('/')
     //GET all blobs
     .get(function(req, res, next) {
         //retrieve all blobs from Monogo
-        mongoose.model('user_model').find({}, function (err, users) {
+        mongoose.model('student_model').find({}, function (err, users) {
               if (err) {
                   return console.error(err);
               } else {
@@ -29,7 +29,7 @@ router.route('/')
                       //HTML response will render the index.jade file in the views/blobs folder. We are also setting "blobs" to be an accessible variable in our jade view
                     html: function(){
                         res.render('users/index', {
-                              title: 'All my admins',
+                              title: 'All Users',
                               "users" : users
                           });
                     },
@@ -52,10 +52,20 @@ router.route('/')
         var email = req.body.email;
         var adddress = req.body.adddress;
         var contactNumber = req.body.contactNumber;
-        var userLevel = req.body.userLevel;
+        var dob = req.body.dob,
+        gender = req.body.gender,
+        alStream = req.body.alStream,
+        zScore = req.body.zScore,
+        Department = 1,
+        registeredDate = req.body.registeredDate,
+        profileImage = "testS",
+        subjects= req.body.subjects.split(",");
+
+          // profileImage = req.body.profileImage,
+
 
         //call the create function for our database
-        mongoose.model('user_model').create({
+        mongoose.model('student_model').create({
             userId : userId,
             userName : userName,
             firstName : firstName,
@@ -63,8 +73,15 @@ router.route('/')
             email : email,
             adddress : adddress,
             contactNumber : contactNumber,
-            userLevel : userLevel,
-            lastName : lastName
+            lastName : lastName,
+            dob :  dob,
+            gender : gender,
+            alStream : alStream,
+            zScore : zScore,
+            Department : Department,
+            registeredDate : registeredDate,
+            profileImage : profileImage,
+            subjects : subjects
         }, function (err, user) {
               if (err) {
                   res.send("There was a problem adding the information to the database.");
@@ -98,7 +115,7 @@ router.get('/new', function(req, res) {
 router.param('id', function(req, res, next, id) {
     //console.log('validating ' + id + ' exists');
     //find the ID in the Database
-    mongoose.model('admin').findById(id, function (err, admin) {
+    mongoose.model('student_model').findById(id, function (err, admin) {
         //if it isn't found, we are going to repond with 404
         if (err) {
             console.log(id + ' was not found');
@@ -127,7 +144,7 @@ router.param('id', function(req, res, next, id) {
 
 router.route('/:id')
   .get(function(req, res) {
-    mongoose.model('admin').findById(req.id, function (err, blob) {
+    mongoose.model('student_model').findById(req.id, function (err, blob) {
       if (err) {
         console.log('GET Error: There was a problem retrieving: ' + err);
       } else {

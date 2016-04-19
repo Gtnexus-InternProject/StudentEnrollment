@@ -17,22 +17,15 @@ router.use(methodOverride(function(req, res){
     }
 }))
 
-router.route('/:id')
+router.route('/studentPerSubject/:id')
     .get(function(req, res) {
-        mongoose.model('user_model').find({subjects:123},{userId:1, firstName: 1,lastName: 1,email:1 }, function (err, resultUser) {
+        mongoose.model('student_model').find({subjects:"c4"},{userId:1, firstName: 1,lastName: 1,email:1 }, function (err, resultUser) {
             if (err) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
                 console.log('GET Retrieving ID: ' + resultUser._id);
-                //var blobdob = resultUser.userName.toISOString();
-                //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
+
                 res.format({
-                    //html: function(){
-                    //    res.render('subjects/showSBS', {
-                    //        "blobdob" : blobdob,
-                    //        "resultUser" : resultUser
-                    //    });
-                    //},
                     json: function(){
                         res.json(resultUser);
                     }
@@ -40,4 +33,22 @@ router.route('/:id')
             }
         });
     });
+router.route('/subjectPerStudent/:id')
+    .get(function(req, res) {
+        mongoose.model('student_model').find({userName:"w"}, {subjects:1}, function (err, resultSubjects) {
+            if (err) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+                console.log('GET Retrieving ID: ' + resultSubjects._id);
+
+                res.format({
+                    json: function(){
+                        res.json(resultSubjects);
+                    }
+                });
+            }
+        });
+    });
+
 module.exports = router;
+

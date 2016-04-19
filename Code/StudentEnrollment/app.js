@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/subjects', subjects);
-app.use('/studentBySubject', studentBySubject);
+app.use('/studentSubject', studentBySubject);
 
 
 
