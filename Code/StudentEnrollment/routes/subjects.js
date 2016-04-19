@@ -38,7 +38,7 @@ router.route('/')
                     },
                     //JSON response will show all blobs in JSON format
                     json: function(){
-                        res.json(infophotos);
+                        res.json(subjects);
                     }
                 });
             }
@@ -194,8 +194,6 @@ router.get('/:id/edit', function(req, res) {
 //PUT to update a blob by ID
 router.put('/:id/edit', function(req, res) {
     // Get our REST or form values. These rely on the "name" attributes
-
-
 
     var moduleCode = req.body.moduleCode;
     var moduleName = req.body.moduleName;

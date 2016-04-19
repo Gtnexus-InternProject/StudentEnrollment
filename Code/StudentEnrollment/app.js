@@ -8,9 +8,10 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var subjects = require('./routes/subjects');
+var studentBySubject= require('./routes/studentBySubject');
 
 var db = require('./model/db');
-var subject = require('./model/subject');
+var subject = require('./model/subject_model');
 var admin = require('./model/user_model');
 
 
@@ -31,9 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-<<<<<<< HEAD
-app.use('/admins', admins);
 app.use('/subjects', subjects);
+app.use('/studentBySubject', studentBySubject);
 
 
 
