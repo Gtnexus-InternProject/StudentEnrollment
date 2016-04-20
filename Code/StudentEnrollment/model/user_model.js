@@ -1,10 +1,20 @@
 var mongoose = require('mongoose');
 var extend = require('mongoose-schema-extend');
+// var bcrypt = require('bcrypt-nodejs');
+
 
 var userSchema = new mongoose.Schema({
 
-  userId: String,
-  userName: String,
+  userId: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  userName: {
+    type: String,
+    unique: true,
+    required: true
+  },
   firstName: String,
   lastName: String,
   password: String,
@@ -13,6 +23,40 @@ var userSchema = new mongoose.Schema({
   contactNumber: Number
 
 });
+
+// // Execute before each user.save() call
+// userSchema.pre('save', function(callback) {
+//   var user = this;
+//
+//   // Break out if the password hasn't changed
+//   if (!user.isModified('password')) return callback();
+//
+//   // Password changed so we need to hash it
+//   bcrypt.genSalt(5, function(err, salt) {
+//     if (err) return callback(err);
+//
+//     bcrypt.hash(user.password, salt, null, function(err, hash) {
+//       if (err) return callback(err);
+//       user.password = hash;
+//       callback();
+//     });
+//   });
+// });
+//
+//
+// //verify Password
+// userSchema.methods.verifyPassword = function(password, cb) {
+//   bcrypt.compare(password, this.password, function(err, isMatch) {
+//     if (err) return cb(err);
+//     cb(null, isMatch);
+//   });
+// };
+
+
+userSchema.methods.findByUserID = function (cb) {
+  return this.model('user_model').findOne({userId: this.userId}, cb);
+}
+
 
 var admin = userSchema.extend({
 
@@ -29,7 +73,7 @@ var student = userSchema.extend({
     profileImage: String,
     subjects:[String]
 
-});
+}, {collection: 'student_models'});
 
 
 

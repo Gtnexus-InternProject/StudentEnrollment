@@ -14,8 +14,12 @@ var subject = require('./model/subject');
 var admin = require('./model/user_model');
 
 
+var config = require('./config');
+
 
 var app = express();
+
+app.set('superSecret', config.secret); // secret variable
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
