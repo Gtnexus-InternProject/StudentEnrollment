@@ -73,7 +73,7 @@ var student = userSchema.extend({
     profileImage: String,
     subjects:[String]
 
-}, {collection: 'student_models'});
+});
 
 
 

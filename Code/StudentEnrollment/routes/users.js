@@ -7,6 +7,7 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 var config = require('../config');
 
+
 //This will make sure that every requests that hits this controller will pass through these functions
 router.use(bodyParser.urlencoded({ extended: true }))
 router.use(methodOverride(function(req, res){
@@ -56,6 +57,8 @@ router.post('/authenticate', function(req, res) {
 
   });
 });
+
+
 
 
 // // route middleware to verify a token
@@ -163,6 +166,7 @@ router.route('/student')
         }, function (err, user) {
               if (err) {
                   res.send("There was a problem adding the information to the database.");
+                  console.log(err);
               } else {
                   //Blob has been created
                   console.log('POST creating new blob: ' + user);
@@ -172,7 +176,7 @@ router.route('/student')
                         // If it worked, set the header so the address bar doesn't still say /adduser
                         res.location("users");
                         // And forward to success page
-                        res.redirect("/users");
+                        res.redirect("/users/student");
                     },
                     //JSON response will show the newly created blob
                     json: function(){
@@ -191,11 +195,14 @@ router.get('/student/new', function(req, res) {
 
 // route middleware to validate :id
 router.param('id', function(req, res, next, id) {
+
     console.log('validating ' + id + ' exists');
+    id = "" + id;
     //find the ID in the Database
     mongoose.model('student_model').findOne({userId: id}, function (err, user) {
         //if it isn't found, we are going to repond with 404
-        if (err) {
+        console.log(err);
+        if (err || user == null ) {
             console.log(id + ' was not found');
             res.status(404)
             var err = new Error('Not Found');
@@ -208,10 +215,11 @@ router.param('id', function(req, res, next, id) {
                        res.json({message : err.status  + ' ' + err});
                  }
             });
+
         //if it is found we continue on
         } else {
 
-          console.log(user.userId + ' was  found');
+          console.log(user);
             //uncomment this next line if you want to see every JSON document response for every GET/PUT/DELETE call
             //console.log(blob);
             // once validation is done save the new item in the req
@@ -222,9 +230,9 @@ router.param('id', function(req, res, next, id) {
     });
 });
 
-router.route('/studenttk/:id')
+router.route('/student/:id')
   .get(function(req, res) {
-    mongoose.model('student_model').findOne({userId:req.params.id}, function (err, student) {
+    mongoose.model('student_model').findOne({userId:req.id}, function (err, student) {
       console.log('ID: ' + req.params.id);
       if (err) {
         console.log('GET Error: There was a problem retrieving: ' + err);
@@ -248,39 +256,9 @@ router.route('/studenttk/:id')
   });
 
 
-  //GET the individual blob by Mongo ID
-router.get('/:id/edit', function(req, res) {
-    //search for the blob within Mongo
-    mongoose.model('admin').findById(req.body.userId, function (err, admin) {
-        if (err) {
-            console.log('GET Error: There was a problem retrieving: ' + err);
-        } else {
-            //Return the blob
-            console.log('GET Retrieving ID: ' + admin.userId);
-            //format the date properly for the value to show correctly in our edit form
-          var blobdob = admin.userName.toISOString();
-          // blobdob = blobdob.substring(0, blobdob.indexOf('T'))
-            res.format({
-                //HTML response will render the 'edit.jade' template
-                html: function(){
-                       res.render('blobs/edit', {
-                          title: 'Blob' + admin.userId,
-                        "blobdob" : blobdob,
-                          "blob" : admin
-                      });
-                 },
-                 //JSON response will return the JSON output
-                json: function(){
-                       res.json(admin);
-                 }
-            });
-        }
-    });
-});
-
 
 //PUT to update a blob by ID
-router.put('/:id/edit', function(req, res) {
+router.put('/student/:id/edit', function(req, res) {
     // Get our REST or form values. These rely on the "name" attributes
     var userId = req.body.userId;
     var userName = req.body.userName;
@@ -290,10 +268,17 @@ router.put('/:id/edit', function(req, res) {
     var email = req.body.email;
     var adddress = req.body.adddress;
     var contactNumber = req.body.contactNumber;
-    var userLevel = req.body.userLevel;
+    var dob = req.body.dob,
+    gender = req.body.gender,
+    alStream = req.body.alStream,
+    zScore = req.body.zScore,
+    Department = 1,
+    registeredDate = req.body.registeredDate,
+    profileImage = "testS",
+    subjects = req.body.subjects.split(",");
 
    //find the document by ID
-        mongoose.model('admin').findById(req.id, function (err, admin) {
+        mongoose.model('student_model').findById(req.id, function (err, admin) {
             //update it
             admin.update({
               userId : userId,
@@ -303,8 +288,15 @@ router.put('/:id/edit', function(req, res) {
               email : email,
               adddress : adddress,
               contactNumber : contactNumber,
-              userLevel : userLevel,
-              lastName : lastName
+              lastName : lastName,
+              dob :  dob,
+              gender : gender,
+              alStream : alStream,
+              zScore : zScore,
+              Department : Department,
+              registeredDate : registeredDate,
+              profileImage : profileImage,
+              subjects : subjects
             }, function (err, blobID) {
               if (err) {
                   res.send("There was a problem updating the information to the database: " + err);
@@ -327,19 +319,19 @@ router.put('/:id/edit', function(req, res) {
 
 
 //DELETE a Blob by ID
-router.delete('/:id/edit', function (req, res){
+router.delete('/student/:id/edit', function (req, res){
     //find blob by ID
-    mongoose.model('Blob').findById(req.id, function (err, admin) {
+    mongoose.model('student_model').findOne({userId:req.id}, function (err, student) {
         if (err) {
             return console.error(err);
         } else {
             //remove it from Mongo
-            blob.remove(function (err, admin) {
+            student.remove(function (err, student) {
                 if (err) {
                     return console.error(err);
                 } else {
                     //Returning success messages saying it was deleted
-                    console.log('DELETE removing ID: ' + admin.userId);
+                    console.log('DELETE removing ID: ' + student.userId);
                     res.format({
                         //HTML returns us back to the main page, or you can create a success page
                           html: function(){
@@ -348,7 +340,7 @@ router.delete('/:id/edit', function (req, res){
                          //JSON returns the item with the message that is has been deleted
                         json: function(){
                                res.json({message : 'deleted',
-                                   item : admin
+                                   item : student
                                });
                          }
                       });
@@ -357,6 +349,37 @@ router.delete('/:id/edit', function (req, res){
         }
     });
 });
+
+
+// //GET the individual Student by ID
+// router.get('/student/:id/edit', function(req, res) {
+//   //search for the blob within Mongo
+//   mongoose.model('admin').findOne({userId:req.params.id}, function (err, admin) {
+//       if (err) {
+//           console.log('GET Error: There was a problem retrieving: ' + err);
+//       } else {
+//           //Return the blob
+//           console.log('GET Retrieving ID: ' + admin.userId);
+//           //format the date properly for the value to show correctly in our edit form
+//         var blobdob = admin.userName.toISOString();
+//         // blobdob = blobdob.substring(0, blobdob.indexOf('T'))
+//           res.format({
+//               //HTML response will render the 'edit.jade' template
+//               html: function(){
+//                      res.render('blobs/edit', {
+//                         title: 'Blob' + admin.userId,
+//                       "blobdob" : blobdob,
+//                         "blob" : admin
+//                     });
+//                },
+//                //JSON response will return the JSON output
+//               json: function(){
+//                      res.json(admin);
+//                }
+//           });
+//       }
+//   });
+// });
 
 
 module.exports = router;
