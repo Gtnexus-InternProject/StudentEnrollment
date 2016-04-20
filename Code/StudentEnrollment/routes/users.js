@@ -15,8 +15,8 @@ router.use(methodOverride(function(req, res){
       }
 }))
 
-
-router.route('/')
+// Student API Get all the student in GET and add new Student in POST
+router.route('/student')
     //GET all blobs
     .get(function(req, res, next) {
         //retrieve all blobs from Monogo
@@ -59,7 +59,7 @@ router.route('/')
         Department = 1,
         registeredDate = req.body.registeredDate,
         profileImage = "testS",
-        subjects= req.body.subjects.split(",");
+        subjects = req.body.subjects.split(",");
 
           // profileImage = req.body.profileImage,
 
@@ -105,15 +105,15 @@ router.route('/')
         })
     });
 
-    /* GET New Blob page. */
-router.get('/new', function(req, res) {
+    /* GET New Student page. */
+router.get('/student/new', function(req, res) {
     res.render('users/new', { title: 'Add New User' });
 });
 
 
 // route middleware to validate :id
 router.param('id', function(req, res, next, id) {
-    //console.log('validating ' + id + ' exists');
+    console.log('validating ' + id + ' exists');
     //find the ID in the Database
     mongoose.model('student_model').findById(id, function (err, admin) {
         //if it isn't found, we are going to repond with 404
@@ -142,24 +142,24 @@ router.param('id', function(req, res, next, id) {
     });
 });
 
-router.route('/:id')
+router.route('/student/:id')
   .get(function(req, res) {
-    mongoose.model('student_model').findById(req.id, function (err, blob) {
+    mongoose.model('student_model').findById(req.id, function (err, student) {
       if (err) {
         console.log('GET Error: There was a problem retrieving: ' + err);
       } else {
-        console.log('GET Retrieving ID: ' + blob._id);
-        var blobdob = blob.userName.toISOString();
+        console.log('GET Retrieving ID: ' + student._id);
+        //var blobdob = student.userName.toISOString();
         //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
         res.format({
           html: function(){
               res.render('users/show', {
-                    "blobdob" : blobdob,
-                "blob" : blob
+                    
+                "Student" : student
               });
           },
           json: function(){
-              res.json(blob);
+              res.json(student);
           }
         });
       }

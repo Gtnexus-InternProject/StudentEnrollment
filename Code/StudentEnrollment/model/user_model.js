@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var extend = require('mongoose-schema-extend');
 
 var userSchema = new mongoose.Schema({
+
   userId: String,
   userName: String,
   firstName: String,
@@ -18,6 +19,7 @@ var admin = userSchema.extend({
 });
 
 var student = userSchema.extend({
+
     dob: Date,
     gender: String,
     alStream: String,
