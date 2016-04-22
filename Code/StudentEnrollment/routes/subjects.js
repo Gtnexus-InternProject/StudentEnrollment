@@ -23,7 +23,7 @@ router.route('/')
     //GET all blobs
     .get(function(req, res, next) {
         //retrieve all blobs from Monogo
-        mongoose.model('subject').find({}, function (err, subjects) {
+        mongoose.model('subject_model').find({}, function (err, subjects) {
             if (err) {
                 return console.error(err);
             } else {
@@ -62,7 +62,7 @@ router.route('/')
 
 
         //call the create function for our database
-        mongoose.model('subject').create({
+        mongoose.model('subject_model').create({
 
             moduleCode:moduleCode,
             moduleName:moduleName,
@@ -108,7 +108,7 @@ router.get('/new', function(req, res) {
 router.param('id', function(req, res, next, id) {
     //console.log('validating ' + id + ' exists');
     //find the ID in the Database
-    mongoose.model('subject').findById(id, function (err, subject) {
+    mongoose.model('subject_model').findById(id, function (err, subject) {
         //if it isn't found, we are going to repond with 404
         if (err) {
             console.log(id + ' was not found');
@@ -137,7 +137,7 @@ router.param('id', function(req, res, next, id) {
 
 router.route('/:id')
     .get(function(req, res) {
-        mongoose.model('subject').findById(req.id, function (err, blob) {
+        mongoose.model('subject_model').findById(req.id, function (err, blob) {
             if (err) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
@@ -163,7 +163,7 @@ router.route('/:id')
 //GET the individual blob by Mongo ID
 router.get('/:id/edit', function(req, res) {
     //search for the blob within Mongo
-    mongoose.model('subject').findById(req.moduleCode, function (err, subject) {
+    mongoose.model('subject_model').findById(req.moduleCode, function (err, subject) {
         if (err) {
             console.log('GET Error: There was a problem retrieving: ' + err);
         } else {
@@ -207,7 +207,7 @@ router.put('/:id/edit', function(req, res) {
     var status=req.body.status;
 
     //find the document by ID
-    mongoose.model('subject').findById(req.id, function (err, subject) {
+    mongoose.model('subject_model').findById(req.id, function (err, subject) {
         //update it
         subject.update({
             moduleCode : moduleCode,
@@ -242,25 +242,27 @@ router.put('/:id/edit', function(req, res) {
 
 
 //DELETE a Blob by ID
-router.delete('/:id/edit', function (req, res){
+router.delete('/delete/:id', function (req, res){
     //find blob by ID
-    mongoose.model('Blob').findById(req.id, function (err, admin) {
+    mongoose.model('subject_model').find({moduleCode:"2"}, function (err, deletesub) {
         if (err) {
+            console.log('fff');
             return console.error(err);
+
         } else {
             //remove it from Mongo
-            blob.remove(function (err, admin) {
+            deletesub.remove(function (err, subjct) {
                 if (err) {
                     return console.error(err);
                 } else {
-                    //Returning success messages saying it was deleted
-                    console.log('DELETE removing ID: ' + admin.userId);
+                    ////Returning success messages saying it was deleted
+                    console.log('DELETE removing ID: ');
                     res.format({
-                        //HTML returns us back to the main page, or you can create a success page
-                        html: function(){
-                            res.redirect("/admins");
-                        },
-                        //JSON returns the item with the message that is has been deleted
+                        ////HTML returns us back to the main page, or you can create a success page
+                        //html: function(){
+                        //    res.redirect("/admins");
+                        //},
+                        ////JSON returns the item with the message that is has been deleted
                         json: function(){
                             res.json({message : 'deleted',
                                 item : admin

@@ -15,6 +15,9 @@
     "mongoose": "^4.4.11",
     "mongoose-schema-extend": "^0.2.2",
     "morgan": "~1.6.1",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "name": "node-token-jwt",
+    "main": "server.js"
   }
+
 }

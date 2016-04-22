@@ -13,5 +13,5 @@ var subjectSchema = new mongoose.Schema({
     status:String
 
 });
-mongoose.model('subject', subjectSchema);
+mongoose.model('subject_model', subjectSchema);
 
