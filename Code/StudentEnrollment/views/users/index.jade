@@ -14,11 +14,11 @@ block content
                 = admin.adddress
                 = admin.contactNumber
                 = admin.userLevel
-                form(action='/users/#{admin.userId}/edit',method='post',enctype='application/x-www-form-urlencoded')
+                form(action='/users/student/#{admin.userId}/edit',method='post',enctype='application/x-www-form-urlencoded')
                     input(type='hidden',value='DELETE',name='_method')
                     button(type='submit').
                         Delete
                 p
-                    a(href='/users/#{admin.userId}/edit') Edit
+                    a(href='/users/#{admin._id}/edit') Edit
                 p
-                    a(href='/users/#{admin.userId}') Show
+                    a(href='/users/student/#{admin._id}') Show

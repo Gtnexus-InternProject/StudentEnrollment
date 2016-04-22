@@ -4,7 +4,10 @@ block content
     h1.
         #{title}
     form#formAddAdmin(name="addstudent",method="post",action="/users")
+    form#formAddAdmin(name="addstudent",method="post",action="/users/student")
 
+        p User ID:
+            input#inputfirstName(type="text", name="userId")
         p First Name:
             input#inputfirstName(type="text", name="firstName")
         p Last Name:
