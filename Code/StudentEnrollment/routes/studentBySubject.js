@@ -19,7 +19,7 @@ router.use(methodOverride(function(req, res){
 
 router.route('/studentPerSubject/:id')
     .get(function(req, res) {
-        mongoose.model('student_model').find({subjects:"c4"},{userId:1, firstName: 1,lastName: 1,email:1 }, function (err, resultUser) {
+        mongoose.model('student_model').find({subjects:req.param.moduleCode},{userId:1, firstName: 1,lastName: 1,email:1 }, function (err, resultUser) {
             if (err) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
@@ -35,7 +35,8 @@ router.route('/studentPerSubject/:id')
     });
 router.route('/subjectPerStudent/:id')
     .get(function(req, res) {
-        mongoose.model('student_model').find({userName:"w"}, {subjects:1}, function (err, resultSubjects) {
+      //  mongoose.model('student_model').find({userName:"w"}, {subjects:1}, function (err, resultSubjects) {
+        mongoose.model('student_model').find({userName:req.param.userName}, {subjects:1}, function (err, resultSubjects) {
             if (err) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
