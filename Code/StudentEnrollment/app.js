@@ -14,10 +14,15 @@ var deleteSubject=require('./routes/deleteSubject')
 var db = require('./model/db');
 var subject = require('./model/subject_model');
 var admin = require('./model/user_model');
+var user = require('./model/user_model');
 
+
+var config = require('./config');
 
 
 var app = express();
+
+app.set('superSecret', config.secret); // secret variable
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +41,7 @@ app.use('/users', users);
 app.use('/subjects', subjects);
 app.use('/studentSubject', studentBySubject);
 app.use('/deleteSubject', deleteSubject);
+
 
 
 // catch 404 and forward to error handler
@@ -61,11 +67,12 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
+//error: {}
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
-    error: {}
+    error: err
   });
 });
 
