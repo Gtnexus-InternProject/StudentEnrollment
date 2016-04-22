@@ -11,7 +11,7 @@ var subjects = require('./routes/subjects');
 
 var db = require('./model/db');
 var subject = require('./model/subject');
-var admin = require('./model/user_model');
+var user = require('./model/user_model');
 
 
 var config = require('./config');

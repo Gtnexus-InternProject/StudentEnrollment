@@ -6,6 +6,7 @@ var express = require('express'),
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens //used to manipulate POST
 
 var config = require('../config');
+var user =  require('../model/user_model');
 
 
 //This will make sure that every requests that hits this controller will pass through these functions
@@ -24,7 +25,7 @@ router.use(methodOverride(function(req, res){
 router.post('/authenticate', function(req, res) {
 
   // find the user
-    mongoose.model('student_model').findOne({
+    mongoose.model('student').findOne({
     userName: req.body.userName
   }, function(err, user) {
 
@@ -35,23 +36,25 @@ router.post('/authenticate', function(req, res) {
     } else if (user) {
 
       // check if password matches
-      if (user.password != req.body.password) {
-        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-      } else {
+      user.verifyPassword(req.body.password, function (err, isMatch) {
+        if(isMatch && !err){
+          // if user is found and password is right
+          // create a token
+          var token = jwt.sign(user, config.secret, {
+            expiresInMinutes: 1 // expires in 24 hours (in Mini)
+          });
 
-        // if user is found and password is right
-        // create a token
-        var token = jwt.sign(user, config.secret, {
-          expiresInMinutes: 1 // expires in 24 hours (in Mini)
-        });
+          // return the information including token as JSON
+          res.json({
+            success: true,
+            message: 'Enjoy your token!',
+            token: token
+          });
+        }else{
+          res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+        }
+      });
 
-        // return the information including token as JSON
-        res.json({
-          success: true,
-          message: 'Enjoy your token!',
-          token: token
-        });
-      }
 
     }
 
@@ -60,38 +63,103 @@ router.post('/authenticate', function(req, res) {
 
 
 
+//POST a new blob
+router.route('/student').post(function(req, res) {
+    // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
+    var userId = req.body.userId;
+    var userName = req.body.userName;
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
+    var password = req.body.password;
+    var email = req.body.email;
+    var adddress = req.body.adddress;
+    var contactNumber = req.body.contactNumber;
+    var dob = req.body.dob,
+    gender = req.body.gender,
+    alStream = req.body.alStream,
+    zScore = req.body.zScore,
+    Department = 1,
+    registeredDate = req.body.registeredDate,
+    profileImage = "testS",
+    subjects = req.body.subjects;
 
-// // route middleware to verify a token
-// router.use(function(req, res, next) {
-//
-//   // check header or url parameters or post parameters for token
-//   var token = req.body.token || req.query.token || req.headers['x-access-token'];
-//
-//   // decode token
-//   if (token) {
-//
-//     // verifies secret and checks exp
-//     jwt.verify(token, config.secret, function(err, decoded) {
-//       if (err) {
-//         return res.json({ success: false, message: 'Failed to authenticate token.' });
-//       } else {
-//         // if everything is good, save to request for use in other routes
-//         req.decoded = decoded;
-//         next();
-//       }
-//     });
-//
-//   } else {
-//
-//     // if there is no token
-//     // return an error
-//     return res.status(403).send({
-//         success: false,
-//         message: 'No token provided.'
-//     });
-//
-//   }
-// });
+      // profileImage = req.body.profileImage,
+
+
+    //call the create function for our database
+    mongoose.model('student').create({
+        userId : userId,
+        userName : userName,
+        firstName : firstName,
+        password : password,
+        email : email,
+        adddress : adddress,
+        contactNumber : contactNumber,
+        lastName : lastName,
+        dob :  dob,
+        gender : gender,
+        alStream : alStream,
+        zScore : zScore,
+        Department : Department,
+        registeredDate : registeredDate,
+        profileImage : profileImage,
+        subjects : subjects
+    }, function (err, user) {
+          if (err) {
+              res.send("There was a problem adding the information to the database.");
+              console.log(err);
+          } else {
+              //Blob has been created
+              console.log('POST creating new blob: ' + user);
+              res.format({
+                  //HTML response will set the location and redirect back to the home page. You could also create a 'success' page if that's your thing
+                html: function(){
+                    // If it worked, set the header so the address bar doesn't still say /adduser
+                    res.location("users");
+                    // And forward to success page
+                    res.redirect("/users/student");
+                },
+                //JSON response will show the newly created blob
+                json: function(){
+                    res.json(user);
+                }
+            });
+          }
+    })
+});
+
+
+// route middleware to verify a token
+router.use(function(req, res, next) {
+
+  // check header or url parameters or post parameters for token
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+  // decode token
+  if (token) {
+
+    // verifies secret and checks exp
+    jwt.verify(token, config.secret, function(err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        next();
+      }
+    });
+
+  } else {
+
+    // if there is no token
+    // return an error
+    return res.status(403).send({
+        success: false,
+        message: 'No token provided.'
+    });
+
+  }
+});
 
 
 
@@ -101,7 +169,7 @@ router.route('/student')
     //GET all blobs
     .get(function(req, res, next) {
         //retrieve all blobs from Monogo
-        mongoose.model('student_model').find({}, function (err, users) {
+        mongoose.model('student').find({}, function (err, users) {
               if (err) {
                   return console.error(err);
               } else {
@@ -121,71 +189,8 @@ router.route('/student')
                 });
               }
         });
-    })
-    //POST a new blob
-    .post(function(req, res) {
-        // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
-        var userId = req.body.userId;
-        var userName = req.body.userName;
-        var firstName = req.body.firstName;
-        var lastName = req.body.lastName;
-        var password = req.body.password;
-        var email = req.body.email;
-        var adddress = req.body.adddress;
-        var contactNumber = req.body.contactNumber;
-        var dob = req.body.dob,
-        gender = req.body.gender,
-        alStream = req.body.alStream,
-        zScore = req.body.zScore,
-        Department = 1,
-        registeredDate = req.body.registeredDate,
-        profileImage = "testS",
-        subjects = req.body.subjects.split(",");
-
-          // profileImage = req.body.profileImage,
-
-
-        //call the create function for our database
-        mongoose.model('student_model').create({
-            userId : userId,
-            userName : userName,
-            firstName : firstName,
-            password : password,
-            email : email,
-            adddress : adddress,
-            contactNumber : contactNumber,
-            lastName : lastName,
-            dob :  dob,
-            gender : gender,
-            alStream : alStream,
-            zScore : zScore,
-            Department : Department,
-            registeredDate : registeredDate,
-            profileImage : profileImage,
-            subjects : subjects
-        }, function (err, user) {
-              if (err) {
-                  res.send("There was a problem adding the information to the database.");
-                  console.log(err);
-              } else {
-                  //Blob has been created
-                  console.log('POST creating new blob: ' + user);
-                  res.format({
-                      //HTML response will set the location and redirect back to the home page. You could also create a 'success' page if that's your thing
-                    html: function(){
-                        // If it worked, set the header so the address bar doesn't still say /adduser
-                        res.location("users");
-                        // And forward to success page
-                        res.redirect("/users/student");
-                    },
-                    //JSON response will show the newly created blob
-                    json: function(){
-                        res.json(user);
-                    }
-                });
-              }
-        })
     });
+
 
     /* GET New Student page. */
 router.get('/student/new', function(req, res) {
@@ -199,7 +204,7 @@ router.param('id', function(req, res, next, id) {
     console.log('validating ' + id + ' exists');
     id = "" + id;
     //find the ID in the Database
-    mongoose.model('student_model').findOne({userId: id}, function (err, user) {
+    mongoose.model('student').findOne({userId: id}, function (err, user) {
         //if it isn't found, we are going to repond with 404
         console.log(err);
         if (err || user == null ) {
@@ -232,7 +237,7 @@ router.param('id', function(req, res, next, id) {
 
 router.route('/student/:id')
   .get(function(req, res) {
-    mongoose.model('student_model').findOne({userId:req.id}, function (err, student) {
+    mongoose.model('student').findOne({userId:req.id}, function (err, student) {
       console.log('ID: ' + req.params.id);
       if (err) {
         console.log('GET Error: There was a problem retrieving: ' + err);
@@ -259,95 +264,56 @@ router.route('/student/:id')
 
 //PUT to update a blob by ID
 router.put('/student/:id/edit', function(req, res) {
-    // Get our REST or form values. These rely on the "name" attributes
-    var userId = req.body.userId;
-    var userName = req.body.userName;
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-    var password = req.body.password;
-    var email = req.body.email;
-    var adddress = req.body.adddress;
-    var contactNumber = req.body.contactNumber;
-    var dob = req.body.dob,
-    gender = req.body.gender,
-    alStream = req.body.alStream,
-    zScore = req.body.zScore,
-    Department = 1,
-    registeredDate = req.body.registeredDate,
-    profileImage = "testS",
-    subjects = req.body.subjects.split(",");
 
    //find the document by ID
-        mongoose.model('student_model').findById(req.id, function (err, admin) {
+
+        mongoose.model('student').findOneAndUpdate({userId:req.id}, {"$set": req.body}, {new: true}, function (err, place) {
             //update it
-            admin.update({
-              userId : userId,
-              userName : userName,
-              firstName : firstName,
-              password : password,
-              email : email,
-              adddress : adddress,
-              contactNumber : contactNumber,
-              lastName : lastName,
-              dob :  dob,
-              gender : gender,
-              alStream : alStream,
-              zScore : zScore,
-              Department : Department,
-              registeredDate : registeredDate,
-              profileImage : profileImage,
-              subjects : subjects
-            }, function (err, blobID) {
+
+
               if (err) {
                   res.send("There was a problem updating the information to the database: " + err);
               }
               else {
                       //HTML responds by going back to the page or you can be fancy and create a new view that shows a success page.
+
                       res.format({
-                          html: function(){
-                               res.redirect("/blobs/" + admin.userId);
-                         },
+
                          //JSON responds showing the updated values
                         json: function(){
-                               res.json(admin);
+                               res.json(place);
                          }
                       });
                }
-            })
+
         });
+
+
 });
 
 
 //DELETE a Blob by ID
 router.delete('/student/:id/edit', function (req, res){
     //find blob by ID
-    mongoose.model('student_model').findOne({userId:req.id}, function (err, student) {
-        if (err) {
-            return console.error(err);
-        } else {
-            //remove it from Mongo
-            student.remove(function (err, student) {
-                if (err) {
-                    return console.error(err);
-                } else {
-                    //Returning success messages saying it was deleted
-                    console.log('DELETE removing ID: ' + student.userId);
-                    res.format({
-                        //HTML returns us back to the main page, or you can create a success page
-                          html: function(){
-                               res.redirect("/admins");
-                         },
-                         //JSON returns the item with the message that is has been deleted
-                        json: function(){
-                               res.json({message : 'deleted',
-                                   item : student
-                               });
-                         }
-                      });
-                }
+
+    mongoose.model('student').findOneAndRemove({userId:req.id}, function(error, student){
+      if (error) {
+          return console.error(error);
+      } else {
+          //Returning success messages saying it was deleted
+          console.log('DELETE removing ID: ' + student.userId);
+          res.format({
+
+               //JSON returns the item with the message that is has been deleted
+              json: function(){
+                     res.json({message : 'deleted',
+                         item : student
+                     });
+               }
             });
-        }
+      }
     });
+
 });
 
 
