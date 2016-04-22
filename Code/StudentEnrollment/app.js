@@ -13,7 +13,6 @@ var deleteSubject=require('./routes/deleteSubject')
 
 var db = require('./model/db');
 var subject = require('./model/subject_model');
-var admin = require('./model/user_model');
 var user = require('./model/user_model');
 
 

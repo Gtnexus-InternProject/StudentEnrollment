@@ -35,25 +35,35 @@ router.post('/authenticate', function(req, res) {
       res.json({ success: false, message: 'Authentication failed. User not found.' });
     } else if (user) {
 
-      // check if password matches
-      user.verifyPassword(req.body.password, function (err, isMatch) {
-        if(isMatch && !err){
-          // if user is found and password is right
-          // create a token
-          var token = jwt.sign(user, config.secret, {
-            expiresInMinutes: 1 // expires in 24 hours (in Mini)
-          });
+      //// check if password matches
+      //user.verifyPassword(req.body.password, function (err, isMatch) {
+      //  if(isMatch && !err){
+      //    // if user is found and password is right
+      //    // create a token
+      //    var token = jwt.sign(user, config.secret, {
+      //      expiresInMinutes: 1 // expires in 24 hours (in Mini)
+      //    });
+      //
+      //    // return the information including token as JSON
+      //    res.json({
+      //      success: true,
+      //      message: 'Enjoy your token!',
+      //      token: token
+      //    });
+      //  }else{
+      //    res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+      //  }
+      //});
 
-          // return the information including token as JSON
-          res.json({
+        var token = jwt.sign(user, config.secret, {
+                  expiresInMinutes: 10 // expires in 24 hours (in Mini)
+                });
+
+        res.json({
             success: true,
             message: 'Enjoy your token!',
             token: token
-          });
-        }else{
-          res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-        }
-      });
+        });
 
 
     }
@@ -184,7 +194,7 @@ router.route('/student')
                     },
                     //JSON response will show all blobs in JSON format
                     json: function(){
-                        res.json(infophotos);
+                        res.json(users);
                     }
                 });
               }

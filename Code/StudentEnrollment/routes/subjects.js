@@ -7,6 +7,7 @@ var express = require('express'),
     bodyParser = require('body-parser'), //parses information from POST
     methodOverride = require('method-override'); //used to manipulate POST
     jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens //used to manipulate POST
+var config = require('../config');
 
 //This will make sure that every requests that hits this controller will pass through these functions
 router.use(bodyParser.urlencoded({ extended: true }))
@@ -25,7 +26,7 @@ router.use(methodOverride(function(req, res){
 router.post('/authenticate', function(req, res) {
 
     // find the user
-    mongoose.model('student_model').findOne({userName: req.body.userName}, function(err, user) {
+    mongoose.model('student').findOne({userName: req.body.userName}, function(err, user) {
 
         if (err) throw err;
 
