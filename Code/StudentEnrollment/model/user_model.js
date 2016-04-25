@@ -1,23 +1,22 @@
-var mongoose = require('mongoose');
+var mongoose =  require('mongoose');
 var extend = require('mongoose-schema-extend');
-// var bcrypt = require('bcrypt-nodejs');
+
 
 
 var userSchema = new mongoose.Schema({
 
-  userId: {
-    type: String,
-    unique: true,
-    required: true
-  },
   userName: {
     type: String,
     unique: true,
     required: true
   },
+
   firstName: String,
   lastName: String,
-  password: String,
+  password: {
+    type: String,
+    required: true
+  },
   email: String,
   adddress: String,
   contactNumber: Number
@@ -38,9 +37,12 @@ var student = userSchema.extend({
     Department: Number,
     registeredDate: Date,
     profileImage: String,
-    subjects:[String]
+    rfid: String,
+    subjects:[{type:String}]
 
 });
+
+
 
 
 var coordinator = userSchema.extend({
@@ -49,8 +51,6 @@ var coordinator = userSchema.extend({
     subjects:[String]
 
 });
-
-
 
 
 
