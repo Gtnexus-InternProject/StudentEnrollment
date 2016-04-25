@@ -437,6 +437,24 @@ router.put('/:type/:userName', function(req, res) {
      }
    }
 
+
+   if(req.type == "admin"){
+     if(req.decoded.type != "admin"){
+       return res.status(403).send({
+           success: false,
+           message: 'You don\'t have privilages to access'
+       });
+     }
+   }
+   if(req.type == "coordinator"){
+     if(req.decoded.type == "student"){
+       return res.status(403).send({
+           success: false,
+           message: 'You don\'t have privilages to access'
+       });
+     }
+   }
+
         mongoose.model(req.type).findOneAndUpdate({userName:req.userName}, {"$set": req.body}, {new: true}, function (err, place) {
             //update it
 
