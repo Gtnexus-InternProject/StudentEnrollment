@@ -28,9 +28,31 @@ var admin = userSchema.extend({
 
 });
 
+/**  registerStatus   **
+  * 0 :- pending
+  * 1 :- accepted
+  **/
+var subjectsChild = mongoose.Schema({
+  moduleCode : { type: String, required: true, unique: true},
+  state : {type:Number, default:0}
+}, { _id: false});
+
+var coordinator = userSchema.extend({
+
+    Department: Number,
+    subjects:[ { type: String, required: true, unique: true} ]
+
+});
+
+//{ moduleCode: {type:String , required: true, unique: true }, status:{ type:String , default:0 }}
+/**  registerStatus   **
+  * 0 :- pending
+  * 1 :- accepted
+  **/
 var student = userSchema.extend({
 
     dob: Date,
+    registerStatus: Number,
     gender: String,
     alStream: String,
     zScore: Number,
@@ -38,19 +60,14 @@ var student = userSchema.extend({
     registeredDate: Date,
     profileImage: String,
     rfid: String,
-    subjects:[{type:String}]
+    subjects:[subjectsChild]
 
 });
 
 
 
 
-var coordinator = userSchema.extend({
 
-    Department: Number,
-    subjects:[String]
-
-});
 
 
 

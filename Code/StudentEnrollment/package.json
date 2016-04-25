@@ -15,7 +15,6 @@
     "jsonwebtoken": "^5.7.0",
     "method-override": "^2.3.5",
     "mongoose": "^4.4.11",
-    "mongoose-populate-virtuals": "^1.0.3",
     "mongoose-schema-extend": "^0.2.2",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0"
