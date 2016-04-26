@@ -155,7 +155,7 @@ router.post('/:type/authenticate', function(req, res) {
           var claims = { userName: user.userName, type: user.__t || 'student' };
 
           var token = jwt.sign(claims, config.secret, {
-                    expiresInMinutes: 20 // expires in 24 hours (in Mini)
+                    expiresInMinutes: 1440 // expires in 24 hours (in Mini)
                   });
 
           res.json({
