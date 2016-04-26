@@ -35,13 +35,13 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
-<<<<<<< HEAD
+
 Code/.idea/workspace.xml
-=======
+
 
 Code/StudentEnrollment/model/semester.js
 
 Code/StudentEnrollment/model/timeSlot.js
 Code/StudentEnrollment/.idea
 Code/.idea
->>>>>>> TestH
+Code/StudentEnrollment-client/node_modules
