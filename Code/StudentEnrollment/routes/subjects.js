@@ -149,7 +149,8 @@ router.route('/')
         });
     })
     //POST a new blob
-    .post(function(req, res) {
+router.route('/subjectAdd').post(function(req, res) {
+    //.post(function(req, res) {
         // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
         var moduleCode = req.body.moduleCode;
         var moduleName = req.body.moduleName;
@@ -202,10 +203,10 @@ router.route('/')
         })
     });
 
-/* GET New Blob page. */
-router.get('/new', function(req, res) {
-    res.render('subjects/new', { title: 'Add New subject' });
-});
+///* GET New Blob page. */
+//router.get('/new', function(req, res) {
+//    res.render('subjects/new', { title: 'Add New subject' });
+//});
 
 
 // route middleware to validate :id
