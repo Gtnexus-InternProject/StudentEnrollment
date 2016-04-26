@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node --harmony_proxies  ./bin/www"
+    "start": "node --harmony_proxies ./bin/www"
   },
   "dependencies": {
     "body-parser": "^1.13.3",
@@ -17,6 +17,9 @@
     "mongoose": "^4.4.11",
     "mongoose-schema-extend": "^0.2.2",
     "morgan": "~1.6.1",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "jsonwebtoken": "^5.7.0"
+
   }
+
 }

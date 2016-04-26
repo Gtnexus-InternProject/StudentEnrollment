@@ -5,12 +5,13 @@ var subjectSchema = new mongoose.Schema({
     department:String,
     coordinator:String,
     credits:String,
-    semester:String,
-    day:String,
+    semester:String,    //dropdown list
+    day:String,         //dropdown list
+    timeSlot:String,    //dropdown list
     description:String,
     preRequestSubjects:Array,
     status:String
 
 });
-mongoose.model('subject', subjectSchema);
+mongoose.model('subject_model', subjectSchema);
 

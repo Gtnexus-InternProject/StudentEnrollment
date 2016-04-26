@@ -3,7 +3,11 @@ extends ../layout
 block content
     h1.
         #{title}
+<<<<<<< HEAD
+    form#formAddAdmin(name="addstudent",method="post",action="/users")
+=======
     form#formAddAdmin(name="addstudent",method="post",action="/users/student")
+>>>>>>> TKDev
 
         p User ID:
             input#inputfirstName(type="text", name="userId")

@@ -69,8 +69,6 @@ var student = userSchema.extend({
 
 
 
-
-
 // mongoose.model('user', userSchema);
 mongoose.model('admin',admin );
 mongoose.model('student',student );
