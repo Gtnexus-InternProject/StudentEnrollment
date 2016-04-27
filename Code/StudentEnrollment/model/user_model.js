@@ -1,15 +1,10 @@
-var mongoose = require('mongoose');
+var mongoose =  require('mongoose');
 var extend = require('mongoose-schema-extend');
 
 
 
 var userSchema = new mongoose.Schema({
 
-  userId: {
-    type: String,
-    unique: true,
-    required: true
-  },
   userName: {
     type: String,
     unique: true,
@@ -18,7 +13,10 @@ var userSchema = new mongoose.Schema({
 
   firstName: String,
   lastName: String,
-  password: String,
+  password: {
+    type: String,
+    required: true
+  },
   email: String,
   adddress: String,
   contactNumber: Number
@@ -30,26 +28,44 @@ var admin = userSchema.extend({
 
 });
 
+/**  registerStatus   **
+  * 0 :- pending
+  * 1 :- accepted
+  **/
+var subjectsChild = mongoose.Schema({
+  moduleCode : { type: String, required: true, unique: true},
+  state : {type:Number, default:0}
+}, { _id: false});
+
+var coordinator = userSchema.extend({
+
+    Department: Number,
+    subjects:[ { type: String, required: true, unique: true} ]
+
+});
+
+//{ moduleCode: {type:String , required: true, unique: true }, status:{ type:String , default:0 }}
+/**  registerStatus   **
+  * 0 :- pending
+  * 1 :- accepted
+  **/
 var student = userSchema.extend({
 
     dob: Date,
+    registerStatus: Number,
     gender: String,
     alStream: String,
     zScore: Number,
     Department: Number,
     registeredDate: Date,
     profileImage: String,
-    subjects:[String]
+    rfid: String,
+    subjects:[subjectsChild]
 
 });
 
 
-var coordinator = userSchema.extend({
 
-    Department: Number,
-    subjects:[String]
-
-});
 
 
 
