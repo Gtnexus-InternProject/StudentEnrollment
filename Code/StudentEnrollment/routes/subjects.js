@@ -95,6 +95,8 @@ router.post('/authenticate', function(req, res) {
 router.route('/')
     //GET all blobs
     .get(function(req, res, next) {
+
+      
         //retrieve all blobs from Monogo
         mongoose.model('subject_model').find({}, function (err, subjects) {
             if (err) {

@@ -400,15 +400,8 @@ router.route('/:type/:userName')
             //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
             res.format({
 
-                html: function() {
-                    res.render('users/show', {
-                        "blobdob": blobdob,
-                        "blob": blob
-                    });
-                },
-
                 json: function() {
-                    res.json(blob);
+                    res.json(student);
                 }
             });
         }
