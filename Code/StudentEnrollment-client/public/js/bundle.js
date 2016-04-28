@@ -1,0 +1,1 @@
+console.error("Error: Parsing file C:\\Users\\tkodagoda\\Documents\\TK\\Project Folder\\Student Enrollement\\Git\\Student Enrollement\\Code\\StudentEnrollment-client\\app-client.js: 'import' and 'export' may appear only with 'sourceType: module' (1:0)")
