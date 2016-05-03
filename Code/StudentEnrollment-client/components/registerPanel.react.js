@@ -28,8 +28,9 @@ module.exports = React.createClass({
        handleSubmit(data){
            alert('ggg');
            data.preventDefault();
-           var text = this.state.text.trim();
            console.log(this);
+           var text = this.refs.userName.getValue();
+           console.log(JSON.stringify(text));
 
            //this.setState({value: event.target.value});
            ////let theform = data.refs.register.value();
@@ -63,10 +64,7 @@ module.exports = React.createClass({
                     <Form onSubmit={this.handleSubmit}>
                         <FormGroup>
                             <ControlLabel>User Name</ControlLabel>
-                            <FormControl type="text" placeholder="Enter text"
-                                value={this.state.text}
-                                         onChange={this.handleTextChange}
-                                />
+                            <FormControl type="text" placeholder="Enter text" ref="userName" />
 
                         </FormGroup>
 
