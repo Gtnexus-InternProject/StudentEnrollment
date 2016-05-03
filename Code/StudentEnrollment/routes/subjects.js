@@ -7,7 +7,7 @@ var express = require('express'),
     bodyParser = require('body-parser'), //parses information from POST
     methodOverride = require('method-override'); //used to manipulate POST
     jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens //used to manipulate POST
-var config = require('../config');
+    config = require('../config');
 
 //This will make sure that every requests that hits this controller will pass through these functions
 router.use(bodyParser.urlencoded({ extended: true }))
@@ -20,83 +20,81 @@ router.use(methodOverride(function(req, res){
     }
 }))
 
-
-
-// route to authenticate a user (POST http://localhost:8080/api/authenticate)
-router.post('/authenticate', function(req, res) {
-
-    // find the user
-    mongoose.model('student').findOne({userName: req.body.userName}, function(err, user) {
-
-        if (err) throw err;
-
-        if (!user) {
-            res.json({ success: false, message: 'Authentication failed. User not found.' });
-        } else if (user) {
-
-            // check if password matches
-            if (user.password != req.body.password) {
-                res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-            } else {
-
-                // if user is found and password is right
-                // create a token
-                var token = jwt.sign(user, config.secret, {
-                    expiresInMinutes: 1 // expires in 24 hours (in Mini)
-                });
-
-                // return the information including token as JSON
-                res.json({
-                    success: true,
-                    message: 'Enjoy your token!',
-                    token: token
-                });
-            }
-
-        }
-
-    });
-});
+ //// route middleware to verify a token
+ //router.use(function(req, res, next) {
+ //
+ //  // check header or url parameters or post parameters for token
+ //  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+ //
+ //  // decode token
+ //  if (token) {
+ //
+ //    // verifies secret and checks exp
+ //    jwt.verify(token, config.secret, function(err, decoded) {
+ //      if (err) {
+ //        return res.json({ success: false, message: 'Failed to authenticate token.' });
+ //      } else {
+ //        // if everything is good, save to request for use in other routes
+ //        req.decoded = decoded;
+ //        next();
+ //      }
+ //    });
+ //
+ //  } else {
+ //
+ //    // if there is no token
+ //    // return an error
+ //    return res.status(403).send({
+ //        success: false,
+ //        message: 'No token provided.'
+ //    });
+ //
+ //  }
+ //});
 
 
 
  // route middleware to verify a token
- router.use(function(req, res, next) {
+//  router.use(function(req, res, next) {
 
-   // check header or url parameters or post parameters for token
-   var token = req.body.token || req.query.token || req.headers['x-access-token'];
+//    // check header or url parameters or post parameters for token
+//    var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-   // decode token
-   if (token) {
+//    // decode token
+//    if (token) {
 
-     // verifies secret and checks exp
-     jwt.verify(token, config.secret, function(err, decoded) {
-       if (err) {
-         return res.json({ success: false, message: 'Failed to authenticate token.' });
-       } else {
-         // if everything is good, save to request for use in other routes
-         req.decoded = decoded;
-         next();
-       }
-     });
+//      // verifies secret and checks exp
+//      jwt.verify(token, config.secret, function(err, decoded) {
+//        if (err) {
+//          return res.json({ success: false, message: 'Failed to authenticate token.' });
+//        } else {
+//          // if everything is good, save to request for use in other routes
+//          req.decoded = decoded;
+//          next();
+//        }
+//      });
 
-   } else {
+//    } else {
 
-     // if there is no token
-     // return an error
-     return res.status(403).send({
-         success: false,
-         message: 'No token provided.'
-     });
+//      // if there is no token
+//      // return an error
+//      return res.status(403).send({
+//          success: false,
+//          message: 'No token provided.'
+//      });
 
-   }
- });
+//    }
+//  });
 
 router.route('/')
+
     //GET all blobs
     .get(function(req, res, next) {
-
-      
+        var errors = req.validationErrors();
+        if (errors) {
+            res.send('There have been validation errors: ' + errors, 400);
+            return;
+        }
         //retrieve all blobs from Monogo
         mongoose.model('subject_model').find({}, function (err, subjects) {
             if (err) {
@@ -120,7 +118,13 @@ router.route('/')
         });
     })
     //POST a new blob
-    .post(function(req, res) {
+router.route('/subjectAdd').post(function(req, res) {
+    var errors = req.validationErrors();
+    if (errors) {
+        res.send('There have been validation errors: ' + errors, 400);
+        return;
+    }
+    //.post(function(req, res) {
         // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
         var moduleCode = req.body.moduleCode;
         var moduleName = req.body.moduleName;
@@ -131,7 +135,7 @@ router.route('/')
         var day = req.body.day;
         var description = req.body.description;
         var preRequestSubjects = req.body.preRequestSubjects;
-        var status=req.body.status;
+        var status=1;
 
 
 
@@ -173,89 +177,75 @@ router.route('/')
         })
     });
 
-/* GET New Blob page. */
-router.get('/new', function(req, res) {
-    res.render('subjects/new', { title: 'Add New subject' });
-});
+
 
 
 // route middleware to validate :id
-router.param('id', function(req, res, next, id) {
-    //console.log('validating ' + id + ' exists');
-    //find the ID in the Database
-    mongoose.model('subject_model').findById(id, function (err, subject) {
-        //if it isn't found, we are going to repond with 404
-        if (err) {
-            console.log(id + ' was not found');
-            res.status(404)
-            var err = new Error('Not Found');
-            err.status = 404;
-            res.format({
-                html: function(){
-                    next(err);
-                },
-                json: function(){
-                    res.json({message : err.status  + ' ' + err});
-                }
-            });
-            //if it is found we continue on
-        } else {
-            //uncomment this next line if you want to see every JSON document response for every GET/PUT/DELETE call
-            //console.log(blob);
-            // once validation is done save the new item in the req
-            req.id = id;
-            // go to the next thing
-            next();
-        }
-    });
-});
-
-router.route('/:id')
-    .get(function(req, res) {
-        mongoose.model('subject_model').findById(req.id, function (err, blob) {
-            if (err) {
-                console.log('GET Error: There was a problem retrieving: ' + err);
-            } else {
-                console.log('GET Retrieving ID: ' + blob._id);
-                var blobdob = blob.userName.toISOString();
-                //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
-                res.format({
-                    html: function(){
-                        res.render('blobs/show', {
-                            "blobdob" : blobdob,
-                            "blob" : blob
-                        });
-                    },
-                    json: function(){
-                        res.json(blob);
-                    }
-                });
-            }
-        });
-    });
+//router.param('id', function(req, res, next, id) {
+//    //console.log('validating ' + id + ' exists');
+//    //find the ID in the Database
+//    mongoose.model('subject_model').findById(id, function (err, subject) {
+//        //if it isn't found, we are going to repond with 404
+//        if (err) {
+//            console.log(id + ' was not found');
+//            res.status(404)
+//            var err = new Error('Not Found');
+//            err.status = 404;
+//            res.format({
+//                html: function(){
+//                    next(err);
+//                },
+//                json: function(){
+//                    res.json({message : err.status  + ' ' + err});
+//                }
+//            });
+//            //if it is found we continue on
+//        } else {
+//            //uncomment this next line if you want to see every JSON document response for every GET/PUT/DELETE call
+//            //console.log(blob);
+//            // once validation is done save the new item in the req
+//            req.id = id;
+//            // go to the next thing
+//            next();
+//        }
+//    });
+//});
+//
+//router.route('/:id')
+//    .get(function(req, res) {
+//        mongoose.model('subject_model').findById(req.id, function (err, blob) {
+//            if (err) {
+//                console.log('GET Error: There was a problem retrieving: ' + err);
+//            } else {
+//                console.log('GET Retrieving ID: ' + blob._id);
+//                var blobdob = blob.userName.toISOString();
+//                //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
+//                res.format({
+//
+//                    json: function(){
+//                        res.json(blob);
+//                    }
+//                });
+//            }
+//        });
+//    });
 
 
-//GET the individual blob by Mongo ID
-router.get('/:id/edit', function(req, res) {
+//GET the individual subject by Mongo ID
+router.get('/:moduleCode', function(req, res) {
+    var errors = req.validationErrors();
+    if (errors) {
+        res.send('There have been validation errors: ' + errors, 400);
+        return;
+    }
     //search for the blob within Mongo
-    mongoose.model('subject_model').findById(req.moduleCode, function (err, subject) {
+    mongoose.model('subject_model').findOne({moduleCode:req.params.moduleCode}, function (err, subject) {
         if (err) {
             console.log('GET Error: There was a problem retrieving: ' + err);
         } else {
-            //Return the blob
-            console.log('GET Retrieving ID: ' + subject.moduleCode);
-            //format the date properly for the value to show correctly in our edit form
-            var blobdob = subject.moduleName.toISOString();
-            // blobdob = blobdob.substring(0, blobdob.indexOf('T'))
+            //console.log('GET Retrieving ID: ' + subject.moduleCode);
+
             res.format({
-                //HTML response will render the 'edit.jade' template
-                html: function(){
-                    res.render('blobs/edit', {
-                        title: 'Blob' + subject.moduleCode,
-                        "blobdob" : blobdob,
-                        "blob" : admin
-                    });
-                },
                 //JSON response will return the JSON output
                 json: function(){
                     res.json(subject);
@@ -267,88 +257,117 @@ router.get('/:id/edit', function(req, res) {
 
 
 //PUT to update a blob by ID
-router.put('/:id/edit', function(req, res) {
+router.put('/update/:ModuleCode', function(req, res) {
     // Get our REST or form values. These rely on the "name" attributes
-
-    var moduleCode = req.body.moduleCode;
-    var moduleName = req.body.moduleName;
-    var department = req.body.department;
-    var coordinator = req.body.coordinator;
-    var credits = req.body.credits;
-    var semester = req.body.semester;
-    var day = req.body.day;
-    var description = req.body.description;
-    var preRequestSubjects = req.body.preRequestSubjects;
-    var status=req.body.status;
+    var errors = req.validationErrors();
+    if (errors) {
+        res.send('There have been validation errors: ' + errors, 400);
+        return;
+    }
 
     //find the document by ID
-    mongoose.model('subject_model').findById(req.id, function (err, subject) {
+    mongoose.model('subject_model').findOne({moduleCode:req.params.moduleCode}, function (err, subject) {
         //update it
+        if(err){
+            console.log('Error in updating'+ err)
+        }
+        else{
         subject.update({
-            moduleCode : moduleCode,
-            moduleName : moduleName,
-            department : department,
-            coordinator : coordinator,
-            credits : credits,
-            semester : semester,
-            day : day,
-            description : description,
-            preRequestSubjects : preRequestSubjects,
-            status:status,
+            moduleCode :  req.body.moduleCode,
+            moduleName : req.body.moduleName,
+            department : req.body.department,
+            credits : req.body.credits,
+            semester : req.body.semester,
+            day : req.body.day,
+            //description : req.body.description,
+            preRequestSubjects : req.body.preRequestSubjects,
+            //status:req.body.status,
+        },{
+            "upsert" : false
         }, function (err, blobID) {
             if (err) {
                 res.send("There was a problem updating the information to the database: " + err);
             }
             else {
-                //HTML responds by going back to the page or you can be fancy and create a new view that shows a success page.
+
                 res.format({
-                    html: function(){
-                        res.redirect("/blobs/" + admin.userId);
-                    },
+
                     //JSON responds showing the updated values
                     json: function(){
-                        res.json(admin);
+                        res.json(subject);
                     }
                 });
             }
-        })
+        })}
     });
 });
 
 
-//DELETE a Blob by ID
-router.delete('/delete/:id', function (req, res){
-    //find blob by ID
-    mongoose.model('subject_model').find({moduleCode:"2"}, function (err, deletesub) {
+//Delete subject
+
+
+
+router.put('/delete/:moduleCode', function (req, res){  //find blob by ID
+
+    mongoose.model('subject_model').findOne({moduleCode:req.params.moduleCode},{status:1}, function (err, deletesub) {
         if (err) {
-            console.log('fff');
+            console.log('Error occur when deleting');
             return console.error(err);
 
         } else {
-            //remove it from Mongo
-            deletesub.remove(function (err, subjct) {
-                if (err) {
-                    return console.error(err);
-                } else {
-                    ////Returning success messages saying it was deleted
                     console.log('DELETE removing ID: ');
+            deletesub.update({
+                status:2
+            },{
+                "upsert" : false
+            },function(err,updt){
+                if(err){
+                    console.log(('Error'+err))
+                }
+                else{
                     res.format({
-                        ////HTML returns us back to the main page, or you can create a success page
-                        //html: function(){
-                        //    res.redirect("/admins");
-                        //},
-                        ////JSON returns the item with the message that is has been deleted
+
                         json: function(){
                             res.json({message : 'deleted',
-                                item : admin
+                                item : deletesub
                             });
                         }
                     });
+
                 }
-            });
-        }
+
+            })
+
+                }
+
+
     });
 });
+
+// get students per particular subject
+
+router.get('/student/:moduleCode',(function(req, res) {
+        //if (req.type == "admin") {
+        //    return res.status(404).send({
+        //        success: false,
+        //        message: 'Wrong URL'
+        //    });
+        //}
+
+        mongoose.model('student').find({
+            subjects : { $elemMatch :{moduleCode:req.params.moduleCode}}},{userName:1, firstName: 1,lastName: 1,email:1 }, function (err, resultUser) {
+            if (err) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+                console.log('GET Retrieving ID: ' + resultUser);
+                res.format({
+                    json: function(){
+                        res.json(resultUser);
+                    }
+                });
+            }
+        });
+    }));
 
 
 module.exports = router;
