@@ -1,3 +1,7 @@
+// var JSX = require('node-jsx').install({
+//     harmony: true
+// });
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Hello from './components/hello.react';
