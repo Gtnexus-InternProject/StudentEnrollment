@@ -10,11 +10,15 @@ var exphbs = require('express-handlebars');
 var users = require('./routes/users');
 var index = require('./routes/index');
 
+
+
 var app = express();
 
 // Set handlebars as the templating engine
 app.engine('handlebars', exphbs({ defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+
+
 
 
 // uncomment after placing your favicon in /public
@@ -26,12 +30,33 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+// Set /public as our static content dir
+app.use("/", express.static(__dirname + "/public/"));
+
+var config = require("./webpack.config"),
+webpack = require("webpack"),
+webPackDevMiddleware = require('webpack-dev-middleware'),
+webpackHotMiddleware = require('webpack-hot-middleware');
+var compiler = webpack(config);
+
+app.use(webPackDevMiddleware(compiler, {
+  publicPath : config.output.publicPath,
+  stats: {colors: true},
+  hot: true,
+  inline: true,
+  progress: true
+}));
+
+app.use(webpackHotMiddleware(compiler, {
+    log: console.log,  heartbeat: 10 * 1000, path: '/__webpack_hmr'
+}));
+
+
 app.use('/', index);
 app.use('/users', users);
 
 
-// Set /public as our static content dir
-app.use("/", express.static(__dirname + "/public/"));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

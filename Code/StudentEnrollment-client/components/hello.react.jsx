@@ -1,7 +1,7 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-var React = require('react'),
-ReactDOMServer = require('react-dom/server');
+import React from 'react';
+import ReactDOM from 'react-dom';
+// var React = require('react'),
+// ReactDOMServer = require('react-dom/server');
 
 
 module.exports = React.createClass({
@@ -9,7 +9,7 @@ module.exports = React.createClass({
   render: function(){
 
     return (
-              <h1> Hellio </h1>
+              <h1> Hellio working Test</h1>
             );
 
   }

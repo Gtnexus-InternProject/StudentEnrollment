@@ -1,5 +1,5 @@
 
-var JSX = require('node-jsx').install({harmony: true});
+// var JSX = require('node-jsx').install({harmony: true});
 var express = require('express');
 var router = express.Router();
 // var hello =  require('../components/TweetsApp.react');
