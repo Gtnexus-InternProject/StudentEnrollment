@@ -9,20 +9,9 @@ module.exports = React.createClass({
   render: function(){
 
     return (
-              <h1> Hellio working Test asa</h1>
+              <h1> Admin</h1>
             );
 
   }
 
 });
-
-
-// module.exports = React.createClass({
-//   displayName: 'Hello',
-//       render() {
-//           return (
-//                     <h1> Hello   </h1>
-//                  );
-//       },
-//
-// });
