@@ -1,10 +1,16 @@
 var mongoose = require('mongoose');
 var subjectSchema = new mongoose.Schema({
-    moduleCode:String,
+
+
+
+    moduleCode:{
+        type: String,
+        unique: true,
+        required: true
+    },
     moduleName:String,
     department:String,
-    coordinator:String,
-    credits:String,
+    credits:Number,
     semester:String,    //dropdown list
     day:String,         //dropdown list
     timeSlot:String,    //dropdown list
@@ -14,4 +20,3 @@ var subjectSchema = new mongoose.Schema({
 
 });
 mongoose.model('subject_model', subjectSchema);
-
