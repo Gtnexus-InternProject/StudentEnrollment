@@ -32,6 +32,8 @@ var highlight = require('./src/formatters/highlight');
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
 
+
+
 module.exports = React.createClass({
     displayName: 'FullTable',
 
@@ -171,8 +173,8 @@ module.exports = React.createClass({
                             var getButtons = (submit) => {
                                 return (
                                     <span>
-                                        <input type='submit' className='pure-button pure-button-primary ok-button' key='ok' value='OK' onClick={submit}/>
-                                        <input type='submit' className='pure-button cancel-button' key='cancel' value='Cancel' onClick={submit}/>
+                                        <input type='button' className='pure-button pure-button-primary ok-button' key='ok' value='OK' onClick={submit}/>
+                                        <input type='button' className='pure-button cancel-button' key='cancel' value='Cancel' onClick={submit}/>
                                     </span>
                                 );
                             };
