@@ -5,6 +5,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Hello from './components/hello.react';
+import Register from './components/registerPanel.react';
 
 
 // var React = require('react');
@@ -12,6 +13,6 @@ import Hello from './components/hello.react';
 // var ReactDOM = require('react-dom');
 
 ReactDOM.render(
-  <Hello />,
+  <Register />,
   document.getElementById('react-app')
 );
