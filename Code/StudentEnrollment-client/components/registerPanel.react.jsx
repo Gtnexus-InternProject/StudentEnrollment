@@ -131,8 +131,7 @@ module.exports = React.createClass({
                     </PageHeader>
 
                     <Form onSubmit={this.handleSubmit}>
-                        <FormGroup
-                            validationState={this.test12}>
+                        <FormGroup>
                             <ControlLabel>User Name</ControlLabel>
 
 
@@ -179,7 +178,9 @@ module.exports = React.createClass({
 
                         <FormGroup>
                             <ControlLabel>Gender</ControlLabel>
-                            <FormControl componentClass="select" placeholder="select" ref="gender">
+                            <FormControl componentClass="select" placeholder="select"
+                                         ref="gender"
+                                         value={this.setState(ref.target.value)}>
                                 <option value="1">Male</option>
                                 <option value="2">Female</option>
                             </FormControl>
