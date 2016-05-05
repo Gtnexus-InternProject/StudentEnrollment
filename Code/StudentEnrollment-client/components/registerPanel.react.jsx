@@ -1,4 +1,6 @@
-
+/**
+ * Created by hrajapaksha on 5/4/2016.
+ */
 /**
  * Created by hrajapaksha on 4/29/2016.
  */
@@ -6,7 +8,7 @@ var React = require('react'),
     ReactDOMServer = require('react-dom/server');
 
 import request from 'superagent'
-import {Panel ,Form,FormControl,FormGroup,ControlLabel,HelpBlock,Checkbox,Radio,Button,PageHeader} from 'react-bootstrap';
+import {Panel ,Form,FormControl,FormGroup,ControlLabel,HelpBlock,Checkbox,Radio,Button,PageHeader,Col} from 'react-bootstrap';
 
 
 
@@ -47,13 +49,9 @@ module.exports = React.createClass({
                     //var statusCode=fetch(values.userName);
                 }, 1000)
         },
-
         handleChangeUserName: function(event) {
             this.setState({userName: event.target.value});
         },
-
-
-
         handleChangePassword: function(event) {
             //if(this.state.password.trim().length>1){
             this.setState({password: event.target.value});
@@ -110,11 +108,14 @@ module.exports = React.createClass({
                         console.log('yay got ' + JSON.stringify(formR));
                     }
                 })
+
+
         },
 
         render(){
 
-            return ( <div>
+            return ( <div >
+                <Col mdOffset={2} md={8}>
                 <Panel header={title} bsStyle="primary">
                     <PageHeader>Register
                         <small></small>
@@ -166,15 +167,7 @@ module.exports = React.createClass({
                                          onChange={this.handleChangeLast}/>
                         </FormGroup>
 
-                        <FormGroup>
-                            <ControlLabel>Gender</ControlLabel>
-                            <FormControl componentClass="select" placeholder="select"
-                                         ref="gender"
-                                         value={this.setState(ref.target.value)}>
-                                <option value="1">Male</option>
-                                <option value="2">Female</option>
-                            </FormControl>
-                        </FormGroup>
+
                         <FormGroup >
                             <ControlLabel>AL Stream</ControlLabel>
                             <FormControl componentClass="select" placeholder="select" ref="alStresm">
@@ -219,7 +212,7 @@ module.exports = React.createClass({
 
                     </Form>
                 </Panel>
-
+</Col>
             </div>  )
 
 

@@ -140,7 +140,7 @@ module.exports = React.createClass({
                                             <Checkbox>Remember me</Checkbox>
                                         </Col>
                                         <Col smOffset={1} sm={3}>
-                                        <h6><Link to="/hello">Register now </Link></h6>
+                                        <h6><Link to="/register">Register now </Link></h6>
                                     </Col>
                                     </FormGroup>
 

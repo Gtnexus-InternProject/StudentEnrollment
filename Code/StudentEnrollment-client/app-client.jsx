@@ -34,7 +34,7 @@ class PageNotFound extends React.Component {
 
 ReactDOM.render((
     <Router history={browserHistory}>
-        <Route path="/" component={Register}>
+        <Route path="/" component={Login}>
         </Route>
         <Route path="/hello" component={Hello}></Route>
         <Route path="/register" component={Register}></Route>
