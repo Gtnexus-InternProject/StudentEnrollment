@@ -8,6 +8,7 @@ var React = require('react'),
 import StyleSheet from 'react-stylesheet';
 import request from 'superagent';
 import Alert from './alert.react';
+import { Link } from 'react-router'
 
 import {Grid,Row,Carousel,Panel,Col,Form ,FormControl,FormGroup,ControlLabel,HelpBlock,Checkbox,Radio,Button,PageHeader} from 'react-bootstrap';
 
@@ -59,12 +60,12 @@ module.exports = React.createClass({
 
                     if(token){
                         alert('token is - ' + (token));
-
+                        return <Link to="/hello" />;
                     }
                     else{
 
                         alert("wrong username or password");
-                        <Alert />
+
                     //res.send
 
                 }}})
@@ -135,23 +136,25 @@ module.exports = React.createClass({
                                     </FormGroup>
 
                                     <FormGroup>
-                                        <Col smOffset={2} sm={10}>
+                                        <Col sm={8}>
                                             <Checkbox>Remember me</Checkbox>
                                         </Col>
+                                        <Col smOffset={1} sm={3}>
+                                        <h6><Link to="/hello">Register now </Link></h6>
+                                    </Col>
                                     </FormGroup>
 
                                     <FormGroup>
-                                        <Col smOffset={2} sm={10}>
+                                        <Col smOffset={10} sm={2}>
                                             <Button bsStyle="success" type="submit">
                                                 Sign in
                                             </Button>
                                         </Col>
-
-
-
                                 </FormGroup>
 
+
                             </Form>
+
 
                         </Panel>
                         </Col>
