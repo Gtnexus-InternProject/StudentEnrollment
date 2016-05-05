@@ -121,11 +121,14 @@ router.param('type', function(req, res, next, type) {
 
 // route to authenticate a user (POST http://localhost:8080/api/authenticate)
 router.post('/:type/authenticate', function(req, res) {
-
+    
+    // router.get('/:type/authenticate/:userName/:password', function(req, res) {
+ console.log(req.params);
     // find the user
     mongoose.model(req.type).findOne({
         userName: req.body.userName
     }, function(err, user) {
+        console.log("username is "+req.params.userName);
 
         if (err) throw err;
 
@@ -166,12 +169,13 @@ router.post('/:type/authenticate', function(req, res) {
                 var token = jwt.sign(claims, config.secret, {
                     expiresInMinutes: 1440 // expires in 24 hours (in Mini)
                 });
-
+                     console.log("token is"+token);
+                  
                 res.json({
                     success: true,
                     message: 'Enjoy your token!',
                     token: token
-                });
+                                 });
             } else {
                 res.json({
                     success: false,
