@@ -5,6 +5,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Hello from './components/hello.react';
+import Home from './components/home.react';
 import Login from './components/login.react';
 import Register from './components/registerPanel.react';
 import {Router, Route, Link, browserHistory} from 'react-router';
@@ -34,7 +35,8 @@ class PageNotFound extends React.Component {
 
 ReactDOM.render((
     <Router history={browserHistory}>
-        <Route path="/" component={Login}>
+        <Route path="/" component={Home}>
+        <Route path="ab" component={PageNotFound}/>
         </Route>
         <Route path="/hello" component={Hello}></Route>
         <Route path="/register" component={Register}></Route>
