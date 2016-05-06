@@ -8,7 +8,8 @@ var React = require('react'),
 import StyleSheet from 'react-stylesheet';
 import request from 'superagent';
 import Alert from './alert.react';
-import { Link } from 'react-router'
+
+import {Router, Route, Link, browserHistory} from 'react-router';
 
 import {Grid,Row,Carousel,Panel,Col,Form ,FormControl,FormGroup,ControlLabel,HelpBlock,Checkbox,Radio,Button,PageHeader} from 'react-bootstrap';
 
@@ -36,6 +37,9 @@ module.exports = React.createClass({
         this.setState({password: event.target.value});
 
     },
+    contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
 
     handleSubmit(data){
         alert('ggg');
@@ -55,12 +59,14 @@ module.exports = React.createClass({
             .end(function(err, res){
                 if (err || !res.ok) {
                     alert('Oh no! error');
+                    console.log(err);
                 } else {
                     var token=(res.body.token);
 
                     if(token){
                         alert('token is - ' + (token));
-                        return <Link to="/hello" />;
+                        browserHistory.push('/hello');
+                        // return <Link to="/hello" />;
                     }
                     else{
 
