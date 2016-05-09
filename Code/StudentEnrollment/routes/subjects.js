@@ -136,15 +136,35 @@ router.route('/:meta?')
                             counter: 1
                         }
                     }], function(err, result) {
-                        console.log('Count is ' + err + '\n\n' + JSON.stringify(result));
+                      if (err) {
+                          return console.error(err);
+                      }
+                        console.log('Result Set ' + JSON.stringify(result));
                         var codes = [];
+                        // console.log('Count is ' + result.length );
                         for(var l=0; l < result.length; l++){
-                          // codes[result[i]._id] = result[i].counter;
-                        }
-                        for (var k =0; k < subjects.length ; k++){
-                          subjects[k]['count'] = codes[subjects[k].moduleCode] ? codes[subjects[k].moduleCode] : 0;
+                          codes[result[l]._id] = result[l].counter;
+
+                          // console.log(result[l]._id + " " + codes[result[l]._id] + " count " + result[l].counter );
                         }
 
+                        // var subjectss = subjects.toObject();
+                        // console.log('Assoiciate array ' + codes['c01'] );
+                        // for (var k =0; k < subjects.length ; k++){
+
+                          subjects = subjects.map(function(subject) {
+                            //  subject.set('thumbnail', 'test', {strict: false});
+                            //  console.log('Subject ' + subject );
+                             subject.set('count', codes[subject.moduleCode] || 0 , {strict: false} );
+                            //  console.log('Subject ' + subject );
+                             return subject;
+                         });
+
+                          // subjects[k]['count'] = codes[subjects[k].moduleCode];
+                        //   console.log('Count ' +  JSON.stringify(subjects[k]) );
+                        // }
+
+                        // console.log('Respond Data ' + JSON.stringify(subjects[0]));
                         //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
                         res.format({
 
@@ -155,8 +175,10 @@ router.route('/:meta?')
                                 });
                             }
                         });
-                        return;
+
                     });
+
+                    return;
                 } else {
 
                     // mongoose.model('student').
