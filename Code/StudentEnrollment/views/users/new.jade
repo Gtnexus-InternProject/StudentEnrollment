@@ -1,0 +1,41 @@
+extends ../layout
+
+block content
+    h1.
+        #{title}
+<<<<<<< HEAD
+    form#formAddAdmin(name="addstudent",method="post",action="/users")
+=======
+    form#formAddAdmin(name="addstudent",method="post",action="/users/student")
+>>>>>>> TKDev
+
+        p User ID:
+            input#inputfirstName(type="text", name="userId")
+        p First Name:
+            input#inputfirstName(type="text", name="firstName")
+        p Last Name:
+            input#inputUserName(type="text", name="lastName")
+        p Username:
+            input#inputUserName(type="text", name="userName")
+        p Password:
+            input#inputUserName(type="password", name="password")
+        p Email:
+            input#inputUserName(type="text", name="email")
+        p Address:
+            input#inputUserName(type="text", name="adddress")
+        p Contact Number:
+            input#inputBadge(type="number", placeholder="ex. 123456", name="contactNumber")
+        p Date Of Birth:
+            input#inputDob(type="date", name="dob")
+        p Gender:
+            input#inputUserName(type="text", name="gender")
+        p A/L Stream:
+            input#inputUserName(type="text", name="alStream")
+        p Z Score:
+            input#inputUserName(type="number", name="zScore")
+        p Registered Date:
+            input#inputUserName(type="date", name="registeredDate")
+        p Subjects:
+            input#inputUserName(type="text", placeholder="C1001, C1007", name="subjects")
+        p
+            button#btnSubmit(type="submit") submit
