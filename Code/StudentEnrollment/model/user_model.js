@@ -21,7 +21,10 @@ var userSchema = new mongoose.Schema({
   adddress: String,
   contactNumber: Number
 
+
 });
+
+
 
 
 var admin = userSchema.extend({
@@ -33,10 +36,10 @@ var admin = userSchema.extend({
   * 1 :- accepted
   **/
 var subjectsChild = mongoose.Schema({
-  moduleCode : { type: String, required: true, unique: true},
+  moduleCode : { type: String, required: true},
   state : {type:Number, default:0}
 }, { _id: false});
-
+//, { _id: false}
 var coordinator = userSchema.extend({
 
     Department: Number,
@@ -45,6 +48,7 @@ var coordinator = userSchema.extend({
 });
 
 //{ moduleCode: {type:String , required: true, unique: true }, status:{ type:String , default:0 }}
+// subjects:{ type:[subjectsChild], unique: false }
 /**  registerStatus   **
   * 0 :- pending
   * 1 :- accepted
@@ -65,7 +69,10 @@ var student = userSchema.extend({
 });
 
 
-
+// student.index( { "userName": 1, "subjects.moduleCode": 1  }, { unique: true  });
+// student.ensureIndexes( function (err) {
+//   if (err) console.error(err); // error occurred during index creation
+// });
 
 
 
