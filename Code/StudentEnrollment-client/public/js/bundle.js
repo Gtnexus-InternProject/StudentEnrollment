@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "da97e84e1c7fbb4545ae"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1295b0862c6826af08b9"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -6831,7 +6831,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n    background: #fefefe;\n\n    font-family: Sans-Serif;\n\n    line-height: 1.5;\n}\n\nform label {\n    display: block;\n}\n\nheader {\n    position: fixed;\n    padding: 0.5em;\n    top: 0;\n\n    text-align: center;\n\n    color: #333;\n    border: 0.1em solid #bbb;\n\n    /*background-image: url(./images/bgnoise_lg.png);*/\n}\n\nh1 {\n    margin: 0;\n}\n\nblockquote p {\n    padding: 1em;\n    background: rgba(255, 255, 0, 0.13);\n}\n\nheader .description {\n    color: #888;\n}\n\n.highlight {\n    background: rgb(255, 255, 175);\n}\n\n.sticky {\n    position: fixed;\n    top: 0;\n    left: 0;\n    right: 0;\n}\n\n.github-fork-ribbon {\n    position: fixed;\n\n    letter-spacing: 0.01em;\n}\n\narticle {\n    display: block !important;\n\n    margin-top: 6em;\n    margin-left: auto;\n    margin-right: auto;\n\n    max-width: 768px;\n}\n\narticle section {\n    margin-bottom: 2em;\n}\n\narticle h2 {\n    margin-top: 2em;\n}\n\n.skylight-wrapper h2 {\n    margin-top: 0;\n}\n\ntextarea {\n    width: 100%;\n}\n\npre {\n    background: #fafefe;\n    padding: 0.5em;\n}\n\narticle .description {\n    margin: 1em;\n    padding: 1em;\n\n    max-width: 60em;\n\n    background: #fafafa;\n\n    border: 0.1em solid #eee;\n}\n\narticle .description h2 {\n    margin: 0;\n}\n\ntable {\n    width: 100%;\n}\n\n.demonstration tfoot {\n    background: #fafafa;\n}\n\n.controls {\n    overflow: auto;\n}\n.per-page-container {\n    margin: 1em;\n\n    float: left;\n}\n.search-container {\n    margin: 1em;\n\n    float: right;\n}\n\n.edit {\n    margin-right: 1em;\n}\n\n.cancel-button {\n    float: right;\n}\n\n.header-input {\n    float: left;\n    width: 100%;\n}\n", ""]);
+	exports.push([module.id, "body {\r\n    background: #fefefe;\r\n\r\n    font-family: Sans-Serif;\r\n\r\n    line-height: 1.5;\r\n}\r\n\r\nform label {\r\n    display: block;\r\n}\r\n\r\nheader {\r\n    position: fixed;\r\n    padding: 0.5em;\r\n    top: 0;\r\n\r\n    text-align: center;\r\n\r\n    color: #333;\r\n    border: 0.1em solid #bbb;\r\n\r\n    /*background-image: url(./images/bgnoise_lg.png);*/\r\n}\r\n\r\nh1 {\r\n    margin: 0;\r\n}\r\n\r\nblockquote p {\r\n    padding: 1em;\r\n    background: rgba(255, 255, 0, 0.13);\r\n}\r\n\r\nheader .description {\r\n    color: #888;\r\n}\r\n\r\n.highlight {\r\n    background: rgb(255, 255, 175);\r\n}\r\n\r\n.sticky {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n}\r\n\r\n.github-fork-ribbon {\r\n    position: fixed;\r\n\r\n    letter-spacing: 0.01em;\r\n}\r\n\r\narticle {\r\n    display: block !important;\r\n\r\n    margin-top: 6em;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n\r\n    max-width: 768px;\r\n}\r\n\r\narticle section {\r\n    margin-bottom: 2em;\r\n}\r\n\r\narticle h2 {\r\n    margin-top: 2em;\r\n}\r\n\r\n.skylight-wrapper h2 {\r\n    margin-top: 0;\r\n}\r\n\r\ntextarea {\r\n    width: 100%;\r\n}\r\n\r\npre {\r\n    background: #fafefe;\r\n    padding: 0.5em;\r\n}\r\n\r\narticle .description {\r\n    margin: 1em;\r\n    padding: 1em;\r\n\r\n    max-width: 60em;\r\n\r\n    background: #fafafa;\r\n\r\n    border: 0.1em solid #eee;\r\n}\r\n\r\narticle .description h2 {\r\n    margin: 0;\r\n}\r\n\r\ntable {\r\n    width: 100%;\r\n}\r\n\r\n.demonstration tfoot {\r\n    background: #fafafa;\r\n}\r\n\r\n.controls {\r\n    overflow: auto;\r\n}\r\n.per-page-container {\r\n    margin: 1em;\r\n\r\n    float: left;\r\n}\r\n.search-container {\r\n    margin: 1em;\r\n\r\n    float: right;\r\n}\r\n\r\n.edit {\r\n    margin-right: 1em;\r\n}\r\n\r\n.cancel-button {\r\n    float: right;\r\n}\r\n\r\n.header-input {\r\n    float: left;\r\n    width: 100%;\r\n}\r\n", ""]);
 
 	// exports
 
@@ -24402,7 +24402,7 @@
 
 	        // var me = this;
 
-	        request.get('http://localhost:3000/subjects').set('Accept', 'application/json').accept('application/json').set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYyMzQ5OTQyLCJleHAiOjE0NjI0MzYzNDJ9.ipU6F7IrsvC8yU01ICTopiUCalcaFxTNT9D2002L06Q').use(nocache). // Prevents caching of *only* this request
+	        request.get('http://localhost:3000/subjects').set('Accept', 'application/json').accept('application/json').set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6InN0dWRlbnQiLCJpYXQiOjE0NjI3Njc4NzcsImV4cCI6MTQ2Mjg1NDI3N30.g8N_lFxc8QtFa4nHu8fU5gEyM57BgqjZMW9kVVbvtjg').use(nocache). // Prevents caching of *only* this request
 	        end(function (err, res) {
 	            if (!err) {
 
@@ -24418,7 +24418,7 @@
 	                    data.push(row);
 	                }
 
-	                console.log(data);
+	                console.log("data: " + data);
 	                // console.log(res.body);
 
 	                callback(data);

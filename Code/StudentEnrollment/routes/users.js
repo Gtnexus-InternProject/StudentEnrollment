@@ -42,7 +42,7 @@ router.route('/student').post(function(req, res) {
         Department = 1,
         registeredDate = req.body.registeredDate,
         profileImage = "testS";
-    // var subjects = req.body.subjects;
+    var subjects = req.body.subjects;
 
     //, subjects =  {moduleCode:req.body.subjects}
     //,subjects : subjects
@@ -65,7 +65,8 @@ router.route('/student').post(function(req, res) {
         zScore: zScore,
         Department: Department,
         registeredDate: registeredDate,
-        profileImage: profileImage
+        profileImage: profileImage,
+        subjects : subjects
     }, function(err, user) {
         if (err) {
             res.send("There was a problem adding the information to the database.");

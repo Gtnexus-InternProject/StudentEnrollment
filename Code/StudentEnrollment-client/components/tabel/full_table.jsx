@@ -44,7 +44,7 @@ module.exports = React.createClass({
         request.get('http://localhost:3000/subjects')
         .set('Accept', 'application/json')
         .accept('application/json')
-        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYyMzQ5OTQyLCJleHAiOjE0NjI0MzYzNDJ9.ipU6F7IrsvC8yU01ICTopiUCalcaFxTNT9D2002L06Q')
+        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6InN0dWRlbnQiLCJpYXQiOjE0NjI3Njc4NzcsImV4cCI6MTQ2Mjg1NDI3N30.g8N_lFxc8QtFa4nHu8fU5gEyM57BgqjZMW9kVVbvtjg')
         .use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
@@ -61,7 +61,7 @@ module.exports = React.createClass({
                     data.push(row);
                 }
 
-                console.log(data);
+                console.log("data: " + data);
                 // console.log(res.body);
 
                 callback(data);
@@ -314,6 +314,7 @@ module.exports = React.createClass({
                             <Paginator.Segment field="endPages"/>
 
                             <Paginator.Button page={pagination.page + 1}>Next</Paginator.Button>
+                            
                         </Paginator.Context>
                     </div>
                 </div>

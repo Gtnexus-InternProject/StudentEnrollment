@@ -28,7 +28,7 @@ module.exports = React.createClass({
                     <section className='demonstration'>
                         <FullTable />
                     </section>
-            //
+            
                 </article>
             </div>
         );
