@@ -28,58 +28,81 @@ var SectionWrapper = require('./section_wrapper.jsx');
 
 var highlight = require('./src/formatters/highlight');
 
-
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
-
-
 
 module.exports = React.createClass({
     displayName: 'FullTable',
 
-    fetchData: function(callback) {
+    // fetchData: function(callback) {
+    //
+    //     // var me = this;
+    //
+    //     request.get('http://localhost:3000/subjects/asa')
+    //     .set('Accept', 'application/json')
+    //     .accept('application/json')
+    //     .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYyOTY3MzAzLCJleHAiOjE0NjMwNTM3MDN9.doQCPHkb74UxyVVE1xQ44RMgR_7jdRdm1SXtaEy22As')
+    //     .use(nocache). // Prevents caching of *only* this request
+    //     end(function(err, res) {
+    //         if (!err) {
+    //
+    //             var jsonObj = JSON.parse(res.text).subjects;
+    //             // console.log("data: " + JSON.stringify(jsonObj));
+    //             var data = [];
+    //             for (var i = 0; i < jsonObj.length; i++) {
+    //               // console.log("data: " + jsonObj[i] );
+    //                 var row = {
+    //                     moduleCode: jsonObj[i].moduleCode,
+    //                     moduleName: jsonObj[i].moduleName,
+    //                     count: jsonObj[i].count,
+    //                     id: i
+    //                 };
+    //
+    //                 data.push(row);
+    //             }
+    //
+    //             console.log("data: " + data);
+    //             // console.log(res.body);
+    //
+    //             callback(data);
+    //
+    //         }else{
+    //           console.log(err);
+    //         }
+    //
+    //         // console.log(JSON.parse(res.text));
+    //     });
+    // },
+    // componentWillMount: function() {
+    //
+    //     this.fetchData(function(dataSe) {
+    //         this.setState({data: dataSe});
+    //         console.log(dataSe );
+    //     }.bind(this));
+    //     //var data = this.getData();
+    //
+    // },
 
-        // var me = this;
+    // componentWillMount: function() {
+    //
+    //     this.setState({data: this.props.data});
+    //     console.log("Check 3");
+    //     //var data = this.getData();
+    //
+    // },
+    //
+    // componentDidMount: function() {
+    //     this.setState({data: this.props.data});
+    //     console.log("Check 1");
+    //     // this.loadCommentsFromServer();
+    //     // setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+    // },
 
-        request.get('http://localhost:3000/subjects')
-        .set('Accept', 'application/json')
-        .accept('application/json')
-        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6InN0dWRlbnQiLCJpYXQiOjE0NjI3Njc4NzcsImV4cCI6MTQ2Mjg1NDI3N30.g8N_lFxc8QtFa4nHu8fU5gEyM57BgqjZMW9kVVbvtjg')
-        .use(nocache). // Prevents caching of *only* this request
-        end(function(err, res) {
-            if (!err) {
-
-                var jsonObj = JSON.parse(res.text);
-                var data = [];
-                for (var i = 0; i < jsonObj.length; i++) {
-                    var row = {
-                        moduleCode: jsonObj[i].moduleCode,
-                        moduleName: jsonObj[i].moduleName,
-                        id: i
-                    };
-
-                    data.push(row);
-                }
-
-                console.log("data: " + data);
-                // console.log(res.body);
-
-                callback(data);
-
-            }else{
-              console.log(err);
-            }
-
-            // console.log(JSON.parse(res.text));
-        });
-    },
-    componentWillMount: function() {
-
-        this.fetchData(function(dataSe) {
-            this.setState({data: dataSe});
-        }.bind(this));
-        //var data = this.getData();
-
+    componentWillReceiveProps: function(newProps) {
+        // you don't have to do this check first, but some times it helps prevent against an unneeded render.
+        if (newProps.data != this.state.data) {
+            this.setState({data: newProps.data});
+        }
     },
     getInitialState() {
         // var data = [];
@@ -94,13 +117,14 @@ module.exports = React.createClass({
                 type: 'string'
             }
         });
+        // var data = this.props.data;
         // var data = generateData({
         //     amount: 100,
         //     fieldGenerators: getFieldGenerators(countryValues),
         //     properties: properties,
         // });
         // data = attachIds(data);
-        // console.log(data);
+        // console.log("Test" + data);
         // var editable = cells.edit.bind(this, 'editedCell', (value, celldata, rowIndex, property) => {
         //     var idx = findIndex(this.state.data, {
         //         id: celldata[rowIndex].id,
@@ -124,7 +148,7 @@ module.exports = React.createClass({
         return {
 
             editedCell: null,
-            data: [],
+            data: null,
             search: {
                 column: '',
                 query: ''
@@ -149,9 +173,13 @@ module.exports = React.createClass({
                     header: 'Module Name',
                     cell: [highlighter('Module Name')]
                 }, {
+                    property: 'count',
+                    header: 'Student Count',
+                    cell: [highlighter('Student Count')]
+                }, {
                     cell: function(value, celldata, rowIndex) {
                         var idx = findIndex(this.state.data, {id: celldata[rowIndex].id});
-
+                        // console.log("IDX" + idx);
                         var edit = () => {
                             var schema = {
                                 type: 'object',
@@ -230,7 +258,7 @@ module.exports = React.createClass({
             search: search
         });
     },
-// <ColumnFilters columns={columns}/>
+    // <ColumnFilters columns={columns}/>
     columnFilters() {
         var headerConfig = this.state.header;
         var columns = this.state.columns;
@@ -245,12 +273,18 @@ module.exports = React.createClass({
 
     render() {
 
-// console.log("Test");
+        // console.log("Test");
+        // console.log(this.state.data);
         var columns = this.state.columns;
 
         var pagination = this.state.pagination;
-
-        var data = this.state.data;
+        // if(  this.props.data.length < 0 ) {
+        //   // this.setState({ data: this.props.data });
+        // }
+        // == []
+        //     ? this.state.data
+        //     : this.props.data
+        var data = this.state.data ;
 
         if (this.state.search.query) {
             data = Search.search(data, columns, this.state.search.column, this.state.search.query);
@@ -314,7 +348,7 @@ module.exports = React.createClass({
                             <Paginator.Segment field="endPages"/>
 
                             <Paginator.Button page={pagination.page + 1}>Next</Paginator.Button>
-                            
+
                         </Paginator.Context>
                     </div>
                 </div>

@@ -31,7 +31,7 @@ ReactDOM.render((
 
         </Route>
         <Route path="/admin" component={Admin} ></Route>
-        <Route path="/tabel" component={Tabel} ></Route>
+        <Route path="/tabel" component={Tabel.SubjectTabelAdmin} ></Route>
         <Route path="*" component={PageNotFound} />
     </Router>
 
