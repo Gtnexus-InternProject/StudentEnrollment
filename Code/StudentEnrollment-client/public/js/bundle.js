@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "dd35bf291f341699240f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "88c83f0605c2cc0da1f0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -6831,7 +6831,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\r\n    background: #fefefe;\r\n\r\n    font-family: Sans-Serif;\r\n\r\n    line-height: 1.5;\r\n}\r\n\r\nform label {\r\n    display: block;\r\n}\r\n\r\nheader {\r\n    position: fixed;\r\n    padding: 0.5em;\r\n    top: 0;\r\n\r\n    text-align: center;\r\n\r\n    color: #333;\r\n    border: 0.1em solid #bbb;\r\n\r\n    /*background-image: url(./images/bgnoise_lg.png);*/\r\n}\r\n\r\nh1 {\r\n    margin: 0;\r\n}\r\n\r\nblockquote p {\r\n    padding: 1em;\r\n    background: rgba(255, 255, 0, 0.13);\r\n}\r\n\r\nheader .description {\r\n    color: #888;\r\n}\r\n\r\n.highlight {\r\n    background: rgb(255, 255, 175);\r\n}\r\n\r\n.sticky {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n}\r\n\r\n.github-fork-ribbon {\r\n    position: fixed;\r\n\r\n    letter-spacing: 0.01em;\r\n}\r\n\r\narticle {\r\n    display: block !important;\r\n\r\n    margin-top: 6em;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n\r\n    max-width: 768px;\r\n}\r\n\r\narticle section {\r\n    margin-bottom: 2em;\r\n}\r\n\r\narticle h2 {\r\n    margin-top: 2em;\r\n}\r\n\r\n.skylight-wrapper h2 {\r\n    margin-top: 0;\r\n}\r\n\r\ntextarea {\r\n    width: 100%;\r\n}\r\n\r\npre {\r\n    background: #fafefe;\r\n    padding: 0.5em;\r\n}\r\n\r\narticle .description {\r\n    margin: 1em;\r\n    padding: 1em;\r\n\r\n    max-width: 60em;\r\n\r\n    background: #fafafa;\r\n\r\n    border: 0.1em solid #eee;\r\n}\r\n\r\narticle .description h2 {\r\n    margin: 0;\r\n}\r\n\r\ntable {\r\n    width: 100%;\r\n}\r\n\r\n.demonstration tfoot {\r\n    background: #fafafa;\r\n}\r\n\r\n.controls {\r\n    overflow: auto;\r\n}\r\n.per-page-container {\r\n    margin: 1em;\r\n\r\n    float: left;\r\n}\r\n.search-container {\r\n    margin: 1em;\r\n\r\n    float: right;\r\n}\r\n\r\n.edit {\r\n    margin-right: 1em;\r\n}\r\n\r\n.cancel-button {\r\n    float: right;\r\n}\r\n\r\n.header-input {\r\n    float: left;\r\n    width: 100%;\r\n}\r\n", ""]);
+	exports.push([module.id, "body {\r\n    background: #fefefe;\r\n\r\n    font-family: Sans-Serif;\r\n\r\n    line-height: 1.5;\r\n}\r\n\r\nform label {\r\n    display: block;\r\n}\r\n\r\nheader {\r\n    position: fixed;\r\n    padding: 0.5em;\r\n    top: 0;\r\n\r\n    text-align: center;\r\n\r\n    color: #333;\r\n    border: 0.1em solid #bbb;\r\n\r\n    /*background-image: url(./images/bgnoise_lg.png);*/\r\n}\r\n\r\nh1 {\r\n    margin: 0;\r\n}\r\n\r\nblockquote p {\r\n    padding: 1em;\r\n    background: rgba(255, 255, 0, 0.13);\r\n}\r\n\r\nheader .description {\r\n    color: #888;\r\n}\r\n\r\n.highlight {\r\n    background: rgb(255, 255, 175);\r\n}\r\n\r\n.sticky {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n}\r\n\r\n.github-fork-ribbon {\r\n    position: fixed;\r\n\r\n    letter-spacing: 0.01em;\r\n}\r\n\r\narticle {\r\n    display: block !important;\r\n\r\n    margin-top: 6em;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n\r\n    max-width: 768px;\r\n}\r\n\r\narticle section {\r\n    margin-bottom: 2em;\r\n}\r\n\r\narticle h2 {\r\n    margin-top: 2em;\r\n}\r\n\r\n.skylight-wrapper h2 {\r\n    margin-top: 0;\r\n}\r\n\r\ntextarea {\r\n    width: 100%;\r\n}\r\n\r\npre {\r\n    background: #fafefe;\r\n    padding: 0.5em;\r\n}\r\n\r\narticle .description {\r\n    margin: 1em;\r\n    padding: 1em;\r\n\r\n    max-width: 60em;\r\n\r\n    background: #fafafa;\r\n\r\n    border: 0.1em solid #eee;\r\n}\r\n\r\narticle .description h2 {\r\n    margin: 0;\r\n}\r\n\r\ntable {\r\n    width: 100%;\r\n}\r\n\r\n.demonstration tfoot {\r\n    background: #fafafa;\r\n}\r\n\r\n.controls {\r\n    overflow: auto;\r\n}\r\n.per-page-container {\r\n    margin: 1em;\r\n\r\n    float: left;\r\n}\r\n.search-container {\r\n    margin: 1em;\r\n\r\n    float: right;\r\n}\r\n\r\n.edit {\r\n    margin-right: 1em;\r\n}\r\n\r\n.cancel-button {\r\n    float: right;\r\n    margin-right: -130px;\r\n}\r\n\r\n.ok-button {\r\n    float: right;\r\n    margin-right: 140px;\r\n}\r\n\r\n.header-input {\r\n    float: left;\r\n    width: 100%;\r\n}\r\n", ""]);
 
 	// exports
 
@@ -6845,7 +6845,7 @@
 
 
 	// module
-	exports.push([module.id, ".skylight-dialog {\r\n    width: 50%;\r\n    height: 200px;\r\n    position: fixed;\r\n    top: 50%;\r\n    left: 50%;\r\n    margin-top: -200px;\r\n    margin-left: -25%;\r\n    background-color: #fff;\r\n    border-radius: 2px;\r\n    z-index: 100;\r\n    padding: 10px;\r\n    box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);\r\n}\r\n\r\n.skylight-dialog--close {\r\n    cursor: pointer;\r\n    float: right;\r\n    font-size: 1.6em;\r\n}\r\n\r\n.skylight-dialog__overlay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    z-index: 99;\r\n    background-color: rgba(0,0,0,0.3);\r\n}\r\n", ""]);
+	exports.push([module.id, ".skylight-dialog {\r\n    width: 30%;\r\n    height: 200px;\r\n    position: fixed;\r\n    top: 50%;\r\n    left: 50%;\r\n    margin-top: -200px;\r\n    margin-left: -25%;\r\n    background-color: #fff;\r\n    border-radius: 2px;\r\n    z-index: 100;\r\n    padding: 10px;\r\n    box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);\r\n}\r\n\r\n.skylight-dialog--close {\r\n    cursor: pointer;\r\n    float: right;\r\n    font-size: 1.6em;\r\n}\r\n\r\n.skylight-dialog__overlay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    z-index: 99;\r\n    background-color: rgba(0,0,0,0.3);\r\n}\r\n", ""]);
 
 	// exports
 
@@ -25400,12 +25400,28 @@
 	// import 'react-ghfork/gh-fork-ribbon.ie.css';
 	// import 'react-ghfork/gh-fork-ribbon.css';
 
+	// var highlight = require('./src/formatters/highlight');
 
 	var request = __webpack_require__(196);
 	var nocache = __webpack_require__(195);
 
 	module.exports.SubjectTabelAdmin = React.createClass({
 	    displayName: 'App',
+
+	    style: {
+	        width: '30%',
+	        height: '200px',
+	        position: 'fixed',
+	        top: '50%',
+	        left: '50%',
+	        marginTop: '-100px',
+	        marginLeft: '-15%',
+	        backgroundColor: '#fff',
+	        borderRadius: ' 2px',
+	        zIndex: '100',
+	        padding: '10px',
+	        boxShadow: '0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28)'
+	    },
 
 	    getInitialState: function getInitialState() {
 	        // var data = [];
@@ -25417,9 +25433,14 @@
 
 	        // var me = this;
 
-	        request.get('http://localhost:3000/subjects/asa').set('Accept', 'application/json').accept('application/json').set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYyOTY3MzAzLCJleHAiOjE0NjMwNTM3MDN9.doQCPHkb74UxyVVE1xQ44RMgR_7jdRdm1SXtaEy22As').use(nocache). // Prevents caching of *only* this request
+	        request.get('http://localhost:3000/subjects/asa').set('Accept', 'application/json').accept('application/json').set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0').use(nocache). // Prevents caching of *only* this request
 	        end(function (err, res) {
 	            if (!err) {
+
+	                if (res == null) {
+	                    console.log("Empty");
+	                    return;
+	                }
 
 	                var jsonObj = JSON.parse(res.text).subjects;
 	                // console.log("data: " + JSON.stringify(jsonObj));
@@ -25462,27 +25483,80 @@
 
 	        this.fetchData(function (dataSe) {
 	            this.setState({ data: dataSe });
-	            console.log(dataSe);
+	            // console.log(dataSe);
 	        }.bind(this));
-	        console.log("Check 2");
+	        // console.log("Check 2");
 	        //var data = this.getData();
 	    },
 
+	    submitSub: function submitSub(data) {
+	        request.put('http://localhost:3000/subjects/update/' + data.moduleCode).send(data).set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0').set('Accept', 'application/json').end(function (err, res) {
+	            if (err || !res.ok) {
+	                // alert('Oh no! error');
+	                console.log('Oh no! error' + err);
+	            } else {
+	                // alert('yay got ' + JSON.stringify(res.body));
+	                console.log('yay got ' + JSON.stringify(res.body));
+	            }
+	        });
+	    },
+
+	    reamoveSub: function reamoveSub(data) {
+	        request.put('http://localhost:3000/subjects/delete/' + data.moduleCode).set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0').set('Accept', 'application/json').end(function (err, res) {
+	            if (err || !res.ok) {
+	                // alert('Oh no! error');
+	                console.log('Oh no! error' + err);
+	            } else {
+	                // alert('yay got ' + JSON.stringify(res.body));
+	                console.log('yay got ' + JSON.stringify(res.body));
+	            }
+	        });
+	    },
+
 	    render: function render() {
-	        console.log("State Data " + this.state.data);
-	        return React.createElement(
-	            'div',
-	            { className: 'pure-g' },
-	            React.createElement(
-	                'article',
-	                { className: 'pure-u-1' },
-	                React.createElement(
-	                    'section',
-	                    { className: 'demonstration' },
-	                    React.createElement(FullTable, { data: this.state.data })
-	                )
-	            )
-	        );
+	        // console.log("State Data " + this.state.data);
+
+	        // var subjectCol = [
+	        //
+	        //   {
+	        //       property: 'moduleCode',
+	        //       header: "Module Code",
+	        //       cell: [highlighter('Module Code')]
+	        //   }, {
+	        //       property: 'moduleName',
+	        //       header: 'Module Name',
+	        //       cell: [highlighter('Module Name')]
+	        //   }, {
+	        //       property: 'count',
+	        //       header: 'Student Count',
+	        //       cell: [highlighter('Student Count')]
+	        //   }
+	        //
+	        //
+	        // ];
+
+	        var subjectCol = [{
+	            property: 'moduleCode',
+	            header: "Module Code"
+	        }, {
+	            property: 'moduleName',
+	            header: 'Module Name'
+	        }, {
+	            property: 'count',
+	            header: 'Student Count'
+	        }];
+
+	        // <div className='pure-g'>
+	        //
+	        //     <article className='pure-u-1'>
+	        //         <section className='demonstration'></section>
+	        //
+	        //
+	        //
+	        //     </article>
+	        // </div>
+
+	        return React.createElement(FullTable, { style: this.style, columns: subjectCol, remove: this.reamoveSub, submit: this.submitSub, data: this.state.data });
 	    }
 	});
 
@@ -25692,10 +25766,99 @@
 	            });
 	        };
 
+	        var rightCorner = [{
+	            cell: function (value, celldata, rowIndex) {
+	                var _this2 = this;
+
+	                var idx = findIndex(this.state.data, { id: celldata[rowIndex].id });
+	                // console.log("IDX" + idx);
+	                var edit = function edit() {
+	                    var schema = {
+	                        type: 'object',
+	                        properties: properties
+	                    };
+
+	                    var onSubmit = function onSubmit(editData, editValue) {
+	                        _this2.refs.modal.hide();
+
+	                        if (editValue === 'Cancel') {
+	                            return;
+	                        }
+	                        // console.log("State Data" + JSON.stringify(this.state.data[idx]) );
+	                        // console.log("Edit Data" + JSON.stringify(editData)  );
+	                        var updateData = {
+	                            moduleCode: editData.moduleCode,
+	                            moduleName: editData.moduleName
+
+	                        };
+
+	                        _this2.props.submit(updateData);
+	                        _this2.state.data[idx] = editData;
+
+	                        _this2.setState({ data: _this2.state.data });
+	                    };
+
+	                    var getButtons = function getButtons(submit) {
+	                        return React.createElement(
+	                            'span',
+	                            null,
+	                            React.createElement('input', { type: 'button', className: 'pure-button pure-button-primary ok-button', key: 'ok', value: 'OK', onClick: submit }),
+	                            React.createElement('input', { type: 'button', className: 'pure-button cancel-button', key: 'cancel', value: 'Cancel', onClick: submit })
+	                        );
+	                    };
+
+	                    _this2.setState({
+	                        modal: {
+	                            title: 'Edit',
+	                            content: React.createElement(Form, { className: 'pure-form pure-form-aligned', fieldWrapper: FieldWrapper, sectionWrapper: SectionWrapper, buttons: getButtons, schema: schema, validate: validate, values: _this2.state.data[idx], onSubmit: onSubmit })
+	                        }
+	                    });
+
+	                    _this2.refs.modal.show();
+	                };
+
+	                var remove = function remove() {
+	                    // this could go through flux etc.
+	                    var remove = _this2.state.data.splice(idx, 1);
+	                    console.log("Removed Data" + JSON.stringify(remove[0]));
+	                    _this2.props.remove(remove[0]);
+	                    _this2.setState({ data: _this2.state.data });
+	                };
+
+	                return { value: React.createElement(
+	                        'span',
+	                        null,
+	                        React.createElement(
+	                            'span',
+	                            { className: 'edit', onClick: edit.bind(this), style: {
+	                                    cursor: 'pointer'
+	                                } },
+	                            '⇙'
+	                        ),
+	                        React.createElement(
+	                            'span',
+	                            { className: 'remove', onClick: remove.bind(this), style: {
+	                                    cursor: 'pointer'
+	                                } },
+	                            '✗'
+	                        )
+	                    ) };
+	            }.bind(this)
+	        }];
+
+	        var columns = this.props.columns;
+
+	        columns = columns.map(function (col, index) {
+	            col.cell = [highlighter(col.header)];
+	            return col;
+	        });
+
+	        columns = columns.concat(rightCorner);
+
 	        return {
 
 	            editedCell: null,
-	            data: null,
+	            data: [],
 	            search: {
 	                column: '',
 	                query: ''
@@ -25710,95 +25873,14 @@
 	                className: cx(['header'])
 	            },
 	            sortingColumn: null, // reference to sorting column
-	            columns: [{
-	                property: 'moduleCode',
-	                header: "Module Code",
-	                cell: [highlighter('Module Code')]
-	            }, {
-	                property: 'moduleName',
-	                header: 'Module Name',
-	                cell: [highlighter('Module Name')]
-	            }, {
-	                property: 'count',
-	                header: 'Student Count',
-	                cell: [highlighter('Student Count')]
-	            }, {
-	                cell: function (value, celldata, rowIndex) {
-	                    var _this2 = this;
-
-	                    var idx = findIndex(this.state.data, { id: celldata[rowIndex].id });
-	                    console.log("IDX" + idx);
-	                    var edit = function edit() {
-	                        var schema = {
-	                            type: 'object',
-	                            properties: properties
-	                        };
-
-	                        var onSubmit = function onSubmit(editData, editValue) {
-	                            _this2.refs.modal.hide();
-
-	                            if (editValue === 'Cancel') {
-	                                return;
-	                            }
-
-	                            _this2.state.data[idx] = editData;
-
-	                            _this2.setState({ data: _this2.state.data });
-	                        };
-
-	                        var getButtons = function getButtons(submit) {
-	                            return React.createElement(
-	                                'span',
-	                                null,
-	                                React.createElement('input', { type: 'button', className: 'pure-button pure-button-primary ok-button', key: 'ok', value: 'OK', onClick: submit }),
-	                                React.createElement('input', { type: 'button', className: 'pure-button cancel-button', key: 'cancel', value: 'Cancel', onClick: submit })
-	                            );
-	                        };
-
-	                        _this2.setState({
-	                            modal: {
-	                                title: 'Edit',
-	                                content: React.createElement(Form, { className: 'pure-form pure-form-aligned', fieldWrapper: FieldWrapper, sectionWrapper: SectionWrapper, buttons: getButtons, schema: schema, validate: validate, values: _this2.state.data[idx], onSubmit: onSubmit })
-	                            }
-	                        });
-
-	                        _this2.refs.modal.show();
-	                    };
-
-	                    var remove = function remove() {
-	                        // this could go through flux etc.
-	                        _this2.state.data.splice(idx, 1);
-
-	                        _this2.setState({ data: _this2.state.data });
-	                    };
-
-	                    return { value: React.createElement(
-	                            'span',
-	                            null,
-	                            React.createElement(
-	                                'span',
-	                                { className: 'edit', onClick: edit.bind(this), style: {
-	                                        cursor: 'pointer'
-	                                    } },
-	                                '⇙'
-	                            ),
-	                            React.createElement(
-	                                'span',
-	                                { className: 'remove', onClick: remove.bind(this), style: {
-	                                        cursor: 'pointer'
-	                                    } },
-	                                '✗'
-	                            )
-	                        ) };
-	                }.bind(this)
-	            }],
+	            columns: columns,
 	            modal: {
 	                title: 'title',
 	                content: 'content'
 	            },
 	            pagination: {
 	                page: 1,
-	                perPage: 10
+	                perPage: 5
 	            }
 	        };
 	    },
@@ -25822,8 +25904,8 @@
 	    },
 	    render: function render() {
 
-	        console.log("Test");
-	        console.log(this.state.data);
+	        // console.log("Test");
+	        // console.log(this.state.data);
 	        var columns = this.state.columns;
 
 	        var pagination = this.state.pagination;
@@ -25856,6 +25938,8 @@
 	        //         <td></td>
 	        //     </tr>
 	        // </tfoot>
+
+	        var style = this.props.style;
 
 	        return React.createElement(
 	            'div',
@@ -25915,7 +25999,7 @@
 	            ),
 	            React.createElement(
 	                SkyLight,
-	                { ref: 'modal', title: this.state.modal.title },
+	                { dialogStyles: style, ref: 'modal', title: this.state.modal.title },
 	                this.state.modal.content
 	            )
 	        );

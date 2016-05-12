@@ -127,6 +127,12 @@ table {
 
 .cancel-button {
     float: right;
+    margin-right: -130px;
+}
+
+.ok-button {
+    float: right;
+    margin-right: 140px;
 }
 
 .header-input {

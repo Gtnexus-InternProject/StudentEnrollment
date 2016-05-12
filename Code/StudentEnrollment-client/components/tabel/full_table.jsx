@@ -145,10 +145,93 @@ module.exports = React.createClass({
             return Search.matches(column, value, this.state.search.query);
         });
 
+        var rightCorner = [ {
+            cell: function(value, celldata, rowIndex) {
+                var idx = findIndex(this.state.data, {id: celldata[rowIndex].id});
+                // console.log("IDX" + idx);
+                var edit = () => {
+                    var schema = {
+                        type: 'object',
+                        properties: properties
+                    };
+
+                    var onSubmit = (editData, editValue) => {
+                        this.refs.modal.hide();
+
+                        if (editValue === 'Cancel') {
+                            return;
+                        }
+                        // console.log("State Data" + JSON.stringify(this.state.data[idx]) );
+                        // console.log("Edit Data" + JSON.stringify(editData)  );
+                        var updateData = {
+                          moduleCode : editData.moduleCode,
+                          moduleName : editData.moduleName
+
+                        };
+
+                        this.props.submit(updateData);
+                        this.state.data[idx] = editData;
+
+                        this.setState({data: this.state.data});
+                    };
+
+                    var getButtons = (submit) => {
+                        return (
+                            <span>
+                                <input type='button' className='pure-button pure-button-primary ok-button' key='ok' value='OK' onClick={submit}/>
+                                <input type='button' className='pure-button cancel-button' key='cancel' value='Cancel' onClick={submit}/>
+                            </span>
+                        );
+                    };
+
+                    this.setState({
+                        modal: {
+                            title: 'Edit',
+                            content: <Form className='pure-form pure-form-aligned' fieldWrapper={FieldWrapper} sectionWrapper={SectionWrapper} buttons={getButtons} schema={schema} validate={validate} values={this.state.data[idx]} onSubmit={onSubmit}/>
+                        }
+                    });
+
+                    this.refs.modal.show();
+                };
+
+                var remove = () => {
+                    // this could go through flux etc.
+                    var remove = this.state.data.splice(idx, 1);
+                    console.log("Removed Data" + JSON.stringify(remove[0])  );
+                    this.props.remove(remove[0]);
+                    this.setState({data: this.state.data});
+                };
+
+                return {value: (
+                        <span>
+                            <span className='edit' onClick={edit.bind(this)} style={{
+                                cursor: 'pointer'
+                            }}>
+                                &#8665;
+                            </span>
+                            <span className='remove' onClick={remove.bind(this)} style={{
+                                cursor: 'pointer'
+                            }}>
+                                &#10007;
+                            </span>
+                        </span>
+                    )};
+            }.bind(this)
+        } ];
+
+        var columns = this.props.columns;
+
+        columns = columns.map(function(col, index){
+            col.cell = [highlighter(col.header)];
+            return col;
+        });
+
+        columns = columns.concat(rightCorner);
+
         return {
 
             editedCell: null,
-            data: null,
+            data: [],
             search: {
                 column: '',
                 query: ''
@@ -163,91 +246,14 @@ module.exports = React.createClass({
                 className: cx(['header'])
             },
             sortingColumn: null, // reference to sorting column
-            columns: [
-                {
-                    property: 'moduleCode',
-                    header: "Module Code",
-                    cell: [highlighter('Module Code')]
-                }, {
-                    property: 'moduleName',
-                    header: 'Module Name',
-                    cell: [highlighter('Module Name')]
-                }, {
-                    property: 'count',
-                    header: 'Student Count',
-                    cell: [highlighter('Student Count')]
-                }, {
-                    cell: function(value, celldata, rowIndex) {
-                        var idx = findIndex(this.state.data, {id: celldata[rowIndex].id});
-                        // console.log("IDX" + idx);
-                        var edit = () => {
-                            var schema = {
-                                type: 'object',
-                                properties: properties
-                            };
-
-                            var onSubmit = (editData, editValue) => {
-                                this.refs.modal.hide();
-
-                                if (editValue === 'Cancel') {
-                                    return;
-                                }
-
-                                this.state.data[idx] = editData;
-
-                                this.setState({data: this.state.data});
-                            };
-
-                            var getButtons = (submit) => {
-                                return (
-                                    <span>
-                                        <input type='button' className='pure-button pure-button-primary ok-button' key='ok' value='OK' onClick={submit}/>
-                                        <input type='button' className='pure-button cancel-button' key='cancel' value='Cancel' onClick={submit}/>
-                                    </span>
-                                );
-                            };
-
-                            this.setState({
-                                modal: {
-                                    title: 'Edit',
-                                    content: <Form className='pure-form pure-form-aligned' fieldWrapper={FieldWrapper} sectionWrapper={SectionWrapper} buttons={getButtons} schema={schema} validate={validate} values={this.state.data[idx]} onSubmit={onSubmit}/>
-                                }
-                            });
-
-                            this.refs.modal.show();
-                        };
-
-                        var remove = () => {
-                            // this could go through flux etc.
-                            this.state.data.splice(idx, 1);
-
-                            this.setState({data: this.state.data});
-                        };
-
-                        return {value: (
-                                <span>
-                                    <span className='edit' onClick={edit.bind(this)} style={{
-                                        cursor: 'pointer'
-                                    }}>
-                                        &#8665;
-                                    </span>
-                                    <span className='remove' onClick={remove.bind(this)} style={{
-                                        cursor: 'pointer'
-                                    }}>
-                                        &#10007;
-                                    </span>
-                                </span>
-                            )};
-                    }.bind(this)
-                }
-            ],
+            columns: columns,
             modal: {
                 title: 'title',
                 content: 'content'
             },
             pagination: {
                 page: 1,
-                perPage: 10
+                perPage:5
             }
         };
     },
@@ -310,6 +316,8 @@ module.exports = React.createClass({
         //     </tr>
         // </tfoot>
 
+        var style = this.props.style;
+
         return (
             <div>
                 <div className='controls'>
@@ -352,7 +360,7 @@ module.exports = React.createClass({
                         </Paginator.Context>
                     </div>
                 </div>
-                <SkyLight ref='modal' title={this.state.modal.title}>{this.state.modal.content}</SkyLight>
+                <SkyLight  dialogStyles={ style } ref='modal' title={this.state.modal.title}>{this.state.modal.content}</SkyLight>
             </div>
         );
     },
