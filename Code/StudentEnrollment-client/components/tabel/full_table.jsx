@@ -109,14 +109,7 @@ module.exports = React.createClass({
         // this.state.data = data;
 
         // var countryValues = countries.map((c) => c.value);
-        var properties = augmentWithTitles({
-            moduleCode: {
-                type: 'string'
-            },
-            moduleName: {
-                type: 'string'
-            }
-        });
+        var properties = augmentWithTitles( this.props.properties );
         // var data = this.props.data;
         // var data = generateData({
         //     amount: 100,
@@ -163,16 +156,17 @@ module.exports = React.createClass({
                         }
                         // console.log("State Data" + JSON.stringify(this.state.data[idx]) );
                         // console.log("Edit Data" + JSON.stringify(editData)  );
-                        var updateData = {
-                          moduleCode : editData.moduleCode,
-                          moduleName : editData.moduleName
+                        // var updateData = {
+                        //   moduleCode : editData.moduleCode,
+                        //   moduleName : editData.moduleName
+                        //
+                        // };
 
-                        };
 
-                        this.props.submit(updateData);
                         this.state.data[idx] = editData;
 
                         this.setState({data: this.state.data});
+                        this.props.submit(this.state.data[idx] );
                     };
 
                     var getButtons = (submit) => {

@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Hello from './components/hello.react';
-import Tabel from './components/tabel/App';
+
 import Admin from './components/admin.react';
 import {Router, Route, Link, browserHistory} from 'react-router';
 
@@ -31,7 +31,7 @@ ReactDOM.render((
 
         </Route>
         <Route path="/admin" component={Admin} ></Route>
-        <Route path="/tabel" component={Tabel.SubjectTabelAdmin} ></Route>
+
         <Route path="*" component={PageNotFound} />
     </Router>
 

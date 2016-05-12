@@ -40,7 +40,6 @@ module.exports = React.createClass({
     },
 
     getInitialState: function() {
-      // var data = [];
 
         return {data: []};
     },
@@ -49,7 +48,7 @@ module.exports = React.createClass({
 
         // var me = this;
 
-        request.get('http://localhost:3000/subjects/asa').set('Accept', 'application/json').accept('application/json').set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0').use(nocache). // Prevents caching of *only* this request
+        request.get('http://localhost:3000/users/student').set('Accept', 'application/json').accept('application/json').set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0').use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
 
@@ -57,16 +56,20 @@ module.exports = React.createClass({
                 console.log("Empty");
                 return;
               }
-
-                var jsonObj = JSON.parse(res.text).subjects;
-                // console.log("data: " + JSON.stringify(jsonObj));
+                  // console.log(res.body);
+                var jsonObj = res.body;
+                console.log("data: " + JSON.stringify(jsonObj));
                 var data = [];
                 for (var i = 0; i < jsonObj.length; i++) {
                     // console.log("data: " + jsonObj[i] );
+                    // jsonObj[i].subjects.forEach(function(entry) {
+                    //     console.log(entry);
+                    // });
+
                     var row = {
-                        moduleCode: jsonObj[i].moduleCode,
-                        moduleName: jsonObj[i].moduleName,
-                        count: jsonObj[i].count,
+                        userName: jsonObj[i].userName,
+                        Department: jsonObj[i].Department,
+                        subjects: jsonObj[i].subjects,
                         id: i
                     };
 
@@ -74,7 +77,7 @@ module.exports = React.createClass({
                 }
 
                 // console.log("data: " + data);
-                // console.log(res.body);
+
 
                 callback(data);
 
@@ -87,15 +90,6 @@ module.exports = React.createClass({
     },
 
 
-    // componentWillMount: function() {
-    //
-    //     this.fetchData(function(dataSe) {
-    //         this.setState({data: dataSe});
-    //         console.log(dataSe);
-    //     }.bind(this));
-    //     //var data = this.getData();
-    //
-    // },
 
     componentDidMount: function() {
 
@@ -110,7 +104,7 @@ module.exports = React.createClass({
 
     submitSub : function (data) {
       request
-          .put('http://localhost:3000/subjects/update/' + data.moduleCode)
+          .put('http://localhost:3000/users/student/' + data.userName)
           .send(data)
           .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0')
           .set('Accept', 'application/json')
@@ -127,7 +121,7 @@ module.exports = React.createClass({
 
     reamoveSub : function (data) {
       request
-          .put('http://localhost:3000/subjects/delete/' + data.moduleCode)
+          .delete('http://localhost:3000/users/student/' + data.userName)
           .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0')
           .set('Accept', 'application/json')
           .end(function(err, res){
@@ -142,61 +136,29 @@ module.exports = React.createClass({
     },
 
     render() {
-      // console.log("State Data " + this.state.data);
 
-      // var subjectCol = [
-      //
-      //   {
-      //       property: 'moduleCode',
-      //       header: "Module Code",
-      //       cell: [highlighter('Module Code')]
-      //   }, {
-      //       property: 'moduleName',
-      //       header: 'Module Name',
-      //       cell: [highlighter('Module Name')]
-      //   }, {
-      //       property: 'count',
-      //       header: 'Student Count',
-      //       cell: [highlighter('Student Count')]
-      //   }
-      //
-      //
-      // ];
 
 
       var subjectCol = [
 
         {
-            property: 'moduleCode',
-            header: "Module Code"
+            property: 'userName',
+            header: "User Name"
         }, {
-            property: 'moduleName',
-            header: 'Module Name'
-        }, {
-            property: 'count',
-            header: 'Student Count'
+            property: 'Department',
+            header: 'Department'
         }
 
       ];
 
       var properties = {
-          moduleCode: {
-              type: 'string'
-          },
-          moduleName: {
+
+          Department: {
               type: 'string'
           }
       };
 
-      // <div className='pure-g'>
-      //
-      //     <article className='pure-u-1'>
-      //         <section className='demonstration'></section>
-      //
-      //
-      //
-      //     </article>
-      // </div>
+
 
         return (
 
@@ -205,6 +167,3 @@ module.exports = React.createClass({
         );
     }
 });
-
-// module.exports = SubjectTabelAdmin;
-// module.exports = hello;
