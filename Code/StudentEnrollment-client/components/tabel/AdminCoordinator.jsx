@@ -21,16 +21,21 @@ import './skylight.css';
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
 
+import token from  '../../config';
+
+// var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMTE0MjcwLCJleHAiOjE0NjMyMDA2NzB9.X6DXvZ2sIMAogrhow7aaUXJEtFYFsLES5Cl7A0yNg3k';
+
+
 module.exports = React.createClass({
     displayName: 'App',
 
     style : {
       width: '30%',
-      height: '200px',
+      height: '320px',
       position: 'fixed',
       top: '50%',
       left: '50%',
-      marginTop: '-100px',
+      marginTop: '-160px',
       marginLeft: '-15%',
       backgroundColor: '#fff',
       borderRadius:' 2px',
@@ -48,7 +53,7 @@ module.exports = React.createClass({
 
         // var me = this;
 
-        request.get('http://localhost:3000/users/coordinator').set('Accept', 'application/json').accept('application/json').set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0').use(nocache). // Prevents caching of *only* this request
+        request.get('http://localhost:3000/users/coordinator').set('Accept', 'application/json').accept('application/json').set('x-access-token',token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
 
@@ -68,7 +73,11 @@ module.exports = React.createClass({
 
                     var row = {
                         userName: jsonObj[i].userName,
+                        firstName: jsonObj[i].firstName,
+                        lastName: jsonObj[i].lastName,
                         email: jsonObj[i].email,
+                        adddress: jsonObj[i].adddress,
+                        contactNumber: jsonObj[i].contactNumber,
                         subjects: jsonObj[i].subjects,
                         id: i
                     };
@@ -104,7 +113,7 @@ module.exports = React.createClass({
 
     submitSub : function (data) {
 
-      // data.subjects = 
+      // data.subjects =
 
       request
           .put('http://localhost:3000/users/coordinator/' + data.userName)
@@ -148,8 +157,20 @@ module.exports = React.createClass({
             property: 'userName',
             header: "User Name"
         }, {
+            property: 'firstName',
+            header: 'First Name'
+        }, {
+            property: 'lastName',
+            header: 'Last Name'
+        }, {
             property: 'email',
             header: 'Email'
+        }, {
+            property: 'adddress',
+            header: 'Adddress'
+        }, {
+            property: 'contactNumber',
+            header: 'Contact Number'
         }, {
             property: 'subjects',
             header: 'Subjects'
@@ -158,19 +179,34 @@ module.exports = React.createClass({
 
       ];
 
+
+
       var properties = {
 
           subjects: {
               type: 'string'
+          },
+          firstName: {
+              type: 'string'
+          },
+          lastName: {
+              type: 'string'
+          },
+          email: {
+              type: 'string'
+          },
+          contactNumber: {
+              type: 'number'
           }
       };
 
 
 
         return (
-
+          <div>
+            <h1> Coordinator List</h1>
             <FullTable properties={ properties } style={this.style} columns={ subjectCol } remove= {this.reamoveSub} submit={this.submitSub} data ={this.state.data}/>
-
+          </div>
         );
     }
 });

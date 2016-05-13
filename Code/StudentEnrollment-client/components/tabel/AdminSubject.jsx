@@ -21,16 +21,18 @@ import './skylight.css';
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
 
+import token from  '../../config';
+
 module.exports = React.createClass({
     displayName: 'App',
 
     style : {
       width: '30%',
-      height: '200px',
+      height: '300px',
       position: 'fixed',
       top: '50%',
       left: '50%',
-      marginTop: '-100px',
+      marginTop: '-130px',
       marginLeft: '-15%',
       backgroundColor: '#fff',
       borderRadius:' 2px',
@@ -49,7 +51,7 @@ module.exports = React.createClass({
 
         // var me = this;
 
-        request.get('http://localhost:3000/subjects/asa').set('Accept', 'application/json').accept('application/json').set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0').use(nocache). // Prevents caching of *only* this request
+        request.get('http://localhost:3000/subjects/asa').set('Accept', 'application/json').accept('application/json').set('x-access-token', token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
 
@@ -66,6 +68,9 @@ module.exports = React.createClass({
                     var row = {
                         moduleCode: jsonObj[i].moduleCode,
                         moduleName: jsonObj[i].moduleName,
+                        semester: jsonObj[i].semester,
+                        day: jsonObj[i].day,
+                        description: jsonObj[i].description,
                         count: jsonObj[i].count,
                         id: i
                     };
@@ -175,15 +180,31 @@ module.exports = React.createClass({
         }, {
             property: 'count',
             header: 'Student Count'
+        }, {
+            property: 'semester',
+            header: 'Semester'
+        }, {
+            property: 'day',
+            header: 'Day'
+        }, {
+            property: 'description',
+            header: 'Description'
         }
 
       ];
 
       var properties = {
-          moduleCode: {
+
+          moduleName: {
               type: 'string'
           },
-          moduleName: {
+          semester: {
+              type: 'string'
+          },
+          day: {
+              type: 'string'
+          },
+          description: {
               type: 'string'
           }
       };
@@ -199,9 +220,10 @@ module.exports = React.createClass({
       // </div>
 
         return (
-
+          <div>
+            <h1> Subject List</h1>
             <FullTable properties={ properties } style={this.style} columns={ subjectCol } remove= {this.reamoveSub} submit={this.submitSub} data ={this.state.data}/>
-
+          </div>
         );
     }
 });

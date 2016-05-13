@@ -512,7 +512,7 @@ router.route('/coordinator').post(function(req, res) {
 
 
 
-// Student API Get all the student in GET and add new Student in POST
+// Get all students
 router.route('/:type')
     //GET all blobs
     .get(function(req, res, next) {
@@ -532,7 +532,7 @@ router.route('/:type')
 
       }
 
-      
+
 
         //retrieve all blobs from Monogo
         mongoose.model(req.type).find({}, '-password' , function (err, users) {

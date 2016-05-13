@@ -21,16 +21,18 @@ import './skylight.css';
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
 
+import token from  '../../config';
+
 module.exports = React.createClass({
     displayName: 'App',
 
     style : {
       width: '30%',
-      height: '200px',
+      height: '330px',
       position: 'fixed',
       top: '50%',
       left: '50%',
-      marginTop: '-100px',
+      marginTop: '-160px',
       marginLeft: '-15%',
       backgroundColor: '#fff',
       borderRadius:' 2px',
@@ -48,7 +50,7 @@ module.exports = React.createClass({
 
         // var me = this;
 
-        request.get('http://localhost:3000/users/student').set('Accept', 'application/json').accept('application/json').set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0').use(nocache). // Prevents caching of *only* this request
+        request.get('http://localhost:3000/users/student').set('Accept', 'application/json').accept('application/json').set('x-access-token',token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
 
@@ -67,6 +69,12 @@ module.exports = React.createClass({
                     // });
 
                     var row = {
+
+                        firstName: jsonObj[i].firstName,
+                        lastName: jsonObj[i].lastName,
+                        email: jsonObj[i].email,
+                        adddress: jsonObj[i].adddress,
+                        contactNumber: jsonObj[i].contactNumber,
                         userName: jsonObj[i].userName,
                         Department: jsonObj[i].Department,
                         subjects: jsonObj[i].subjects,
@@ -145,6 +153,21 @@ module.exports = React.createClass({
             property: 'userName',
             header: "User Name"
         }, {
+            property: 'firstName',
+            header: 'First Name'
+        }, {
+            property: 'lastName',
+            header: 'Last Name'
+        }, {
+            property: 'email',
+            header: 'Email'
+        }, {
+            property: 'adddress',
+            header: 'Adddress'
+        }, {
+            property: 'contactNumber',
+            header: 'Contact Number'
+        }, {
             property: 'Department',
             header: 'Department'
         }
@@ -153,16 +176,32 @@ module.exports = React.createClass({
 
       var properties = {
 
+
+          firstName: {
+              type: 'string'
+          },
+          lastName: {
+              type: 'string'
+          },
+          email: {
+              type: 'string'
+          },
+          contactNumber: {
+              type: 'number'
+          },
           Department: {
               type: 'string'
           }
+
       };
 
 
 
         return (
-
+          <div>
+            <h1> Subject List</h1>
             <FullTable properties={ properties } style={this.style} columns={ subjectCol } remove= {this.reamoveSub} submit={this.submitSub} data ={this.state.data}/>
+          </div>
 
         );
     }
