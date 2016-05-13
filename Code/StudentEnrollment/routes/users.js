@@ -24,6 +24,87 @@ router.use(methodOverride(function(req, res) {
 
 
 
+var checkUserName = function(userName, res, cb) {
+    mongoose.model("admin").findOne({
+        userName: userName
+    }, function(err, admin) {
+
+        if (err) {
+            throw err;
+            // return false;
+            cb(false);
+        }
+        console.log(admin);
+        //No user admin
+        if (admin) {
+
+
+            res.json({
+                error: true,
+                message: 'User exist'
+            });
+
+            // return false;
+            cb(false);
+        } else {
+            mongoose.model("coordinator").findOne({
+                userName: userName
+            }, function(err, coordinator) {
+                console.log(coordinator);
+                if (err) {
+                    throw err;
+                    // return false;
+                    cb(false);
+                }
+                //No user student
+                if (coordinator) {
+
+
+                    res.json({
+                        error: true,
+                        message: 'User exist'
+                    });
+
+                    // return false;
+                    cb(false);
+                } else {
+                  // // return true;
+                  // cb(true);
+                    mongoose.model("student").findOne({
+                        userName: userName
+                    }, function(err, admin) {
+
+                        if (err) {
+                            throw err;
+                            // return false;
+                            cb(false);
+                        }
+                        //No user student
+                        if (admin) {
+
+
+                            res.json({
+                                error: true,
+                                message: 'User exist'
+                            });
+
+                            // return false;
+                            cb(false);
+                        } else {
+                          // return true;
+                          cb(true);
+                        }
+
+                    });
+                }
+
+            });
+        }
+
+    });
+}
+
+
 //Create a new student
 router.route('/student').post(function(req, res) {
     // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
@@ -42,46 +123,55 @@ router.route('/student').post(function(req, res) {
         Department = 1,
         registeredDate = req.body.registeredDate,
         profileImage = "testS";
-    // var subjects = req.body.subjects;
+    var subjects = req.body.subjects;
 
     //, subjects =  {moduleCode:req.body.subjects}
     //,subjects : subjects
     // profileImage = req.body.profileImage,
+    // console.log(checkUserName(userName, res));
+    checkUserName(userName, res, function (availability) {
+      if(availability){
+
+        //call the create function for our database
+        mongoose.model('student').create({
+
+            userName: userName,
+            firstName: firstName,
+            password: password,
+            email: email,
+            adddress: adddress,
+            contactNumber: contactNumber,
+            lastName: lastName,
+            dob: dob,
+            gender: gender,
+            alStream: alStream,
+            zScore: zScore,
+            Department: Department,
+            registeredDate: registeredDate,
+            profileImage: profileImage,
+            subjects : subjects
+        }, function(err, user) {
+            if (err) {
+                res.send("There was a problem adding the information to the database.");
+                console.log(err);
+            } else {
+                //Blob has been created
+                console.log('POST creating new blob: ' + user);
+                res.format({
+
+                    //JSON response will show the newly created blob
+                    json: function() {
+                        res.json(user);
+                    }
+                });
+            }
+        });
 
 
-    //call the create function for our database
-    mongoose.model('student').create({
+      }else{ return; }
+    });
 
-        userName: userName,
-        firstName: firstName,
-        password: password,
-        email: email,
-        adddress: adddress,
-        contactNumber: contactNumber,
-        lastName: lastName,
-        dob: dob,
-        gender: gender,
-        alStream: alStream,
-        zScore: zScore,
-        Department: Department,
-        registeredDate: registeredDate,
-        profileImage: profileImage
-    }, function(err, user) {
-        if (err) {
-            res.send("There was a problem adding the information to the database.");
-            console.log(err);
-        } else {
-            //Blob has been created
-            console.log('POST creating new blob: ' + user);
-            res.format({
 
-                //JSON response will show the newly created blob
-                json: function() {
-                    res.json(user);
-                }
-            });
-        }
-    })
 });
 
 
@@ -119,75 +209,136 @@ router.param('type', function(req, res, next, type) {
 });
 
 
-// route to authenticate a user (POST http://localhost:8080/api/authenticate)
-router.post('/:type/authenticate', function(req, res) {
-    
-    // router.get('/:type/authenticate/:userName/:password', function(req, res) {
- console.log(req.params);
-    // find the user
-    mongoose.model(req.type).findOne({
-        userName: req.body.userName
-    }, function(err, user) {
-        console.log("username is "+req.params.userName);
+// authenticate password
+var passwordAuthintacte = function(user, password, res) {
+    console.log(user);
+    if (user) {
 
-        if (err) throw err;
+        //// check if password matches
+        //user.verifyPassword(req.body.password, function (err, isMatch) {
+        //  if(isMatch && !err){
+        //    // if user is found and password is right
+        //    // create a token
+        //    var token = jwt.sign(user, config.secret, {
+        //      expiresInMinutes: 1 // expires in 24 hours (in Mini)
+        //    });
+        //
+        //    // return the information including token as JSON
+        //    res.json({
+        //      success: true,
+        //      message: 'Enjoy your token!',
+        //      token: token
+        //    });
+        //  }else{
+        //    res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+        //  }
+        //});
 
-        if (!user) {
+        if (user.password == password) {
+            //console.log(user.__t);
+            var claims = {
+                userName: user.userName,
+                type: user.__t || 'student'
+            };
+
+            var token = jwt.sign(claims, config.secret, {
+                expiresInMinutes: 1440 // expires in 24 hours (in Mini)
+            });
+
+            res.json({
+                success: true,
+                message: 'Enjoy your token!',
+                token: token
+            });
+        } else {
             res.json({
                 success: false,
-                message: 'Authentication failed. User not found.'
+                message: 'Authentication failed. Wrong password.'
             });
-        } else if (user) {
-
-            //// check if password matches
-            //user.verifyPassword(req.body.password, function (err, isMatch) {
-            //  if(isMatch && !err){
-            //    // if user is found and password is right
-            //    // create a token
-            //    var token = jwt.sign(user, config.secret, {
-            //      expiresInMinutes: 1 // expires in 24 hours (in Mini)
-            //    });
-            //
-            //    // return the information including token as JSON
-            //    res.json({
-            //      success: true,
-            //      message: 'Enjoy your token!',
-            //      token: token
-            //    });
-            //  }else{
-            //    res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-            //  }
-            //});
-
-            if (user.password == req.body.password) {
-                //console.log(user.__t);
-                var claims = {
-                    userName: user.userName,
-                    type: user.__t || 'student'
-                };
-
-                var token = jwt.sign(claims, config.secret, {
-                    expiresInMinutes: 1440 // expires in 24 hours (in Mini)
-                });
-                     console.log("token is"+token);
-                  
-                res.json({
-                    success: true,
-                    message: 'Enjoy your token!',
-                    token: token
-                                 });
-            } else {
-                res.json({
-                    success: false,
-                    message: 'Authentication failed. Wrong password.'
-                });
-            }
-
-
         }
 
+
+    }
+}
+
+// route to authenticate a user (POST http://localhost:8080/api/authenticate)
+router.post('/authenticate', function(req, res) {
+
+
+
+    // find the admin
+    mongoose.model("admin").findOne({
+        userName: req.body.userName
+    }, function(err, admin) {
+
+        if (err) {
+            throw err;
+            return;
+        }
+
+        if (!admin) {
+
+            // find the coordinator
+            mongoose.model("coordinator").findOne({
+                userName: req.body.userName
+            }, function(err, coordinator) {
+                console.log(coordinator);
+                if (err) {
+                    throw err;
+                    return;
+                }
+
+                if (!coordinator) {
+                    // find the student
+                    mongoose.model("student").findOne({
+                        userName: req.body.userName
+                    }, function(err, student) {
+
+                        if (err) {
+                            throw err;
+                            return;
+                        }
+                        //No user student
+                        if (!student) {
+
+
+                            res.json({
+                                success: false,
+                                message: 'Authentication failed. User not found.'
+                            });
+
+                            return;
+                        } else {
+                            passwordAuthintacte(student, req.body.password, res);
+                        }
+
+                    });
+
+                    // res.json({
+                    //     success: false,
+                    //     message: 'Authentication failed. User not found.'
+                    // });
+                } else {
+                    passwordAuthintacte(coordinator, req.body.password, res);
+                }
+
+            });
+
+            // res.json({
+            //     success: false,
+            //     message: 'Authentication failed. User not found.'
+            // });
+        } else {
+            passwordAuthintacte(admin, req.body.password, res);
+        }
+
+
     });
+
+
 });
+
+
 
 // route middleware to validate :username
 router.param('userName', function(req, res, next, userName) {
@@ -279,40 +430,40 @@ router.route('/:type/:userName/rfidvalidate/:rfid')
 
 
 
-// // route middleware to verify a token
-// router.use(function(req, res, next) {
+// route middleware to verify a token
+router.use(function(req, res, next) {
 
-//     // check header or url parameters or post parameters for token
-//     var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    // check header or url parameters or post parameters for token
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-//     // decode token
-//     if (token) {
+    // decode token
+    if (token) {
 
-//         // verifies secret and checks exp
-//         jwt.verify(token, config.secret, function(err, decoded) {
-//             if (err) {
-//                 return res.json({
-//                     success: false,
-//                     message: 'Failed to authenticate token.'
-//                 });
-//             } else {
-//                 // if everything is good, save to request for use in other routes
-//                 req.decoded = decoded;
-//                 next();
-//             }
-//         });
+        // verifies secret and checks exp
+        jwt.verify(token, config.secret, function(err, decoded) {
+            if (err) {
+                return res.json({
+                    success: false,
+                    message: 'Failed to authenticate token.'
+                });
+            } else {
+                // if everything is good, save to request for use in other routes
+                req.decoded = decoded;
+                next();
+            }
+        });
 
-//     } else {
+    } else {
 
-//         // if there is no token
-//         // return an error
-//         return res.status(403).send({
-//             success: false,
-//             message: 'No token provided.'
-//         });
+        // if there is no token
+        // return an error
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided.'
+        });
 
-//     }
-// });
+    }
+});
 
 
 //Create a new coordinator
@@ -331,6 +482,10 @@ router.route('/coordinator').post(function(req, res) {
             }
         });
 
+    }
+
+    if( !checkUserName(userName, res)){
+      return;
     }
 
     //call the create function for our database
@@ -357,27 +512,45 @@ router.route('/coordinator').post(function(req, res) {
 
 
 
-// // Student API Get all the student in GET and add new Student in POST
-// router.route('/:type')
-//     //GET all blobs
-//     .get(function(req, res, next) {
-//
-//         //retrieve all blobs from Monogo
-//         mongoose.model(req.type).find({}, function (err, users) {
-//               if (err) {
-//                   return console.error(err);
-//               } else {
-//                   //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
-//                   res.format({
-//
-//                     //JSON response will show all blobs in JSON format
-//                     json: function(){
-//                         res.json(users);
-//                     }
-//                 });
-//               }
-//         });
-//     });
+// Get all students
+router.route('/:type')
+    //GET all blobs
+    .get(function(req, res, next) {
+
+      if (req.decoded.type != 'admin') {
+          return res.format({
+
+
+              json: function() {
+
+                  res.status(403).json({
+                      success: false,
+                      message: 'You don\'t have privilages to access '
+                  });
+              }
+          });
+
+      }
+
+
+
+        //retrieve all blobs from Monogo
+        mongoose.model(req.type).find({}, '-password' , function (err, users) {
+              if (err) {
+                  return console.error(err);
+              } else {
+                console.log(JSON.stringify(users));
+                  //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+                  res.format({
+
+                    //JSON response will show all blobs in JSON format
+                    json: function(){
+                        res.json(users);
+                    }
+                });
+              }
+        });
+    });
 
 
 
@@ -773,5 +946,12 @@ router.delete('/student/:userName/subjects', function(req, res) {
 //   });
 // });
 
+// catch 404 and forward to error handler
+router.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  // next(err);
+  next(err);
+});
 
 module.exports = router;

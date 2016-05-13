@@ -26,6 +26,7 @@ module.exports = React.createClass({
         request
             .get('http://localhost:3000/users/student/'+ userName )
             .set('Accept', 'application/json')
+            .set('x-access-token', this.props.token)
             .end(function (err, res) {
                 if (err) {
                     alert('error' + err);
@@ -52,7 +53,7 @@ module.exports = React.createClass({
         <div>
             <Panel  bsStyle="danger">
                 <Col md={12} >
-                <Image  src="img/pro.PNG" circle/>
+                <Image  src="http://localhost:5000/img/pro.PNG" circle/>
                 </Col><Col md={12} >
                 <h3 ><strong>{this.state.firstName} {this.state.lastName}</strong> </h3>
                 </Col> <Col md={12} >
