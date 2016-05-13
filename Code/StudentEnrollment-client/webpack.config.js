@@ -35,6 +35,15 @@ module.exports = {
             // ,
             // test: /(\.jsx|\.js)$/,
             {
+                test: /\.png$/,
+                loaders: ['url?limit=100000&mimetype=image/png'],
+                include:  path.join(__dirname, 'components')
+            },
+            {
+                test: /\.css$/,
+                loaders: ['style', 'css']
+            },
+            {
                 test:  /\.jsx?$/,
                 loaders:  ['react-hot' , 'babel-loader'],
                 exclude: /(node_modules)/
@@ -44,6 +53,12 @@ module.exports = {
                 //     presets: ['es2015', 'react', 'stage-0']
                 // }
                 // ,query: {presets: ['es2015', 'react'] }
+            },
+            {
+                test:  /\.js?$/,
+                loaders:   ['babel-loader'],
+                exclude: /(node_modules)/ ,
+                include:  path.join(__dirname, 'components')
             }
 
         ]

@@ -33,7 +33,7 @@ var admin = userSchema.extend({
   * 1 :- accepted
   **/
 var subjectsChild = mongoose.Schema({
-  moduleCode : { type: String, required: true, unique: true},
+  moduleCode : { type: String, required: true},
   state : {type:Number, default:0}
 }, { _id: false});
 
