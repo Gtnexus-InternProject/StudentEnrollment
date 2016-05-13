@@ -46,7 +46,7 @@ module.exports = React.createClass({
                         firstName: res.body.firstName,
                         lastName: res.body.lastName,
                         email: res.body.email,
-                        address: res.body.address,
+                        address: res.body.adddress,
                         zScore: res.body.zScore,
                         alStream: res.body.alStream,
                         telephone: res.body.telephone,

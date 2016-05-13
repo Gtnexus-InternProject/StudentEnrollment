@@ -87,22 +87,30 @@ module.exports = React.createClass({
             this.setState({telephone: event.target.value});
 
         },
+        handleChangeGender(event){
+            this.setState({gender: event.target.value});
+        },
+        handleChangeALStream(event){
+            this.setState({alStream: event.target.value});
+        },
+
         handleSubmit(data) {
             alert('ggg');
             data.preventDefault();
+
             var formR = {
                 userName: this.state.userName.trim(),
                 password: this.state.password.trim(),
                 email: this.state.email.trim(),
                 firstName: this.state.firstName.trim(),
                 lastName: this.state.lastName.trim(),
-                gender: this.state.gender.trim(),
+                gender: this.state.gender.trim() == '1' ? "Male" : "Female",
                 alStream: this.state.alStream.trim(),
-                address: this.state.address.trim(),
-                telephone: this.state.telephone.trim(),
+                adddress: this.state.address.trim(),
+                contactNumber: this.state.telephone.trim(),
                 zScore: this.state.zScore.trim()
-            }
-
+            };
+alert(JSON.stringify(formR));
             request.post('http://localhost:3000/users/student')
                 .set('Accept', 'application/json')
                 .set('Content-Type', 'application/json')
