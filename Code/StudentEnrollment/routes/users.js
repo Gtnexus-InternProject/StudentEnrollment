@@ -248,6 +248,7 @@ var passwordAuthintacte = function(user, password, res) {
             res.json({
                 success: true,
                 message: 'Enjoy your token!',
+                type : user.__t || 'student',
                 token: token
             });
         } else {

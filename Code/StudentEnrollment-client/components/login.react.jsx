@@ -57,13 +57,18 @@ module.exports = React.createClass({
                     var token = (res.body.token);
 
                     if (token) {
-                        alert('token is - ' + (token));
-                        browserHistory.push('/home/'+formL.userName+ '/' +token);
+                        if(res.body.type == 'student') {
+                            alert('token is - ' + (token));
+                            browserHistory.push('/home/' + formL.userName + '/' + token);
+                        }else if(res.body.type == 'admin'){
+                            alert('token is - ' + (token));
+                            browserHistory.push('/admin');
+                        }
 
                     }
                     else {
                         alert("wrong username or password");
-
+                        browserHistory.push('/login');
                         //res.send
                     }
                 }
