@@ -23,7 +23,6 @@ router.get('/', function(req, res, next) {
     // res.render('index', {
     //     markup: markup
     // });
-
     res.sendFile(path.join(__dirname + '/index.html'));
 
 });

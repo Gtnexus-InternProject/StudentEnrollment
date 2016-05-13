@@ -8,16 +8,9 @@ import Hello from './components/hello.react';
 import Home from './components/home.react';
 import Login from './components/login.react';
 import Register from './components/registerPanel.react';
-import {Router, Route, Link, browserHistory} from 'react-router';
 
-// var React = require('react');
-// var Hello = require('./components/hello.react');
-// var ReactDOM = require('react-dom');
-//
-//ReactDOM.render(
-//  <Login />,
-//  document.getElementById('react-app')
-//);
+import Tab from './components/tabs';
+import {Router, Route, Link, browserHistory} from 'react-router';
 
 
 class PageNotFound extends React.Component {
@@ -31,16 +24,15 @@ class PageNotFound extends React.Component {
         )
     }
 }
-
-
 ReactDOM.render((
     <Router history={browserHistory}>
-        <Route path="/" component={Home}>
-        <Route path="ab" component={PageNotFound}/>
+        <Route path="/" component={Login}>
+            <Route path="ab" component={PageNotFound}/>
         </Route>
-        <Route path="/hello" component={Hello}></Route>
-        <Route path="/register" component={Register}></Route>
+        <Route path="/tab" component={Tab}></Route>
+        <Route path="/home/:userName" component={Home}></Route>
         <Route path="/login" component={Login}></Route>
+        <Route path="/register" component={Register}></Route>
         <Route path="*" component={PageNotFound}/>
     </Router>
 ), document.getElementById('react-app'));

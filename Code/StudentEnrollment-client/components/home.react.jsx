@@ -2,31 +2,38 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 // var React = require('react'),
 // ReactDOMServer = require('react-dom/server');
-import Hello from './hello.react'
-import Register from './registerPanel.react'
+
 import Header from './header.react'
+import Tab from './tabs'
+import Profile from './profileView.react'
 import {Col} from 'react-bootstrap'
 
 module.exports = React.createClass({
-  // Render the component
-  render: function () {
+    getInitialState() {
+        return ({
+        userName:this.props.params.userName
+        });
+    },
+
+
+// Render the component
+render()
+{
 
     return (
-
-      <div>
-        <Col md={12}>{this.props.children || <Header />}</Col>
-        <Col md={2}>
-
-          {this.props.children || <Hello />}
-        </Col>
-        <Col md={10}>
-          {this.props.children || <Register />}
-        </Col>
-      </div>
+        <div>
+            <Col md={12}>
+                {  <Header userName={this.state.userName} /> || this.props.children}
+            </Col>
+            <Col md={3}>
+                {  <Profile userName={this.state.userName} /> || this.props.children}
+            </Col>
+            <Col md={9}>
+                { <Tab userName={this.state.userName} /> || this.props.children}
+            </Col>
+        </div>
 
     );
-
-  }
-
+}
 });
 

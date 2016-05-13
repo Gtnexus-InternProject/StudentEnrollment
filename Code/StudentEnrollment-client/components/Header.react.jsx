@@ -18,7 +18,7 @@ import {Link} from 'react-router'
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Navbar.Text>
-                        Signed in as: <Navbar.Link href="#">Mark Otto</Navbar.Link>
+                        Signed in as: <Navbar.Link href="#">{this.props.userName}</Navbar.Link>
                     </Navbar.Text>
                     <Navbar.Text  pullRight>
                     <Navbar.Link >

@@ -7,77 +7,68 @@ var React = require('react'),
 
 import StyleSheet from 'react-stylesheet';
 import request from 'superagent';
-import Alert from './alert.react';
+
 
 import {Router, Route, Link, browserHistory} from 'react-router';
 
 import {Grid,Row,Carousel,Panel,Col,Form ,FormControl,FormGroup,ControlLabel,HelpBlock,Checkbox,Radio,Button,PageHeader} from 'react-bootstrap';
 
-//const styless = StyleSheet.createStyleSheet({
-//    base: {
-//        width: 1366,
-//        height: 768,
-//        }
-//});
 const title = (
     <h2>Login</h2>
 );
 module.exports = React.createClass({
 
     getInitialState() {
-        return {userName: '',password:''};
+        return {userName: '', password: ''};
     },
 
-    handleChangeUserName: function(event) {
+    handleChangeUserName: function (event) {
         this.setState({userName: event.target.value});
     },
 
-    handleChangePassword: function(event) {
+    handleChangePassword: function (event) {
 
         this.setState({password: event.target.value});
 
     },
     contextTypes: {
-    router: React.PropTypes.object.isRequired
-  },
+        router: React.PropTypes.object.isRequired
+    },
 
     handleSubmit(data){
-        alert('ggg');
+        //alert('ggg');
         data.preventDefault();
-        var formL={
-            userName:this.state.userName.trim(),
-            password:this.state.password.trim(),
+        var formL = {
+            userName: this.state.userName.trim(),
+            password: this.state.password.trim(),
         }
-        //console.log(formL.userName);
-        //request.get('http://localhost:3000/users/student/authenticate/'+formL.userName+'/'+formL.password)
+
         request.post('http://localhost:3000/users/student/authenticate')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .send(formL)
 
             .withCredentials()
-            .end(function(err, res){
+            .end(function (err, res) {
                 if (err || !res.ok) {
                     alert('Oh no! error');
                     console.log(err);
                 } else {
-                    var token=(res.body.token);
+                    var token = (res.body.token);
 
-                    if(token){
+                    if (token) {
                         alert('token is - ' + (token));
-                        browserHistory.push('/hello');
-                        // return <Link to="/hello" />;
-                    }
-                    else{
+                        browserHistory.push('/home/'+formL.userName);
 
+                    }
+                    else {
                         alert("wrong username or password");
 
-                    //res.send
-
-                }}})
-              },
-
-
+                        //res.send
+                    }
+                }
+            })
+    },
     render(){
 
 
@@ -85,19 +76,19 @@ module.exports = React.createClass({
 
             <Carousel>
                 <Carousel.Item>
-                    <img  width= {1366} height= {768} alt="900x500" src="img/Hydrangeas.jpg"/>
+                    <img width={1366} height={768} alt="900x500" src="img/Hydrangeas.jpg"/>
                     <Carousel.Caption>
 
                     </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
-                    <img width={1366} height= {768} alt="900x500" src="img/Penguins.jpg"/>
+                    <img width={1366} height={768} alt="900x500" src="img/Penguins.jpg"/>
                     <Carousel.Caption>
 
                     </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
-                    <img width={1366} height= {768} alt="900x500" src="img/Tulips.jpg"/>
+                    <img width={1366} height={768} alt="900x500" src="img/Tulips.jpg"/>
 
                     <Carousel.Caption>
 
@@ -146,8 +137,8 @@ module.exports = React.createClass({
                                             <Checkbox>Remember me</Checkbox>
                                         </Col>
                                         <Col smOffset={1} sm={3}>
-                                        <h6><Link to="/register">Register now </Link></h6>
-                                    </Col>
+                                            <h6><Link to="/register">Register now </Link></h6>
+                                        </Col>
                                     </FormGroup>
 
                                     <FormGroup>
@@ -156,13 +147,9 @@ module.exports = React.createClass({
                                                 Sign in
                                             </Button>
                                         </Col>
-                                </FormGroup>
-
-
-                            </Form>
-
-
-                        </Panel>
+                                    </FormGroup>
+                                </Form>
+                            </Panel>
                         </Col>
                         <Col xs={6} md={3}></Col>
                     </Row></Grid>
