@@ -15,14 +15,3 @@ module.exports = React.createClass({
   }
 
 });
-
-
-// module.exports = React.createClass({
-//   displayName: 'Hello',
-//       render() {
-//           return (
-//                     <h1> Hello   </h1>
-//                  );
-//       },
-//
-// });
