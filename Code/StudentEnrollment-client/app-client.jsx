@@ -10,10 +10,14 @@ import Login from './components/login.react';
 import Register from './components/registerPanel.react';
 
 import Tab from './components/tabs';
+
+import Admin from './components/admin.react';
+
 import {Router, Route, Link, browserHistory} from 'react-router';
 
 
 class PageNotFound extends React.Component {
+
     render() {
         return (
             <div>
@@ -29,6 +33,7 @@ ReactDOM.render((
         <Route path="/" component={Login}>
             <Route path="ab" component={PageNotFound}/>
         </Route>
+        <Route path="/admin" component={Admin} ></Route>
         <Route path="/tab" component={Tab}></Route>
         <Route path="/home/:userName/:token" component={Home}></Route>
         <Route path="/login" component={Login}></Route>
