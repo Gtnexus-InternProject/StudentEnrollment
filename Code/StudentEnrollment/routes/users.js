@@ -512,45 +512,27 @@ router.route('/coordinator').post(function(req, res) {
 
 
 
-// Get all students
-router.route('/:type')
-    //GET all blobs
-    .get(function(req, res, next) {
-
-      if (req.decoded.type != 'admin') {
-          return res.format({
-
-
-              json: function() {
-
-                  res.status(403).json({
-                      success: false,
-                      message: 'You don\'t have privilages to access '
-                  });
-              }
-          });
-
-      }
-
-
-
-        //retrieve all blobs from Monogo
-        mongoose.model(req.type).find({}, '-password' , function (err, users) {
-              if (err) {
-                  return console.error(err);
-              } else {
-                console.log(JSON.stringify(users));
-                  //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
-                  res.format({
-
-                    //JSON response will show all blobs in JSON format
-                    json: function(){
-                        res.json(users);
-                    }
-                });
-              }
-        });
-    });
+// // Student API Get all the student in GET and add new Student in POST
+// router.route('/:type')
+//     //GET all blobs
+//     .get(function(req, res, next) {
+//
+//         //retrieve all blobs from Monogo
+//         mongoose.model(req.type).find({}, function (err, users) {
+//               if (err) {
+//                   return console.error(err);
+//               } else {
+//                   //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+//                   res.format({
+//
+//                     //JSON response will show all blobs in JSON format
+//                     json: function(){
+//                         res.json(users);
+//                     }
+//                 });
+//               }
+//         });
+//     });
 
 
 
@@ -618,7 +600,7 @@ router.get('/:id/edit', function(req, res) {
 
 
 
-// Get Subjects Per Student
+// Get Subjects Per Student/coordinator
 router.route('/:type/:userName/subjects')
     .get(function(req, res) {
 
@@ -631,18 +613,25 @@ router.route('/:type/:userName/subjects')
 
         mongoose.model(req.type).findOne({
             userName: req.userName
-        }, 'subjects', function(err, subjects) {
+        }, 'subjects.moduleCode', function(err, subjects) {
             // console.log('ID: ' + req.params.id);
             if (err || subjects == null) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
 
-                console.log('GET Retrieving Subject ID: ' + subjects.subjects);
-                mongoose.model("subject").find({
+              var subjectCodeArray = [];
+
+              subjects.subjects.map(function (subject, index) {
+                subjectCodeArray.push(subject.moduleCode);
+              })
+
+                console.log('Check Codes: ' + subjectCodeArray);
+                console.log('GET Retrieving Subject ID: ' + subjects);
+                mongoose.model("subject_model").find({
                     moduleCode: {
-                        $in: subjects.subjects
+                        $in: subjectCodeArray
                     }
-                }, function(err, subject) {
+                }, 'moduleCode', function(err, subject) {
                     if (err || subjects == null) {
                         console.log('GET Error: There was a problem retrieving: ' + err);
                     } else {

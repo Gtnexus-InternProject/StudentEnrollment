@@ -28,8 +28,8 @@ var SectionWrapper = require('./section_wrapper.jsx');
 
 var highlight = require('./src/formatters/highlight');
 
-var request = require('superagent');
-var nocache = require('superagent-no-cache');
+// var request = require('superagent');
+// var nocache = require('superagent-no-cache');
 
 module.exports = React.createClass({
     displayName: 'FullTable',
