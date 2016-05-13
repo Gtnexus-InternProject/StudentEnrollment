@@ -43,7 +43,7 @@ module.exports = React.createClass({
             password: this.state.password.trim(),
         }
 
-        request.post('http://localhost:3000/users/student/authenticate')
+        request.post('http://localhost:3000/users/authenticate')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .send(formL)
@@ -58,7 +58,7 @@ module.exports = React.createClass({
 
                     if (token) {
                         alert('token is - ' + (token));
-                        browserHistory.push('/home/'+formL.userName);
+                        browserHistory.push('/home/'+formL.userName+ '/' +token);
 
                     }
                     else {

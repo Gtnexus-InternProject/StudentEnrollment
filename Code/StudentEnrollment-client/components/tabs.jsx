@@ -20,7 +20,7 @@ module.exports = React.createClass({
                                 <Tab eventKey={1} title="Profile">
                                     <h4>Student Profile</h4>
 
-                                    <p><PersonalD userName={this.props.userName} /> </p>
+                                    <p><PersonalD userName={this.props.userName} token={this.props.token}/> </p>
                                 </Tab>
                                 <Tab eventKey={2} title="Subject">
                                     <h4>Subject Profile</h4>

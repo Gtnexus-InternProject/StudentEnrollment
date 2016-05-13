@@ -11,29 +11,34 @@ import {Col} from 'react-bootstrap'
 module.exports = React.createClass({
     getInitialState() {
         return ({
-        userName:this.props.params.userName
+            userName: this.props.params.userName,
+            token: this.props.params.token
         });
     },
+    //contextTypes: {
+    //    token:  React.PropTypes.string
+    //},
+
 
 
 // Render the component
-render()
-{
+    render()
+    {
 
-    return (
-        <div>
-            <Col md={12}>
-                {  <Header userName={this.state.userName} /> || this.props.children}
-            </Col>
-            <Col md={3}>
-                {  <Profile userName={this.state.userName} /> || this.props.children}
-            </Col>
-            <Col md={9}>
-                { <Tab userName={this.state.userName} /> || this.props.children}
-            </Col>
-        </div>
+        return (
+            <div>
+                <Col md={12}>
+                    {  <Header userName={this.state.userName} /> || this.props.children}
+                </Col>
+                <Col md={3}>
+                    {  <Profile userName={this.state.userName} token={this.state.token}/> || this.props.children}
+                </Col>
+                <Col md={9}>
+                    { <Tab userName={this.state.userName} token={this.state.token}/> || this.props.children}
+                </Col>
+            </div>
 
-    );
-}
+        );
+    }
 });
 

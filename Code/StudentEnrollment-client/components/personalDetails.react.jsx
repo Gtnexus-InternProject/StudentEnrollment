@@ -35,15 +35,12 @@ module.exports = React.createClass({
         request
             .get('http://localhost:3000/users/student/' + userName)
             .set('Accept', 'application/json')
+            .set('x-access-token', this.props.token)
             .end(function (err, res) {
                 if (err) {
                     alert('error' + err);
                 }
                 else {
-                    //alert('aaaa')
-
-
-                    //userName= (res.body.userName);
                     this.setState({
                         userName: res.body.userName,
                         firstName: res.body.firstName,
