@@ -512,45 +512,27 @@ router.route('/coordinator').post(function(req, res) {
 
 
 
-// Get all students
-router.route('/:type')
-    //GET all blobs
-    .get(function(req, res, next) {
-
-      if (req.decoded.type != 'admin') {
-          return res.format({
-
-
-              json: function() {
-
-                  res.status(403).json({
-                      success: false,
-                      message: 'You don\'t have privilages to access '
-                  });
-              }
-          });
-
-      }
-
-
-
-        //retrieve all blobs from Monogo
-        mongoose.model(req.type).find({}, '-password' , function (err, users) {
-              if (err) {
-                  return console.error(err);
-              } else {
-                console.log(JSON.stringify(users));
-                  //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
-                  res.format({
-
-                    //JSON response will show all blobs in JSON format
-                    json: function(){
-                        res.json(users);
-                    }
-                });
-              }
-        });
-    });
+// // Student API Get all the student in GET and add new Student in POST
+// router.route('/:type')
+//     //GET all blobs
+//     .get(function(req, res, next) {
+//
+//         //retrieve all blobs from Monogo
+//         mongoose.model(req.type).find({}, function (err, users) {
+//               if (err) {
+//                   return console.error(err);
+//               } else {
+//                   //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+//                   res.format({
+//
+//                     //JSON response will show all blobs in JSON format
+//                     json: function(){
+//                         res.json(users);
+//                     }
+//                 });
+//               }
+//         });
+//     });
 
 
 

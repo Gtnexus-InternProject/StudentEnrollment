@@ -340,14 +340,14 @@ router.get('/:moduleCode?', function(req, res) {
 
 
 //PUT to update a blob by ID
-router.put('/update/:moduleCode', function(req, res) {
+router.put('/update/:ModuleCode', function(req, res) {
     // Get our REST or form values. These rely on the "name" attributes
     var errors = req.validationErrors();
     if (errors) {
         res.send('There have been validation errors: ' + errors, 400);
         return;
     }
-    // console.log(req.body);
+
     //find the document by ID
     mongoose.model('subject_model').findOne({
         moduleCode: req.params.moduleCode
@@ -356,37 +356,28 @@ router.put('/update/:moduleCode', function(req, res) {
         if (err) {
             console.log('Error in updating' + err)
         } else {
-
-          if(subject == null){
-            console.log('Null');
-            return;
-          }
-
-          var credits = req.body.credits || 0;
-
             subject.update({
                 moduleCode: req.body.moduleCode,
                 moduleName: req.body.moduleName,
                 department: req.body.department,
-                credits: credits,
+                credits: req.body.credits,
                 semester: req.body.semester,
                 day: req.body.day,
                 //description : req.body.description,
-                preRequestSubjects: req.body.preRequestSubjects
+                preRequestSubjects: req.body.preRequestSubjects,
                 //status:req.body.status,
             }, {
                 "upsert": false
             }, function(err, blobID) {
                 if (err) {
                     res.send("There was a problem updating the information to the database: " + err);
-                    console.log('Error ' + JSON.stringify(err));
                 } else {
-                    console.log('Updated ' + JSON.stringify(blobID));
+
                     res.format({
 
                         //JSON responds showing the updated values
                         json: function() {
-                            res.json(blobID);
+                            res.json(subject);
                         }
                     });
                 }
