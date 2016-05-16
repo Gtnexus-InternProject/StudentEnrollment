@@ -49,7 +49,7 @@ module.exports = React.createClass({
                         address: res.body.adddress,
                         zScore: res.body.zScore,
                         alStream: res.body.alStream,
-                        telephone: res.body.telephone,
+                        telephone: res.body.contactNumber,
                         gender: res.body.gender,
                         dateOfBirth: res.body.dateOfBirth
                     });

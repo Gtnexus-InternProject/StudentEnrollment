@@ -100,7 +100,7 @@ module.exports = React.createClass({
 
 
     handleSubmit(data) {
-        alert('ggg');
+
         data.preventDefault();
         var formAddSub = {
             firstName: this.state.firstName.trim(),
@@ -125,6 +125,7 @@ module.exports = React.createClass({
                     console.log('Oh no! error');
                 } else {
                     console.log('yay got ' + JSON.stringify(formAddSub));
+
                 }
             })
     },
@@ -387,7 +388,7 @@ module.exports = React.createClass({
 
                                   <Col sm={6}>
                                       <Button bsStyle="danger" onClick={this.close}>Close</Button>
-                                      <Button bsStyle="success" type="submit">Submit</Button>
+                                      <Button bsStyle="success" onClick={this.close} type="submit">Submit</Button>
                                   </Col>
                               </Form>
                           </div>

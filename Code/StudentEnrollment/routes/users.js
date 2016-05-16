@@ -671,18 +671,18 @@ router.put('/:type/:userName', function(req, res) {
 
     //find the document by ID
 
-    if (req.body.subjects.state == 1) {
-        if (req.decoded.type == "student") {
-            return res.format({
-                json: function() {
-                    res.status(403).json({
-                        success: false,
-                        message: 'You don\'t have privilages to access'
-                    });
-                }
-            });
-        }
-    }
+    // if (req.body.subjects.state == 1) {
+    //     if (req.decoded.type == "student") {
+    //         return res.format({
+    //             json: function() {
+    //                 res.status(403).json({
+    //                     success: false,
+    //                     message: 'You don\'t have privilages to access'
+    //                 });
+    //             }
+    //         });
+    //     }
+    // }
 
 
     if (req.type == "admin") {

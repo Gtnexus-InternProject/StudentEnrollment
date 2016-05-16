@@ -353,10 +353,10 @@ module.exports = React.createClass({
                                           <FormControl componentClass="select" placeholder="select" ref="semester" onChange={this.handleSelectSem}>
 
                                               <option value="">~Select ~</option>
-                                              <option value="1">Semester 1</option>
-                                              <option value="2">Semester 2</option>
-                                              <option value="3">Semester 3</option>
-                                              <option value="4">Semester 4</option>
+                                              <option value="Semester 1">Semester 1</option>
+                                              <option value="Semester 2">Semester 2</option>
+                                              <option value="Semester 3">Semester 3</option>
+                                              <option value="Semester 4">Semester 4</option>
                                           </FormControl>
                                       </FormGroup>
 
@@ -366,13 +366,13 @@ module.exports = React.createClass({
                                           <ControlLabel>Day</ControlLabel>
                                           <FormControl componentClass="select" placeholder="select" ref="day" onChange={this.handleSelectDay}>
                                               <option value="">~Select ~</option>
-                                              <option value="1">Sunday</option>
-                                              <option value="2">Monday</option>
-                                              <option value="3">Tuesday</option>
-                                              <option value="4">Wednesday</option>
-                                              <option value="5">Thuesday</option>
-                                              <option value="6">Friday</option>
-                                              <option value="7">Saturday</option>
+                                              <option value="Sunday">Sunday</option>
+                                              <option value="Monday">Monday</option>
+                                              <option value="Tuesday">Tuesday</option>
+                                              <option value="Wednesday">Wednesday</option>
+                                              <option value="Thuesday">Thuesday</option>
+                                              <option value="Friday">Friday</option>
+                                              <option value="Saturday">Saturday</option>
                                           </FormControl>
                                       </FormGroup>
 
@@ -381,10 +381,10 @@ module.exports = React.createClass({
                                       <ControlLabel>Time Slot</ControlLabel>
                                       <FormControl componentClass="select" placeholder="select" ref="timeSlot" onChange={this.handleSelectTimeSlt}>
                                           <option value="">~Select ~</option>
-                                          <option value="1">08.15-10.15</option>
-                                          <option value="2">10.30-12.30</option>
-                                          <option value="3">13.15-15.15</option>
-                                          <option value="4">15.30-17.30</option>
+                                          <option value="08.15-10.15">08.15-10.15</option>
+                                          <option value="10.30-12.30">10.30-12.30</option>
+                                          <option value="13.15-15.15">13.15-15.15</option>
+                                          <option value="15.30-17.30">15.30-17.30</option>
                                       </FormControl>
                                   </FormGroup>
 
@@ -403,7 +403,7 @@ module.exports = React.createClass({
 
                                   <Col sm={6}>
                                       <Button bsStyle="danger" onClick={this.close}>Close</Button>
-                                      <Button bsStyle="success" type="submit">Submit</Button>
+                                      <Button bsStyle="success" onClick={this.close} type="submit">Submit</Button>
                                   </Col>
                               </Form>
                           </div>
