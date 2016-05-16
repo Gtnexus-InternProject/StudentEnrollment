@@ -512,27 +512,45 @@ router.route('/coordinator').post(function(req, res) {
 
 
 
-// // Student API Get all the student in GET and add new Student in POST
-// router.route('/:type')
-//     //GET all blobs
-//     .get(function(req, res, next) {
-//
-//         //retrieve all blobs from Monogo
-//         mongoose.model(req.type).find({}, function (err, users) {
-//               if (err) {
-//                   return console.error(err);
-//               } else {
-//                   //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
-//                   res.format({
-//
-//                     //JSON response will show all blobs in JSON format
-//                     json: function(){
-//                         res.json(users);
-//                     }
-//                 });
-//               }
-//         });
-//     });
+// Get all students
+router.route('/:type')
+    //GET all blobs
+    .get(function(req, res, next) {
+
+      if (req.decoded.type != 'admin') {
+          return res.format({
+
+
+              json: function() {
+
+                  res.status(403).json({
+                      success: false,
+                      message: 'You don\'t have privilages to access '
+                  });
+              }
+          });
+
+      }
+
+
+
+        //retrieve all blobs from Monogo
+        mongoose.model(req.type).find({}, '-password' , function (err, users) {
+              if (err) {
+                  return console.error(err);
+              } else {
+                // console.log(JSON.stringify(users));
+                  //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+                  res.format({
+
+                    //JSON response will show all blobs in JSON format
+                    json: function(){
+                        res.json(users);
+                    }
+                });
+              }
+        });
+    });
 
 
 
@@ -613,36 +631,42 @@ router.route('/:type/:userName/subjects')
 
         mongoose.model(req.type).findOne({
             userName: req.userName
-        }, 'subjects.moduleCode', function(err, subjects) {
+        }, 'subjects', function(err, subjects) {
             // console.log('ID: ' + req.params.id);
             if (err || subjects == null) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
 
-              var subjectCodeArray = [];
+              res.format({
+                  json: function() {
+                      res.json(subjects);
+                  }
+              });
 
-              subjects.subjects.map(function (subject, index) {
-                subjectCodeArray.push(subject.moduleCode);
-              })
-
-                console.log('Check Codes: ' + subjectCodeArray);
-                console.log('GET Retrieving Subject ID: ' + subjects);
-                mongoose.model("subject_model").find({
-                    moduleCode: {
-                        $in: subjectCodeArray
-                    }
-                }, 'moduleCode', function(err, subject) {
-                    if (err || subjects == null) {
-                        console.log('GET Error: There was a problem retrieving: ' + err);
-                    } else {
-                        console.log('GET Retrieving Subjects: ' + subject);
-                        res.format({
-                            json: function() {
-                                res.json(subject);
-                            }
-                        });
-                    }
-                });
+              // var subjectCodeArray = [];
+              //
+              // subjects.subjects.map(function (subject, index) {
+              //   subjectCodeArray.push(subject.moduleCode);
+              // })
+              //
+              //   // console.log('Check Codes: ' + subjectCodeArray);
+              //   console.log('GET Retrieving Subject ID: ' + subjects);
+              //   mongoose.model("subject_model").find({
+              //       moduleCode: {
+              //           $in: subjectCodeArray
+              //       }
+              //   }, 'moduleCode', function(err, subject) {
+              //       if (err || subjects == null) {
+              //           console.log('GET Error: There was a problem retrieving: ' + err);
+              //       } else {
+              //           console.log('GET Retrieving Subjects: ' + subject);
+              //           res.format({
+              //               json: function() {
+              //                   res.json(subjects);
+              //               }
+              //           });
+              //       }
+              //   });
 
                 //var blobdob = student.userName.toISOString();
                 //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
@@ -766,7 +790,7 @@ router.put('/:type/:userName/subjects', function(req, res) {
 
     //find the document by ID
 
-    req.checkBody('subjects', 'Invalid body').notEmpty();
+    // req.checkBody('subjects', 'Invalid body').notEmpty();
 
     if (req.type == "admin") {
         return res.status(404).send({
@@ -791,11 +815,11 @@ router.put('/:type/:userName/subjects', function(req, res) {
         }
     }
 
-    var errors = req.validationErrors();
-    if (errors) {
-        res.send('There have been validation errors: ' + errors, 400);
-        return;
-    }
+    // var errors = req.validationErrors();
+    // if (errors) {
+    //     res.send('There have been validation errors: ' + errors, 400);
+    //     return;
+    // }
 
     mongoose.model(req.type).findOneAndUpdate({
         userName: req.userName
@@ -830,23 +854,30 @@ router.put('/:type/:userName/subjects', function(req, res) {
 
 
 //Unerrole a subject from student
-router.delete('/student/:userName/subjects', function(req, res) {
+router.delete('/:type/:userName/subjects', function(req, res) {
     //find blob by ID
-    req.checkBody('subjects', 'Invalid body').notEmpty();
 
+    // console.log('Unerrole Subject: ');
+    // req.checkBody('subjects', 'Invalid body').notEmpty();
 
-    var errors = req.validationErrors();
-    if (errors) {
-        res.send('There have been validation errors: ' + errors, 400);
-        return;
+    if (req.type == "admin") {
+      return res.status(403).send({
+          success: false,
+          message: 'Wrong Information'
+      });
     }
+    // var errors = req.validationErrors();
+    // if (errors) {
+    //     res.send('There have been validation errors: ' + errors, 400);
+    //     return;
+    // }
 
 
     mongoose.model('student').findOneAndUpdate({
         userName: req.userName
     }, {
         "$pull": {
-            subjects: req.body.subjects
+            subjects:   { moduleCode : { $in: req.body.subjects} }
         }
     }, {
         new: true

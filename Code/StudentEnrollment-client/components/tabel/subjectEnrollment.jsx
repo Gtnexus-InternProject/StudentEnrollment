@@ -7,6 +7,7 @@ var SkyLight = require('react-skylight').default;
 var Paginator = require('react-pagify').default;
 var titleCase = require('title-case');
 var findIndex = require('lodash/findIndex');
+var removeArray = require('lodash/remove');
 var orderBy = require('lodash/orderBy');
 var cx = require('classnames');
 var segmentize = require('segmentize');
@@ -22,6 +23,7 @@ var highlight = require('./src/formatters/highlight');
 
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
+import {Button} from 'react-bootstrap';
 
 import token from  '../../config';
 
@@ -60,8 +62,8 @@ module.exports = React.createClass({
                 // console.log("data: " + data);
                 // console.log(res.body);
 
-
-                request.get('http://localhost:3000/student/' + this.props.userName + "/subjects" ).
+// + this.props.userName
+                request.get('http://localhost:3000/users/student/'  + "TK/subjects" ).
                         set('Accept', 'application/json').
                         accept('application/json').
                         set('x-access-token', token).
@@ -69,20 +71,37 @@ module.exports = React.createClass({
                         end(function(err, res) {
                             if (!err) {
 
-                                var jsonObj = res.body;
+                                var jsonObj = res.body.subjects;
                                 // console.log("data: " + JSON.stringify(jsonObj));
                                 var subjectCodeArray = [];
+                                var statusArray = [];
                                 for (var i = 0; i < jsonObj.length; i++) {
                                   // console.log("data: " + jsonObj[i] );
                                     var row = {
                                         moduleCode: jsonObj[i].moduleCode,
+                                        status : jsonObj[i].state,
                                         id: i
                                     };
+                                    // statusArray[i] =  i;
+                                    statusArray[jsonObj[i].moduleCode] =  jsonObj[i].state;
+                                    // console.log("Status" + JSON.stringify(statusArray));
 
                                     subjectCodeArray.push(row);
                                 }
 
-                                console.log("data: " + subjectCodeArray);
+                                // console.log("Status" + statusArray["c01"]);
+
+                                data = data.map(function (subject, index) {
+                                  if( statusArray[subject.moduleCode] == 0 ||  statusArray[subject.moduleCode]){
+                                    subject.status = statusArray[subject.moduleCode] == 0 ? "Pending" : "Accepted";
+                                  }else{
+                                    subject.status = "Not Registered";
+                                  }
+
+                                  return subject;
+                                });
+
+                                // console.log("data: " + subjectCodeArray);
                                 // console.log(res.body);
 
                                 callback(data, subjectCodeArray);
@@ -116,7 +135,8 @@ module.exports = React.createClass({
 
 
         // var properties = augmentWithTitles( this.props.properties );
-
+        var buttonText;
+        var baStyle;
 
         var highlighter = (column) => highlight((value) => {
             return Search.matches(column, value, this.state.search.query);
@@ -125,32 +145,111 @@ module.exports = React.createClass({
         var rightCorner = [ {
             cell: function(value, celldata, rowIndex) {
                 var idx = findIndex(this.state.data, {id: celldata[rowIndex].id});
+
+                var enrrolle = findIndex(this.state.subjectCode, {'moduleCode': this.state.data[idx].moduleCode } );
+                buttonText = enrrolle == -1 ? "Enrrole" : "Remove";
+                baStyle =  enrrolle == -1 ? "success" : "danger";
+                // if(enrrolle){
+                //
+                // }
+
+                // console.log("enrrolle" + enrrolle);
+                // console.log("subjectCode" + JSON.stringify(this.state.subjectCode) );
+                // console.log("This Data" + JSON.stringify(this.state.data[idx]));
                 // console.log("IDX" + idx);
                 var edit = () => {
+                    console.log("Enrrolle Data"  );
+
+                    request
+                        .put('http://localhost:3000/users/student/' + "TK" + '/subjects')
+                        .set('x-access-token', token)
+                        .set('Accept', 'application/json')
+                        .send({subjects: { moduleCode : this.state.data[idx].moduleCode } })
+                        .end(function(err, res){
+                          if (err || !res.ok) {
+                            // alert('Oh no! error');
+                            // console.log('Oh no! error' + err);
+                          } else {
+
+                            // console.log('yay got ' + JSON.stringify(res.body));
+                            this.state.subjectCode.push(
+                              {
+                                moduleCode : this.state.data[idx].moduleCode
+                              }
+                            );
+
+                            this.state.data[idx].status = "Pending";
+
+                            this.setState(
+                              {
+                                subjectCode: this.state.subjectCode,
+                                columns : this.state.columns,
+                                data : this.state.data
+                              }
+                            );
+
+                          }
+
+                        }.bind(this));
 
                 };
 
                 var remove = () => {
                     // this could go through flux etc.
-                    var remove = this.state.data.splice(idx, 1);
-                    console.log("Removed Data" + JSON.stringify(remove[0])  );
-                    this.props.remove(remove[0]);
-                    this.setState({data: this.state.data});
+                    // var remove = this.state.data.splice(idx, 1);
+                    console.log("Removed Data"  );
+                    // this.props.remove(remove[0]);
+                    // this.setState({data: this.state.data});
+
+                    request
+                        .delete('http://localhost:3000/users/student/' + "TK" + '/subjects')
+                        .set('x-access-token', token)
+                        .set('Accept', 'application/json')
+                        .send({subjects: this.state.data[idx].moduleCode })
+                        .end(function(err, res){
+                          if (err || !res.ok) {
+                            // alert('Oh no! error');
+                            // console.log('Oh no! error' + err);
+                          } else {
+
+                            // console.log('yay got ' + JSON.stringify(res.body));
+
+                            var remove = removeArray(this.state.subjectCode, function (n) {
+                              return n.moduleCode == this.state.data[idx].moduleCode;
+                            }.bind(this) );
+                            this.state.data[idx].status = "Not Registered";
+                            this.setState(
+                              {
+                                subjectCode: this.state.subjectCode,
+                                columns : this.state.columns,
+                                data : this.state.data
+                              }
+                            );
+
+                          }
+
+                        }.bind(this));
+
                 };
 
+                var onClick = enrrolle == -1 ? edit : remove;
+
+                // <span>
+                //     <span className='edit' onClick={edit.bind(this)} style={{
+                //         cursor: 'pointer'
+                //     }}>
+                //         &#8665;
+                //     </span>
+                //     <span className='remove' onClick={remove.bind(this)} style={{
+                //         cursor: 'pointer'
+                //     }} >
+                //         &#10007;
+                //     </span>
+                // </span>
+
                 return {value: (
-                        <span>
-                            <span className='edit' onClick={edit.bind(this)} style={{
-                                cursor: 'pointer'
-                            }}>
-                                &#8665;
-                            </span>
-                            <span className='remove' onClick={remove.bind(this)} style={{
-                                cursor: 'pointer'
-                            }} >
-                                &#10007;
-                            </span>
-                        </span>
+                  <Button onClick={onClick} bsStyle={this.state.buttonData.style || baStyle }>{this.state.buttonData.text || buttonText}</Button>
+
                     )};
             }.bind(this)
         } ];
@@ -158,26 +257,23 @@ module.exports = React.createClass({
         var columns = [
 
           {
-              property: 'userName',
-              header: "User Name"
+              property: 'moduleCode',
+              header: "Module Code"
           }, {
-              property: 'firstName',
-              header: 'First Name'
+              property: 'moduleName',
+              header: 'Module Name'
           }, {
-              property: 'lastName',
-              header: 'Last Name'
+              property: 'semester',
+              header: 'Semester'
           }, {
-              property: 'email',
-              header: 'Email'
+              property: 'day',
+              header: 'Day'
           }, {
-              property: 'adddress',
-              header: 'Adddress'
+              property: 'description',
+              header: 'Description'
           }, {
-              property: 'contactNumber',
-              header: 'Contact Number'
-          }, {
-              property: 'subjects',
-              header: 'Subjects'
+              property: 'status',
+              header: 'Status'
           }
 
 
@@ -214,7 +310,8 @@ module.exports = React.createClass({
                 page: 1,
                 perPage:5
             },
-            subjectCode: []
+            subjectCode: [],
+            buttonData : { style: baStyle, text: buttonText }
         };
     },
 
@@ -276,6 +373,8 @@ module.exports = React.createClass({
                 </div>
                 <Table className='pure-table pure-table-striped' columnNames={this.columnFilters} columns={columns} data={paginated.data} row={(d, rowIndex) => {
                     return {
+
+
                         className: rowIndex % 2
                             ? 'odd-row'
                             : 'even-row',
