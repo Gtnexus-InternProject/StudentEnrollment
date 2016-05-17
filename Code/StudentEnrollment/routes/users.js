@@ -13,7 +13,7 @@ var user = require('../model/user_model');
 router.use(bodyParser.urlencoded({
     extended: true
 }))
-router.use(methodOverride(function(req, res) {
+router.use(methodOverride(function (req, res) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         // look in urlencoded POST bodies and delete it
         var method = req.body._method
@@ -24,10 +24,10 @@ router.use(methodOverride(function(req, res) {
 
 
 
-var checkUserName = function(userName, res, cb) {
+var checkUserName = function (userName, res, cb) {
     mongoose.model("admin").findOne({
         userName: userName
-    }, function(err, admin) {
+    }, function (err, admin) {
 
         if (err) {
             throw err;
@@ -49,7 +49,7 @@ var checkUserName = function(userName, res, cb) {
         } else {
             mongoose.model("coordinator").findOne({
                 userName: userName
-            }, function(err, coordinator) {
+            }, function (err, coordinator) {
                 console.log(coordinator);
                 if (err) {
                     throw err;
@@ -68,11 +68,11 @@ var checkUserName = function(userName, res, cb) {
                     // return false;
                     cb(false);
                 } else {
-                  // // return true;
-                  // cb(true);
+                    // // return true;
+                    // cb(true);
                     mongoose.model("student").findOne({
                         userName: userName
-                    }, function(err, admin) {
+                    }, function (err, admin) {
 
                         if (err) {
                             throw err;
@@ -91,8 +91,8 @@ var checkUserName = function(userName, res, cb) {
                             // return false;
                             cb(false);
                         } else {
-                          // return true;
-                          cb(true);
+                            // return true;
+                            cb(true);
                         }
 
                     });
@@ -106,7 +106,7 @@ var checkUserName = function(userName, res, cb) {
 
 
 //Create a new student
-router.route('/student').post(function(req, res) {
+router.route('/student').post(function (req, res) {
     // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
     // var userId = req.body.userId;
     var userName = req.body.userName;
@@ -130,45 +130,45 @@ router.route('/student').post(function(req, res) {
     // profileImage = req.body.profileImage,
     // console.log(checkUserName(userName, res));
     checkUserName(userName, res, function (availability) {
-      if(availability){
+        if (availability) {
 
-        //call the create function for our database
-        mongoose.model('student').create({
+            //call the create function for our database
+            mongoose.model('student').create({
 
-            userName: userName,
-            firstName: firstName,
-            password: password,
-            email: email,
-            adddress: adddress,
-            contactNumber: contactNumber,
-            lastName: lastName,
-            dob: dob,
-            gender: gender,
-            alStream: alStream,
-            zScore: zScore,
-            Department: Department,
-            registeredDate: registeredDate,
-            profileImage: profileImage,
-            subjects : subjects
-        }, function(err, user) {
-            if (err) {
-                res.send("There was a problem adding the information to the database.");
-                console.log(err);
-            } else {
-                //Blob has been created
-                console.log('POST creating new blob: ' + user);
-                res.format({
+                userName: userName,
+                firstName: firstName,
+                password: password,
+                email: email,
+                adddress: adddress,
+                contactNumber: contactNumber,
+                lastName: lastName,
+                dob: dob,
+                gender: gender,
+                alStream: alStream,
+                zScore: zScore,
+                Department: Department,
+                registeredDate: registeredDate,
+                profileImage: profileImage,
+                subjects: subjects
+            }, function (err, user) {
+                if (err) {
+                    res.send("There was a problem adding the information to the database.");
+                    console.log(err);
+                } else {
+                    //Blob has been created
+                    console.log('POST creating new blob: ' + user);
+                    res.format({
 
-                    //JSON response will show the newly created blob
-                    json: function() {
-                        res.json(user);
-                    }
-                });
-            }
-        });
+                        //JSON response will show the newly created blob
+                        json: function () {
+                            res.json(user);
+                        }
+                    });
+                }
+            });
 
 
-      }else{ return; }
+        } else { return; }
     });
 
 
@@ -176,7 +176,7 @@ router.route('/student').post(function(req, res) {
 
 
 // route middleware to validate :type
-router.param('type', function(req, res, next, type) {
+router.param('type', function (req, res, next, type) {
     //console.log('validating ' + id + ' exists');
     //find the ID in the Database
 
@@ -194,10 +194,10 @@ router.param('type', function(req, res, next, type) {
         var err = new Error('Not Found');
         err.status = 404;
         res.format({
-            html: function() {
+            html: function () {
                 next(err);
             },
-            json: function() {
+            json: function () {
                 res.json({
                     message: err.status + ' ' + err
                 });
@@ -210,7 +210,7 @@ router.param('type', function(req, res, next, type) {
 
 
 // authenticate password
-var passwordAuthintacte = function(user, password, res) {
+var passwordAuthintacte = function (user, password, res) {
     console.log(user);
     if (user) {
 
@@ -248,7 +248,7 @@ var passwordAuthintacte = function(user, password, res) {
             res.json({
                 success: true,
                 message: 'Enjoy your token!',
-                type : user.__t || 'student',
+                type: user.__t || 'student',
                 token: token
             });
         } else {
@@ -263,14 +263,14 @@ var passwordAuthintacte = function(user, password, res) {
 }
 
 // route to authenticate a user (POST http://localhost:8080/api/authenticate)
-router.post('/authenticate', function(req, res) {
+router.post('/authenticate', function (req, res) {
 
 
 
     // find the admin
     mongoose.model("admin").findOne({
         userName: req.body.userName
-    }, function(err, admin) {
+    }, function (err, admin) {
 
         if (err) {
             throw err;
@@ -282,7 +282,7 @@ router.post('/authenticate', function(req, res) {
             // find the coordinator
             mongoose.model("coordinator").findOne({
                 userName: req.body.userName
-            }, function(err, coordinator) {
+            }, function (err, coordinator) {
                 console.log(coordinator);
                 if (err) {
                     throw err;
@@ -293,7 +293,7 @@ router.post('/authenticate', function(req, res) {
                     // find the student
                     mongoose.model("student").findOne({
                         userName: req.body.userName
-                    }, function(err, student) {
+                    }, function (err, student) {
 
                         if (err) {
                             throw err;
@@ -342,7 +342,7 @@ router.post('/authenticate', function(req, res) {
 
 
 // route middleware to validate :username
-router.param('userName', function(req, res, next, userName) {
+router.param('userName', function (req, res, next, userName) {
     //console.log('validating ' + id + ' exists');
     //find the ID in the Database
 
@@ -351,7 +351,7 @@ router.param('userName', function(req, res, next, userName) {
     //find the ID in the Database
     mongoose.model(req.type).findOne({
         userName: userName
-    }, function(err, user) {
+    }, function (err, user) {
         //if it isn't found, we are going to repond with 404
         console.log(err);
         if (err || user == null) {
@@ -360,10 +360,10 @@ router.param('userName', function(req, res, next, userName) {
             var err = new Error('User Not Found');
             err.status = 404;
             res.format({
-                html: function() {
+                html: function () {
                     next(err);
                 },
-                json: function() {
+                json: function () {
                     res.json({
                         message: '' + err
                     });
@@ -386,7 +386,7 @@ router.param('userName', function(req, res, next, userName) {
 
 // RFID validation
 router.route('/:type/:userName/rfidvalidate/:rfid')
-    .get(function(req, res) {
+    .get(function (req, res) {
 
         if (req.type != "student") {
             return res.status(404).send({
@@ -398,7 +398,7 @@ router.route('/:type/:userName/rfidvalidate/:rfid')
         mongoose.model('student').findOne({
             userName: req.userName,
             rfid: req.params.rfid
-        }, 'rfid', function(err, student) {
+        }, 'rfid', function (err, student) {
             // console.log('ID: ' + req.params.id);
             if (err) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
@@ -417,7 +417,7 @@ router.route('/:type/:userName/rfidvalidate/:rfid')
                 //var blobdob = student.userName.toISOString();
                 //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
                 res.format({
-                    json: function() {
+                    json: function () {
                         res.json({
                             message: message,
                             status: status
@@ -432,7 +432,7 @@ router.route('/:type/:userName/rfidvalidate/:rfid')
 
 
 // route middleware to verify a token
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
 
     // check header or url parameters or post parameters for token
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -441,7 +441,7 @@ router.use(function(req, res, next) {
     if (token) {
 
         // verifies secret and checks exp
-        jwt.verify(token, config.secret, function(err, decoded) {
+        jwt.verify(token, config.secret, function (err, decoded) {
             if (err) {
                 return res.json({
                     success: false,
@@ -468,13 +468,13 @@ router.use(function(req, res, next) {
 
 
 //Create a new coordinator
-router.route('/coordinator').post(function(req, res) {
+router.route('/coordinator').post(function (req, res) {
 
     if (req.decoded.type != 'admin') {
         return res.format({
 
 
-            json: function() {
+            json: function () {
 
                 res.status(403).json({
                     success: false,
@@ -485,12 +485,12 @@ router.route('/coordinator').post(function(req, res) {
 
     }
 
-    if( !checkUserName(userName, res)){
-      return;
+    if (!checkUserName(userName, res)) {
+        return;
     }
 
     //call the create function for our database
-    mongoose.model('coordinator').create(req.body, function(err, user) {
+    mongoose.model('coordinator').create(req.body, function (err, user) {
         if (err) {
             res.send("There was a problem adding the information to the database.");
             console.log(err);
@@ -501,7 +501,7 @@ router.route('/coordinator').post(function(req, res) {
 
 
                 //JSON response will show the newly created blob
-                json: function() {
+                json: function () {
                     res.json(user);
                 }
             });
@@ -516,40 +516,40 @@ router.route('/coordinator').post(function(req, res) {
 // Get all students
 router.route('/:type')
     //GET all blobs
-    .get(function(req, res, next) {
+    .get(function (req, res, next) {
 
-      if (req.decoded.type != 'admin') {
-          return res.format({
+        if (req.decoded.type != 'admin') {
+            return res.format({
 
 
-              json: function() {
+                json: function () {
 
-                  res.status(403).json({
-                      success: false,
-                      message: 'You don\'t have privilages to access '
-                  });
-              }
-          });
+                    res.status(403).json({
+                        success: false,
+                        message: 'You don\'t have privilages to access '
+                    });
+                }
+            });
 
-      }
+        }
 
 
 
         //retrieve all blobs from Monogo
-        mongoose.model(req.type).find({}, '-password' , function (err, users) {
-              if (err) {
-                  return console.error(err);
-              } else {
+        mongoose.model(req.type).find({}, '-password', function (err, users) {
+            if (err) {
+                return console.error(err);
+            } else {
                 console.log(JSON.stringify(users));
-                  //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
-                  res.format({
+                //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+                res.format({
 
                     //JSON response will show all blobs in JSON format
-                    json: function(){
+                    json: function () {
                         res.json(users);
                     }
                 });
-              }
+            }
         });
     });
 
@@ -565,32 +565,32 @@ router.route('/:type')
 // Get data per user
 router.route('/:type/:userName')
 
-.get(function(req, res) {
-    mongoose.model(req.type).findOne({
-        userName: req.userName
-    }, function(err, student) {
-        // console.log('ID: ' + req.params.id);
-        if (err) {
-            console.log('GET Error: There was a problem retrieving: ' + err);
-        } else {
-            console.log('GET Retrieving ID: ' + student.userName);
-            //var blobdob = student.userName.toISOString();
-            //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
-            res.format({
+    .get(function (req, res) {
+        mongoose.model(req.type).findOne({
+            userName: req.userName
+        }, function (err, student) {
+            // console.log('ID: ' + req.params.id);
+            if (err) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+                console.log('GET Retrieving ID: ' + student.userName);
+                //var blobdob = student.userName.toISOString();
+                //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
+                res.format({
 
-                json: function() {
-                    res.json(student);
-                }
-            });
-        }
+                    json: function () {
+                        res.json(student);
+                    }
+                });
+            }
+        });
     });
-});
 
 
 //GET the individual blob by Mongo ID
-router.get('/:id/edit', function(req, res) {
+router.get('/:id/edit', function (req, res) {
     //search for the blob within Mongo
-    mongoose.model('admin').findById(req.userId, function(err, admin) {
+    mongoose.model('admin').findById(req.userId, function (err, admin) {
         if (err) {
             console.log('GET Error: There was a problem retrieving: ' + err);
         } else {
@@ -601,7 +601,7 @@ router.get('/:id/edit', function(req, res) {
             // blobdob = blobdob.substring(0, blobdob.indexOf('T'))
             res.format({
                 //HTML response will render the 'edit.jade' template
-                html: function() {
+                html: function () {
                     res.render('blobs/edit', {
                         title: 'Blob' + admin.userId,
                         "blobdob": blobdob,
@@ -609,7 +609,7 @@ router.get('/:id/edit', function(req, res) {
                     });
                 },
                 //JSON response will return the JSON output
-                json: function() {
+                json: function () {
                     res.json(admin);
                 }
             });
@@ -621,7 +621,7 @@ router.get('/:id/edit', function(req, res) {
 
 // Get Subjects Per Student
 router.route('/:type/:userName/subjects')
-    .get(function(req, res) {
+    .get(function (req, res) {
 
         if (req.type == "admin") {
             return res.status(404).send({
@@ -632,29 +632,42 @@ router.route('/:type/:userName/subjects')
 
         mongoose.model(req.type).findOne({
             userName: req.userName
-        }, 'subjects', function(err, subjects) {
+        }, 'subjects', function (err, subjects) {
             // console.log('ID: ' + req.params.id);
             if (err || subjects == null) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
 
-                console.log('GET Retrieving Subject ID: ' + subjects.subjects);
-                mongoose.model("subject").find({
-                    moduleCode: {
-                        $in: subjects.subjects
-                    }
-                }, function(err, subject) {
-                    if (err || subjects == null) {
-                        console.log('GET Error: There was a problem retrieving: ' + err);
-                    } else {
-                        console.log('GET Retrieving Subjects: ' + subject);
-                        res.format({
-                            json: function() {
-                                res.json(subject);
-                            }
-                        });
+                res.format({
+                    json: function () {
+                        res.json(subjects);
                     }
                 });
+
+                // var subjectCodeArray = [];
+                //
+                // subjects.subjects.map(function (subject, index) {
+                //   subjectCodeArray.push(subject.moduleCode);
+                // })
+                //
+                //   // console.log('Check Codes: ' + subjectCodeArray);
+                //   console.log('GET Retrieving Subject ID: ' + subjects);
+                //   mongoose.model("subject_model").find({
+                //       moduleCode: {
+                //           $in: subjectCodeArray
+                //       }
+                //   }, 'moduleCode', function(err, subject) {
+                //       if (err || subjects == null) {
+                //           console.log('GET Error: There was a problem retrieving: ' + err);
+                //       } else {
+                //           console.log('GET Retrieving Subjects: ' + subject);
+                //           res.format({
+                //               json: function() {
+                //                   res.json(subjects);
+                //               }
+                //           });
+                //       }
+                //   });
 
                 //var blobdob = student.userName.toISOString();
                 //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
@@ -666,8 +679,67 @@ router.route('/:type/:userName/subjects')
 
 
 
+
+router.route('/:type/:userName/subjects/timeTable')
+    .get(function (req, res) {
+
+        if (req.type == "admin") {
+            return res.status(404).send({
+                success: false,
+                message: 'Wrong URL'
+            });
+        }
+
+        mongoose.model(req.type).findOne({
+            userName: req.userName
+        }, 'subjects', function (err, subjects) {
+            // console.log('ID: ' + req.params.id);
+            if (err || subjects == null) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+
+                // res.format({
+                //     json: function () {
+                //         res.json(subjects);
+                //     }
+                // });
+
+                var subjectCodeArray = [];
+
+                subjects.subjects.map(function (subject, index) {
+                    subjectCodeArray.push(subject.moduleCode);
+                })
+
+                // console.log('Check Codes: ' + subjectCodeArray);
+                console.log('GET Retrieving Subject ID: ' + subjects);
+                mongoose.model("subject_model").find({
+                    moduleCode: { $in: subjectCodeArray }
+                },{'moduleCode':1,'moduleName':1,'semester':1,'day':1,'timeSlot':1}, function (err, subject) {
+                    if (err || subjects == null) {
+                        console.log('GET Error: There was a problem retrieving: ' + err);
+                    } else {
+                        console.log('GET Retrieving Subjects: ' + subject);
+                        res.format({
+                            json: function () {
+                                res.json(subject);
+                            }
+                        });
+                    }
+                });
+
+                // var blobdob = student.userName.toISOString();
+                // blobdob = blobdob.substring(0, blobdob.indexOf('T'))
+
+            }
+        });
+    });
+
+
+
+
+
 //Update Users
-router.put('/:type/:userName', function(req, res) {
+router.put('/:type/:userName', function (req, res) {
 
     //find the document by ID
 
@@ -704,22 +776,22 @@ router.put('/:type/:userName', function(req, res) {
     mongoose.model(req.type).findOneAndUpdate({
         userName: req.userName
     }, {
-        "$set": req.body
-    }, {
-        new: true
-    }, function(err, place) {
+            "$set": req.body
+        }, {
+            new: true
+        }, function (err, place) {
 
-        if (err) {
-            res.send("There was a problem updating the information to the database: " + err);
-        } else {
-            res.format({
-                //JSON responds showing the updated values
-                json: function() {
-                    res.json(place);
-                }
-            });
-        }
-    });
+            if (err) {
+                res.send("There was a problem updating the information to the database: " + err);
+            } else {
+                res.format({
+                    //JSON responds showing the updated values
+                    json: function () {
+                        res.json(place);
+                    }
+                });
+            }
+        });
 });
 
 
@@ -728,7 +800,7 @@ router.put('/:type/:userName', function(req, res) {
 
 
 
-router.delete('/:type/:userName', function(req, res) {
+router.delete('/:type/:userName', function (req, res) {
 
     //find blob by ID
 
@@ -751,7 +823,7 @@ router.delete('/:type/:userName', function(req, res) {
 
     mongoose.model(req.type).findOneAndRemove({
         userName: req.userName
-    }, function(error, student) {
+    }, function (error, student) {
         if (error) {
             return console.error(error);
         } else {
@@ -760,7 +832,7 @@ router.delete('/:type/:userName', function(req, res) {
             res.format({
 
                 //JSON returns the item with the message that is has been deleted
-                json: function() {
+                json: function () {
                     res.json({
                         message: 'deleted',
                         item: student
@@ -774,7 +846,7 @@ router.delete('/:type/:userName', function(req, res) {
 
 
 //Enrrole a student for a subject
-router.put('/:type/:userName/subjects', function(req, res) {
+router.put('/:type/:userName/subjects', function (req, res) {
 
     //find the document by ID
 
@@ -792,7 +864,7 @@ router.put('/:type/:userName/subjects', function(req, res) {
             return res.format({
 
 
-                json: function() {
+                json: function () {
 
                     res.status(403).json({
                         success: false,
@@ -812,37 +884,37 @@ router.put('/:type/:userName/subjects', function(req, res) {
     mongoose.model(req.type).findOneAndUpdate({
         userName: req.userName
     }, {
-        "$push": {
-            subjects: req.body.subjects
-        }
-    }, {
-        upsert: true,
-        new: true
-    }, function(err, place) {
-        //update it
+            "$push": {
+                subjects: req.body.subjects
+            }
+        }, {
+            upsert: true,
+            new: true
+        }, function (err, place) {
+            //update it
 
 
-        if (err) {
-            res.send("There was a problem updating the information to the database: " + err);
-        } else {
+            if (err) {
+                res.send("There was a problem updating the information to the database: " + err);
+            } else {
 
-            res.format({
+                res.format({
 
-                //JSON responds showing the updated values
-                json: function() {
-                    res.json(place);
-                }
-            });
-        }
+                    //JSON responds showing the updated values
+                    json: function () {
+                        res.json(place);
+                    }
+                });
+            }
 
-    });
+        });
 
 
 });
 
 
 //Unerrole a subject from student
-router.delete('/student/:userName/subjects', function(req, res) {
+router.delete('/student/:userName/subjects', function (req, res) {
     //find blob by ID
     req.checkBody('subjects', 'Invalid body').notEmpty();
 
@@ -857,29 +929,29 @@ router.delete('/student/:userName/subjects', function(req, res) {
     mongoose.model('student').findOneAndUpdate({
         userName: req.userName
     }, {
-        "$pull": {
-            subjects: req.body.subjects
-        }
-    }, {
-        new: true
-    }, function(err, place) {
-        //update it
+            "$pull": {
+                subjects: req.body.subjects
+            }
+        }, {
+            new: true
+        }, function (err, place) {
+            //update it
 
 
-        if (err) {
-            res.send("There was a problem updating the information to the database: " + err);
-        } else {
+            if (err) {
+                res.send("There was a problem updating the information to the database: " + err);
+            } else {
 
-            res.format({
+                res.format({
 
-                //JSON responds showing the updated values
-                json: function() {
-                    res.json(place);
-                }
-            });
-        }
+                    //JSON responds showing the updated values
+                    json: function () {
+                        res.json(place);
+                    }
+                });
+            }
 
-    });
+        });
 
 
 
@@ -948,11 +1020,11 @@ router.delete('/student/:userName/subjects', function(req, res) {
 // });
 
 // catch 404 and forward to error handler
-router.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  // next(err);
-  next(err);
+router.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    // next(err);
+    next(err);
 });
 
 module.exports = router;

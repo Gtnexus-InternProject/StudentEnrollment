@@ -264,9 +264,6 @@ module.exports = React.createClass({
 
 
       ];
-
-
-
       var properties = {
 
           subjects: {
@@ -285,8 +282,6 @@ module.exports = React.createClass({
               type: 'number'
           }
       };
-
-
 
         return (
           <div>

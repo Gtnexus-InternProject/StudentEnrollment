@@ -8,6 +8,7 @@ import {Router, Route, Link, browserHistory} from 'react-router';
 
 import {Panel,Tabs,Tab,Col} from 'react-bootstrap';
 import PersonalD from './personalDetails.react'
+import TimeTable from './timeTable.React'
 
 module.exports = React.createClass({
         render(){
@@ -21,6 +22,9 @@ module.exports = React.createClass({
                                     <h4>Student Profile</h4>
 
                                     <p><PersonalD userName={this.props.userName} token={this.props.token}/> </p>
+                                    <h4>Time Table</h4>
+
+                                    <p><TimeTable userName={this.props.userName} token={this.props.token}/> </p>
                                 </Tab>
                                 <Tab eventKey={2} title="Subject">
                                     <h4>Subject Profile</h4>

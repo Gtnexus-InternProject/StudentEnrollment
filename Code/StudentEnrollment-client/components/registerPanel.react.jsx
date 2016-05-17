@@ -128,10 +128,10 @@ alert(JSON.stringify(formR));
 
 
         },
+    render() {
 
-        render() {
+        return (<div >
 
-            return (<div >
                 <Col mdOffset={2} md={8}>
                     <Panel header={title} bsStyle="primary">
                         <PageHeader>Register
