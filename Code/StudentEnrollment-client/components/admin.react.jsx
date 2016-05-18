@@ -4,6 +4,8 @@ import SubjectTabel from './tabel/AdminSubject';
 import StudentTabel from './tabel/AdminStudent';
 import CoordinatorTabel from './tabel/AdminCoordinator';
 import SubjectEnrollment from './tabel/subjectEnrollment';
+import SubjectApprove from './tabel/CoordinatorSubjectApprove';
+
 import 'purecss/build/pure.css';
 // var React = require('react'),
 // ReactDOMServer = require('react-dom/server');
@@ -16,10 +18,11 @@ module.exports = React.createClass({
 
         return (
             <div>
+              <SubjectApprove />
               <SubjectEnrollment/>
               <CoordinatorTabel/>
               <SubjectTabel/>
-              <StudentTabel/>              
+              <StudentTabel/>
             </div>
         );
 

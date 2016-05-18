@@ -43,7 +43,7 @@ module.exports = React.createClass({
             if (!err) {
 
                 var jsonObj = res.body;
-                console.log("data: " + JSON.stringify(jsonObj));
+                // console.log("data: " + JSON.stringify(jsonObj));
                 var data = [];
                 for (var i = 0; i < jsonObj.length; i++) {
                   // console.log("data: " + jsonObj[i] );
