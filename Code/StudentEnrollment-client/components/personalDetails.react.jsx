@@ -38,7 +38,7 @@ module.exports = React.createClass({
             .set('x-access-token', this.props.token)
             .end(function (err, res) {
                 if (err) {
-                    alert('error' + err);
+                    console.log('error' + err)
                 }
                 else {
                     this.setState({

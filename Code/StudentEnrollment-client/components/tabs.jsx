@@ -7,8 +7,9 @@ var React = require('react'),
 import {Router, Route, Link, browserHistory} from 'react-router';
 
 import {Panel,Tabs,Tab,Col} from 'react-bootstrap';
-import PersonalD from './personalDetails.react'
-import TimeTable from './timeTable.React'
+import PersonalD from './personalDetails.react';
+import TimeTable from './timeTable.React';
+import SubjectEdit from './tabel/subjectEnrollment';
 
 module.exports = React.createClass({
         render(){
@@ -29,15 +30,7 @@ module.exports = React.createClass({
                                 <Tab eventKey={2} title="Subject">
                                     <h4>Subject Profile</h4>
 
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                        nostrud
-                                        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                        irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                                        nulla
-                                        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                                        officia
-                                        deserunt mollit anim id est laborum.</p>
+                                    <p><SubjectEdit userName={this.props.userName} token={this.props.token}/> </p>
                                 </Tab>
 
                             </Tabs>

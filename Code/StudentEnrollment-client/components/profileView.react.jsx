@@ -41,7 +41,7 @@ module.exports = React.createClass({
             .set('x-access-token', this.props.token)
             .end(function (err, res) {
                 if (err) {
-                    alert('error' + err);
+                    console.log('error' + err);
                 }
                 else {
                     //alert('aaaa')
@@ -96,7 +96,7 @@ module.exports = React.createClass({
     },
 
     handleSubmit(data) {
-        alert('ggg');
+        //alert('ggg');
         data.preventDefault();
 
         var formR = {
@@ -112,7 +112,7 @@ module.exports = React.createClass({
             contactNumber: this.state.telephone.trim()
 
         };
-        alert(JSON.stringify(formR));
+        //alert(JSON.stringify(formR));
         request.put('http://localhost:3000/users/student/'+this.props.userName)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
@@ -144,7 +144,7 @@ module.exports = React.createClass({
                     <h4 >{this.state.email}</h4></Col>
                     <ButtonGroup vertical block>
                         <Button bsStyle="info" onClick={this.open}>Edit Profile</Button>
-                        <Button bsStyle="info">Edit Subject</Button>
+
                     </ButtonGroup>
                 </Panel>
 

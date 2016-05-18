@@ -692,7 +692,7 @@ router.route('/:type/:userName/subjects/timeTable')
 
         mongoose.model(req.type).findOne({
             userName: req.userName
-        }, 'subjects', function (err, subjects) {
+        }, { 'subjects': '1' }, function (err, subjects) {
             // console.log('ID: ' + req.params.id);
             if (err || subjects == null) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
@@ -707,14 +707,15 @@ router.route('/:type/:userName/subjects/timeTable')
                 var subjectCodeArray = [];
 
                 subjects.subjects.map(function (subject, index) {
-                    subjectCodeArray.push(subject.moduleCode);
+                    if (req.type == "student") { subjectCodeArray.push(subject.moduleCode); }
+                    else if (req.type == "coordinator") { subjectCodeArray.push(subject); }
                 })
 
                 // console.log('Check Codes: ' + subjectCodeArray);
                 console.log('GET Retrieving Subject ID: ' + subjects);
                 mongoose.model("subject_model").find({
                     moduleCode: { $in: subjectCodeArray }
-                },{'moduleCode':1,'moduleName':1,'semester':1,'day':1,'timeSlot':1}, function (err, subject) {
+                }, { 'moduleCode': 1, 'moduleName': 1, 'semester': 1, 'day': 1, 'timeSlot': 1,'description':1,'status':1 }, function (err, subject) {
                     if (err || subjects == null) {
                         console.log('GET Error: There was a problem retrieving: ' + err);
                     } else {
@@ -726,16 +727,50 @@ router.route('/:type/:userName/subjects/timeTable')
                         });
                     }
                 });
-
-                // var blobdob = student.userName.toISOString();
-                // blobdob = blobdob.substring(0, blobdob.indexOf('T'))
+           
 
             }
         });
     });
 
 
+// coordinator add subject
+router.put('/:type/:userName/subjectAdd', function (req, res) {
 
+    if (req.type == "admin") {
+        if (req.decoded.type != "admin") {
+            return res.status(403).send({
+                success: false,
+                message: 'You don\'t have privilages to access'
+            });
+        }
+    }
+    if (req.type == "student") {
+        if (req.decoded.type == "student") {
+            return res.status(403).send({
+                success: false,
+                message: 'You don\'t have privilages to access'
+            });
+        }
+    }
+    else {
+        mongoose.model(req.type).findOneAndUpdate({ userName: req.userName }, { "$push": { "subjects": req.body.moduleCode } }, { new: true }, function (err, place) {
+
+            if (err) {
+                res.send("There was a problem updating the information to the database: " + err);
+            } else {
+                res.format({
+                    //JSON responds showing the updated values
+                    json: function () {
+                        res.json(place);
+                    }
+                });
+            }
+        });
+
+    }
+
+});
 
 
 //Update Users
@@ -914,44 +949,51 @@ router.put('/:type/:userName/subjects', function (req, res) {
 
 
 //Unerrole a subject from student
-router.delete('/student/:userName/subjects', function (req, res) {
+router.delete('/:type/:userName/subjects', function(req, res) {
     //find blob by ID
-    req.checkBody('subjects', 'Invalid body').notEmpty();
 
+    // console.log('Unerrole Subject: ');
+    // req.checkBody('subjects', 'Invalid body').notEmpty();
 
-    var errors = req.validationErrors();
-    if (errors) {
-        res.send('There have been validation errors: ' + errors, 400);
-        return;
+    if (req.type == "admin") {
+      return res.status(403).send({
+          success: false,
+          message: 'Wrong Information'
+      });
     }
+    // var errors = req.validationErrors();
+    // if (errors) {
+    //     res.send('There have been validation errors: ' + errors, 400);
+    //     return;
+    // }
 
 
     mongoose.model('student').findOneAndUpdate({
         userName: req.userName
     }, {
-            "$pull": {
-                subjects: req.body.subjects
-            }
-        }, {
-            new: true
-        }, function (err, place) {
-            //update it
+        "$pull": {
+            subjects:   { moduleCode : { $in: req.body.subjects} }
+        }
+    }, {
+        new: true
+    }, function(err, place) {
+        //update it
 
 
-            if (err) {
-                res.send("There was a problem updating the information to the database: " + err);
-            } else {
+        if (err) {
+            res.send("There was a problem updating the information to the database: " + err);
+        } else {
 
-                res.format({
+            res.format({
 
-                    //JSON responds showing the updated values
-                    json: function () {
-                        res.json(place);
-                    }
-                });
-            }
+                //JSON responds showing the updated values
+                json: function() {
+                    res.json(place);
+                }
+            });
+        }
 
-        });
+    });
 
 
 

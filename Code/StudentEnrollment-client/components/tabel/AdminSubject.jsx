@@ -53,76 +53,13 @@ module.exports = React.createClass({
             timeSlot: '',
             credits: '',
             description: '',
-            showModal: false,
+
             data: []
         };
     },
 
 
-    close() {
-        this.setState({ showModal: false });
-    },
 
-    open() {
-        this.setState({ showModal: true });
-    },
-    handleChangeModuleCode: function (event) {
-        this.setState({ moduleCode: event.target.value });
-    },
-    handleChangeModuleName: function (event) {
-        //if(this.state.password.trim().length>1){
-        this.setState({ moduleName: event.target.value });
-    },
-
-
-    handleChangeCredits: function (event) {
-        this.setState({ credits: event.target.value });
-    },
-
-    handleChangeDescription: function (event) {
-        this.setState({ description: event.target.value });
-    },
-    handleSelectSem: function (event) {
-        this.setState({ semester: event.target.value })
-    },
-    handleSelectDay: function (event) {
-        this.setState({ day: event.target.value });
-    },
-    handleSelectTimeSlt: function (event) {
-        this.setState({ timeSlot: event.target.value });
-    },
-
-
-
-    handleSubmit(data) {
-        alert('ggg');
-        data.preventDefault();
-        var formAddSub = {
-            moduleCode: this.state.moduleCode.trim(),
-            moduleName: this.state.moduleName.trim(),
-            credits: this.state.credits.trim(),
-            semester: this.state.semester.trim(),
-            day: this.state.day.trim(),
-            timeSlot: this.state.timeSlot.trim(),
-            description: this.state.description.trim(),
-
-        }
-
-
-        request.post('http://localhost:3000/subjects/subjectAdd')
-            .set('Accept', 'application/json')
-            .set('Content-Type', 'application/json')
-            .set('x-access-token',token)
-            .send(formAddSub)
-            .withCredentials()
-            .end(function (err, res) {
-                if (err || !res.ok) {
-                    console.log('Oh no! error');
-                } else {
-                    console.log('yay got ' + JSON.stringify(formAddSub));
-                }
-            })
-    },
 
 
 
@@ -300,121 +237,10 @@ module.exports = React.createClass({
 
         return (
           <div>
-              <div>  <Col mdOffset={10} md={2}> <Button bsStyle="success" bsSize="xsmall" onClick={this.open}>Add Subject</Button></Col></div>
             <h1> Subject List</h1>
             <FullTable properties={ properties } style={this.style} columns={ subjectCol } remove= {this.reamoveSub} submit={this.submitSub} data ={this.state.data}/>
 
 
-              <div className="modal-container" >
-                  <Modal
-                      show={this.state.showModal}
-                      onHide={this.close}
-                      //show={this.state.show}
-                      //onHide={close}
-                      //container={this}
-                      aria-labelledby="contained-modal-title"
-                      >
-                      <Modal.Header closeButton>
-                          <Modal.Title id="contained-modal-title">Contained Modal</Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                          <div>
-                              <Form onSubmit={this.handleSubmit}>
-                                  <Col md={12}>
-                                      <FormGroup>
-                                          <ControlLabel>Module Code</ControlLabel>
-                                          <FormControl type="text"
-                                                       ref="moduleCode"
-                                                       value={this.state.moduleCode}
-                                                       onChange={this.handleChangeModuleCode}/>
-                                      </FormGroup>
-                                  </Col><Col md={12}>
-                                  <FormGroup>
-                                      <ControlLabel>Module Name</ControlLabel>
-                                      <FormControl type="text"
-                                                   ref="moduleName"
-                                                   value={this.state.moduleName}
-                                                   onChange={this.handleChangeModuleName}/>
-                                  </FormGroup>
-
-                              </Col>  <Col md={6}>
-                                  <FormGroup>
-                                      <ControlLabel>Credits</ControlLabel>
-                                      <FormControl type="text"
-                                                   ref="credits"
-                                                   value={this.state.credits}
-                                                   onChange={this.handleChangeCredits}/>
-                                  </FormGroup>
-
-                              </Col>
-                                  <Col md={6}>
-                                      <FormGroup >
-                                          <ControlLabel>Semester</ControlLabel>
-                                          <FormControl componentClass="select" placeholder="select" ref="semester" onChange={this.handleSelectSem}>
-
-                                              <option value="">~Select ~</option>
-                                              <option value="Semester 1">Semester 1</option>
-                                              <option value="Semester 2">Semester 2</option>
-                                              <option value="Semester 3">Semester 3</option>
-                                              <option value="Semester 4">Semester 4</option>
-                                          </FormControl>
-                                      </FormGroup>
-
-                                  </Col>
-                                  <Col md={6}>
-                                      <FormGroup >
-                                          <ControlLabel>Day</ControlLabel>
-                                          <FormControl componentClass="select" placeholder="select" ref="day" onChange={this.handleSelectDay}>
-                                              <option value="">~Select ~</option>
-                                              <option value="Sunday">Sunday</option>
-                                              <option value="Monday">Monday</option>
-                                              <option value="Tuesday">Tuesday</option>
-                                              <option value="Wednesday">Wednesday</option>
-                                              <option value="Thuesday">Thuesday</option>
-                                              <option value="Friday">Friday</option>
-                                              <option value="Saturday">Saturday</option>
-                                          </FormControl>
-                                      </FormGroup>
-
-                                  </Col>    <Col md={6}>
-                                  <FormGroup >
-                                      <ControlLabel>Time Slot</ControlLabel>
-                                      <FormControl componentClass="select" placeholder="select" ref="timeSlot" onChange={this.handleSelectTimeSlt}>
-                                          <option value="">~Select ~</option>
-                                          <option value="08.15-10.15">08.15-10.15</option>
-                                          <option value="10.30-12.30">10.30-12.30</option>
-                                          <option value="13.15-15.15">13.15-15.15</option>
-                                          <option value="15.30-17.30">15.30-17.30</option>
-                                      </FormControl>
-                                  </FormGroup>
-
-                              </Col>
-                                  <Col md={12}>
-                                      <FormGroup >
-                                          <ControlLabel>Description</ControlLabel>
-                                          <FormControl componentClass="textarea" placeholder="Description here"
-                                                       ref="description"
-                                                       value={this.state.description}
-                                                       onChange={this.handleChangeDescription} />
-                                      </FormGroup>
-
-                                  </Col>
-
-
-                                  <Col sm={6}>
-                                      <Button bsStyle="danger" onClick={this.close}>Close</Button>
-                                      <Button bsStyle="success" onClick={this.close} type="submit">Submit</Button>
-                                  </Col>
-                              </Form>
-                          </div>
-                      </Modal.Body>
-                      <Modal.Footer>
-
-                      </Modal.Footer>
-                  </Modal>
-
-
-              </div>
 
           </div>
         );

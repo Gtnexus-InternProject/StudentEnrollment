@@ -86,23 +86,6 @@ module.exports = React.createClass({
 
         },
 
-        //rowData(){
-        //    return(
-        //
-        //    <tr>
-        //
-        //        <td>{this.props.data.moduleCode}</td>
-        //        <td>{this.props.data.moduleName}</td>
-        //        <td>{this.props.data.semester}</td>
-        //        <td>{this.props.data.day}</td>
-        //        <td>{this.props.data.timeSlot}</td>
-        //
-        //    </tr>
-        //
-        //    );
-        //
-        //
-        //},
 
 
 

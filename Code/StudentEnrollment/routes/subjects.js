@@ -212,6 +212,7 @@ router.route('/subjectAdd').post(function(req, res) {
     var credits = req.body.credits;
     var semester = req.body.semester;
     var day = req.body.day;
+    var timeSlot=req.body.timeSlot;
     var description = req.body.description;
     var preRequestSubjects = req.body.preRequestSubjects;
     var status = 1;
@@ -229,6 +230,7 @@ router.route('/subjectAdd').post(function(req, res) {
         credits: credits,
         semester: semester,
         day: day,
+        timeSlot:timeSlot,
         description: description,
         preRequestSubjects: preRequestSubjects,
         status: status,
@@ -371,7 +373,8 @@ router.put('/update/:moduleCode', function(req, res) {
                 credits: credits,
                 semester: req.body.semester,
                 day: req.body.day,
-                //description : req.body.description,
+                timeSlot:req.body.timeSlot,
+                description : req.body.description,
                 preRequestSubjects: req.body.preRequestSubjects
                 //status:req.body.status,
             }, {
@@ -416,7 +419,7 @@ router.put('/delete/:moduleCode', function(req, res) { //find blob by ID
             deletesub.update({
                 status: 2
             }, {
-                "upsert": false
+                "upsert": true
             }, function(err, updt) {
                 if (err) {
                     console.log(('Error' + err))
@@ -440,6 +443,47 @@ router.put('/delete/:moduleCode', function(req, res) { //find blob by ID
 
     });
 });
+
+
+
+
+router.post('/timeTable/:subjects', function(req, res) {
+  
+
+    mongoose.model('student').find({
+        userName: req.userName
+    }, {
+        "$pull": {
+            subjects:   { moduleCode : { $in: req.body.subjects} }
+        }
+    }, {
+        new: true
+    }, function(err, place) {
+        //update it
+
+
+        if (err) {
+            res.send("There was a problem updating the information to the database: " + err);
+        } else {
+
+            res.format({
+
+                //JSON responds showing the updated values
+                json: function() {
+                    res.json(place);
+                }
+            });
+        }
+
+    });
+
+
+
+});
+
+
+
+
 
 // get students per particular subject
 
