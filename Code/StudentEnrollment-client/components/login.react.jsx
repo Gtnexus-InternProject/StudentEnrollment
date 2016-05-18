@@ -47,8 +47,6 @@ module.exports = React.createClass({
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .send(formL)
-
-            .withCredentials()
             .end(function (err, res) {
                 if (err || !res.ok) {
                     alert('Oh no! error');

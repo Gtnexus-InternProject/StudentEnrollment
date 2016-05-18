@@ -115,7 +115,6 @@ alert(JSON.stringify(formR));
                 .set('Accept', 'application/json')
                 .set('Content-Type', 'application/json')
                 .send(formR)
-                .withCredentials()
                 .end(function (err, res) {
                     if (err || !res.ok) {
                         console.log('Oh no! error');

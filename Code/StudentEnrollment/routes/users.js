@@ -107,6 +107,7 @@ var checkUserName = function(userName, res, cb) {
 
 //Create a new student
 router.route('/student').post(function(req, res) {
+    console.log("and here");
     // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
     // var userId = req.body.userId;
     var userName = req.body.userName;
