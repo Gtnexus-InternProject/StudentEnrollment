@@ -3,6 +3,9 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import {Button} from 'react-bootstrap';
 import './react-bootstrap-table.min.css';
 
+var findIndex = require('lodash/findIndex');
+var removeArray = require('lodash/remove');
+
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
 
@@ -11,7 +14,7 @@ import token from '../../config';
 module.exports = React.createClass({
 
 
-
+    selectedRows: [],
     fetchData: function(callback) {
 
         request.get('http://localhost:3000/users/student/state'). //
@@ -77,7 +80,7 @@ module.exports = React.createClass({
                             // }
                         }
 
-                        console.log("data: " + associateArray );
+                        // console.log("data: " + associateArray );
                         data = data.map(function(user, index) {
                             // console.log("user " + user);
                             user.moduleName = associateArray[user.moduleCode] || "";
@@ -85,7 +88,7 @@ module.exports = React.createClass({
                             return user;
                         });
 
-                        console.log("data: " + JSON.stringify(data) );
+                        // console.log("data: " + JSON.stringify(data) );
 
                         callback(data);
 
@@ -116,16 +119,34 @@ module.exports = React.createClass({
         return {data: [] };
     },
     onRowSelect(row, isSelected) {
-        console.log(row);
-        console.log("selected: " + isSelected)
+
+        // console.log("selected: " + isSelected)
+        if(isSelected){
+          this.selectedRows.push(row);
+          console.log("Added" + row);
+        }else {
+          var remove = removeArray(this.selectedRows, function (o) {
+              return o.id = row.id;
+          });
+          console.log("Removed" + remove);
+        }
+        // var index = findIndex(this.selectedRows, { 'id' : row.id } );
+        // this.selectedRows.push(row);
     },
 
-    onSelectAll(isSelected) {
+    onSelectAll(isSelected, data) {
         console.log("is select all: " + isSelected);
+        if(isSelected){
+          this.selectedRows.push(data);
+          console.log("Added" + data);
+        }else {
+          this.selectedRows = [];
+          console.log("Removed" );
+        }
     },
 
     accept(event){
-
+        console.log("Selected data" + JSON.stringify(this.selectedRows) );
     },
     decline(event){
 

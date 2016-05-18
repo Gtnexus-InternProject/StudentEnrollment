@@ -709,7 +709,7 @@ router.put('/:type/:userName', function(req, res) {
 
     //find the document by ID
 
-    if (req.body.subjects.state == 1) {
+    if ( req.body.subjects && req.body.subjects.state && req.body.subjects.state == 1) {
         if (req.decoded.type == "student") {
             return res.format({
                 json: function() {
