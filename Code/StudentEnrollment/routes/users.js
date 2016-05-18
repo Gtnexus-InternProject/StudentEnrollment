@@ -540,7 +540,7 @@ router.route('/:type')
               if (err) {
                   return console.error(err);
               } else {
-                console.log(JSON.stringify(users));
+                // console.log(JSON.stringify(users));
                   //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
                   res.format({
 
@@ -619,7 +619,7 @@ router.get('/:id/edit', function(req, res) {
 
 
 
-// Get Subjects Per Student
+// Get Subjects Per Student/coordinator
 router.route('/:type/:userName/subjects')
     .get(function(req, res) {
 
@@ -638,23 +638,36 @@ router.route('/:type/:userName/subjects')
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
 
-                console.log('GET Retrieving Subject ID: ' + subjects.subjects);
-                mongoose.model("subject").find({
-                    moduleCode: {
-                        $in: subjects.subjects
-                    }
-                }, function(err, subject) {
-                    if (err || subjects == null) {
-                        console.log('GET Error: There was a problem retrieving: ' + err);
-                    } else {
-                        console.log('GET Retrieving Subjects: ' + subject);
-                        res.format({
-                            json: function() {
-                                res.json(subject);
-                            }
-                        });
-                    }
-                });
+              res.format({
+                  json: function() {
+                      res.json(subjects);
+                  }
+              });
+
+              // var subjectCodeArray = [];
+              //
+              // subjects.subjects.map(function (subject, index) {
+              //   subjectCodeArray.push(subject.moduleCode);
+              // })
+              //
+              //   // console.log('Check Codes: ' + subjectCodeArray);
+              //   console.log('GET Retrieving Subject ID: ' + subjects);
+              //   mongoose.model("subject_model").find({
+              //       moduleCode: {
+              //           $in: subjectCodeArray
+              //       }
+              //   }, 'moduleCode', function(err, subject) {
+              //       if (err || subjects == null) {
+              //           console.log('GET Error: There was a problem retrieving: ' + err);
+              //       } else {
+              //           console.log('GET Retrieving Subjects: ' + subject);
+              //           res.format({
+              //               json: function() {
+              //                   res.json(subjects);
+              //               }
+              //           });
+              //       }
+              //   });
 
                 //var blobdob = student.userName.toISOString();
                 //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
@@ -778,7 +791,7 @@ router.put('/:type/:userName/subjects', function(req, res) {
 
     //find the document by ID
 
-    req.checkBody('subjects', 'Invalid body').notEmpty();
+    // req.checkBody('subjects', 'Invalid body').notEmpty();
 
     if (req.type == "admin") {
         return res.status(404).send({
@@ -803,11 +816,11 @@ router.put('/:type/:userName/subjects', function(req, res) {
         }
     }
 
-    var errors = req.validationErrors();
-    if (errors) {
-        res.send('There have been validation errors: ' + errors, 400);
-        return;
-    }
+    // var errors = req.validationErrors();
+    // if (errors) {
+    //     res.send('There have been validation errors: ' + errors, 400);
+    //     return;
+    // }
 
     mongoose.model(req.type).findOneAndUpdate({
         userName: req.userName
@@ -842,23 +855,30 @@ router.put('/:type/:userName/subjects', function(req, res) {
 
 
 //Unerrole a subject from student
-router.delete('/student/:userName/subjects', function(req, res) {
+router.delete('/:type/:userName/subjects', function(req, res) {
     //find blob by ID
-    req.checkBody('subjects', 'Invalid body').notEmpty();
 
+    // console.log('Unerrole Subject: ');
+    // req.checkBody('subjects', 'Invalid body').notEmpty();
 
-    var errors = req.validationErrors();
-    if (errors) {
-        res.send('There have been validation errors: ' + errors, 400);
-        return;
+    if (req.type == "admin") {
+      return res.status(403).send({
+          success: false,
+          message: 'Wrong Information'
+      });
     }
+    // var errors = req.validationErrors();
+    // if (errors) {
+    //     res.send('There have been validation errors: ' + errors, 400);
+    //     return;
+    // }
 
 
     mongoose.model('student').findOneAndUpdate({
         userName: req.userName
     }, {
         "$pull": {
-            subjects: req.body.subjects
+            subjects:   { moduleCode : { $in: req.body.subjects} }
         }
     }, {
         new: true
