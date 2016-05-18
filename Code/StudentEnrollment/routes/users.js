@@ -442,7 +442,7 @@ router.use(function(req, res, next) {
         // verifies secret and checks exp
         jwt.verify(token, config.secret, function(err, decoded) {
             if (err) {
-                return res.json({
+                return res.status(401).send({
                     success: false,
                     message: 'Failed to authenticate token.'
                 });
@@ -513,7 +513,7 @@ router.route('/coordinator').post(function(req, res) {
 
 
 // Get all students
-router.route('/:type')
+router.route('/:type/:meta?')
     //GET all blobs
     .get(function(req, res, next) {
 
@@ -532,6 +532,28 @@ router.route('/:type')
 
       }
 
+      if (req.params.meta){
+
+        mongoose.model(req.type).find({ 'subjects.state' : 0 } , function (err, users) {
+              if (err) {
+                  return console.error(err);
+              } else {
+                // console.log(JSON.stringify(users));
+
+
+                  //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+                  res.format({
+
+                    //JSON response will show all blobs in JSON format
+                    json: function(){
+                        res.json(users);
+                    }
+                });
+              }
+        });
+
+
+      }else {
 
 
         //retrieve all blobs from Monogo
@@ -550,6 +572,10 @@ router.route('/:type')
                 });
               }
         });
+      }
+
+
+
     });
 
 

@@ -310,32 +310,62 @@ router.route('/subjectAdd').post(function(req, res) {
 //    });
 
 
-//GET the individual subject by Mongo ID
-router.get('/:moduleCode?', function(req, res) {
+//With meta array of moduleCodes 
+router.get('/:moduleCode/:meta?', function(req, res) {
     var errors = req.validationErrors();
     if (errors) {
         res.send('There have been validation errors: ' + errors, 400);
         return;
     }
-    //search for the blob within Mongo
-    mongoose.model('subject_model').findOne({
-        moduleCode: req.params.moduleCode
-    }, function(err, subject) {
-        if (err) {
-            console.log('GET Error: There was a problem retrieving: ' + err);
-        } else {
-            //console.log('GET Retrieving ID: ' + subject.moduleCode);
+
+    if (req.params.meta){
+
+      console.log('Params moduleCode ' + req.params.moduleCode);
+      var moduleCode = req.params.moduleCode.split(",");
+      console.log('Params moduleCode ' + moduleCode);
+      //search for the blob within Mongo
+      mongoose.model('subject_model').find({
+          moduleCode: {$in : moduleCode}
+      }, function(err, subject) {
+          if (err) {
+              console.log('GET Error: There was a problem retrieving: ' + err);
+          } else {
+              //console.log('GET Retrieving ID: ' + subject.moduleCode);
 
 
 
-            res.format({
-                //JSON response will return the JSON output
-                json: function() {
-                    res.json(subject);
-                }
-            });
-        }
-    });
+              res.format({
+                  //JSON response will return the JSON output
+                  json: function() {
+                      res.json(subject);
+                  }
+              });
+          }
+      });
+
+    }
+    else{
+      //search for the blob within Mongo
+      mongoose.model('subject_model').findOne({
+          moduleCode: req.params.moduleCode
+      }, function(err, subject) {
+          if (err) {
+              console.log('GET Error: There was a problem retrieving: ' + err);
+          } else {
+              //console.log('GET Retrieving ID: ' + subject.moduleCode);
+
+
+
+              res.format({
+                  //JSON response will return the JSON output
+                  json: function() {
+                      res.json(subject);
+                  }
+              });
+          }
+      });
+    }
+
 });
 
 
