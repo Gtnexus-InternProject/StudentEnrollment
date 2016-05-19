@@ -312,6 +312,82 @@ router.route('/subjectAdd').post(function(req, res) {
 //    });
 
 
+
+router.get('/moduleDetails/:moduleCodes', function (req, res) {
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.send('There have been validation errors: ' + errors, 400);
+        return;
+    }
+    //converting modulecode string to array
+    var moduleCodeArr = req.params.moduleCodes.split(",");
+    mongoose.model('subject_model').find({
+        moduleCode: {
+            $in: moduleCodeArr
+        }
+    }, function (err, modules) {
+        if (err) {
+            console.log(err);
+        } else {
+            var moduleCodes = [];
+            //subjects is an array of the subjects with the module codes.
+            for (var i = 0; i < modules.length; i++) {
+                moduleCodes[i] = modules[i].moduleCode;
+            }
+            mongoose.model('student').aggregate([{
+                $match: {
+                    'subjects.moduleCode': {
+                        "$in": moduleCodes
+                    }
+                }
+                    }, {
+                "$unwind": "$subjects"
+                    }, {
+                $group: {
+                    _id: '$subjects.moduleCode',
+                    counter: {
+                        $sum: 1
+                    }
+                }
+                    }, {
+                $project: {
+                    _id: 1,
+                    counter: 1
+                }
+                    }], function (err, result) {
+                if (err) {
+                    return console.error(err);
+                }
+
+                    var codes = [];
+
+                for (var l = 0; l < result.length; l++) {
+                    codes[result[l]._id] = result[l].counter;
+
+                }
+                modules = modules.map(function (subject) {
+                    subject.set('count', codes[subject.moduleCode] || 0, {
+                        strict: false
+                    });
+                    return subject;
+                });
+
+                res.format({
+                    json: function () {
+                        res.json({
+                            modules
+                        });
+                    }
+                });
+
+            });
+
+        }
+
+    });
+});
+
 //GET the individual subject by Mongo ID
 router.get('/:moduleCode?', function(req, res) {
     var errors = req.validationErrors();

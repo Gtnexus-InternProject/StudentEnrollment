@@ -12,6 +12,7 @@ import {Router, Route, Link, browserHistory} from 'react-router';
 import {Panel,Tabs,Tab,Col,Row} from 'react-bootstrap';
 import CoordinatorOverview from './coordinatorOverview.react'
 
+import CoordinatorSubjectList from './coordinatorSubjectList.react'
 
 module.exports = React.createClass({
         render(){
@@ -30,21 +31,8 @@ module.exports = React.createClass({
                                 </Tab>
                                 <Tab eventKey={2} title="Students">
                                     <h4>Students list </h4>
-
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                        tempor
-                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                        quis
-                                        nostrud
-                                        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                        Duis aute
-                                        irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                                        fugiat
-                                        nulla
-                                        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                                        qui
-                                        officia
-                                        deserunt mollit anim id est laborum.</p>
+                                    <p><CoordinatorSubjectList userName={this.props.userName}
+                                                            token={this.props.token}/></p>
                                 </Tab>
 
                                 <Tab eventKey={3} title="Student Request">

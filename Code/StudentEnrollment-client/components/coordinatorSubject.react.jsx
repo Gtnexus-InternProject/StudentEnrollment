@@ -48,66 +48,41 @@ module.exports = React.createClass({
     fetchData(callback){
         var jsonObjSub;
 
+
         request
-            .get('http://localhost:3000/users/coordinator/coor/subjects')
+            .get('http://localhost:3000/subjects/student/' + this.props.moduleCode)
             .set('Accept', 'application/json')
-            .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjM2MzI3NTEsImV4cCI6MTQ2MzcxOTE1MX0.-tLoehViB7_sjntHQ1AIWSBsaxAVuUSdFFN5KA4tj60')
+            .set('x-access-token', this.props.token)
             .end(function (err, res) {
                 if (err) {
-                    console.log(err);
+                    console.log(err)
                 }
                 else {
-                    if (res == null) {
-                        console.log("Empty");
-                        return;
+                    var jsonObj = res.body;
+                    var data = [];
+                    for (var i = 0; i < jsonObj.length; i++) {
+                        var row = {
+                            userName: jsonObj[i].userName,
+                            firstName: jsonObj[i].firstName,
+                            lastName: jsonObj[i].lastName,
+                            email: jsonObj[i].email,
+                            contactNumber: jsonObj[i].contactNumber,
+
+                        }
+                        data.push(row);
                     }
-                    // console.log(res.body);
-                    jsonObjSub = res.body.subjects;
-                    console.log(jsonObjSub);
-
-                    for (var j = 0; j < jsonObjSub.length; j++) {
-                        request
-                            .get('http://localhost:3000/subjects/coordinator/' + jsonObjSub[j])
-                            .set('Accept', 'application/json')
-                            .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjM2MzI3NTEsImV4cCI6MTQ2MzcxOTE1MX0.-tLoehViB7_sjntHQ1AIWSBsaxAVuUSdFFN5KA4tj60')
-                            .end(function (err, res) {
-                                if (err) {
-                                    console.log(err)
-                                }
-                                else {
-                                    var jsonObj = res.body;
-                                    var data = [];
-                                    for (var i = 0; i < jsonObj.length; i++) {
-                                        var row = {
-                                            userName: jsonObj[i].userName,
-                                            firstName: jsonObj[i].firstName,
-                                            lastName: jsonObj[i].lastName,
-                                            email: jsonObj[i].email,
-                                            contactNumber: jsonObj[i].contactNumber,
-
-                                        }
-                                        data.push(row);
-                                    }
-                                    ;
+                    ;
 
 
-                                    // console.log("data: " + data);
-                                    console.log(data);
+                    // console.log("data: " + data);
+                    console.log(data);
 
-                                    callback(data);
-
-                                }
-
-
-                            });
-                    }
+                    callback(data);
 
                 }
-                ;
 
 
             });
-
 
 
     },
