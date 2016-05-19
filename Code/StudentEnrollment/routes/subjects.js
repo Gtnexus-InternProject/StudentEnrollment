@@ -319,58 +319,84 @@ router.get('/moduleDetails/:moduleCodes', function (req, res) {
         res.send('There have been validation errors: ' + errors, 400);
         return;
     }
-    console.log('ok');
     //converting modulecode string to array
     var moduleCodeArr = req.params.moduleCodes.split(",");
     mongoose.model('subject_model').find({
         moduleCode: {
             $in: moduleCodeArr
         }
-    }, function (err, subjects) {
+    }, function (err, modules) {
         if (err) {
             console.log(err);
         } else {
-            console.log('ok 2');
-            console.log(subjects);
-            console.log('ok 3');
-            
-            mongoose.model('student').find({ }, function (err, allStudents) {
-                var studentCount = 0;
-                allStudents.forEach(function (entry) {
-                    if (entry.subjects.moduleCode) {
-                        studentCount++;
+            var moduleCodes = [];
+            //subjects is an array of the subjects with the module codes.
+            for (var i = 0; i < modules.length; i++) {
+                moduleCodes[i] = modules[i].moduleCode;
+            }
+            mongoose.model('student').aggregate([{
+                $match: {
+                    'subjects.moduleCode': {
+                        "$in": moduleCodes
+                    }
+                }
+                    }, {
+                "$unwind": "$subjects"
+                    }, {
+                $group: {
+                    _id: '$subjects.moduleCode',
+                    counter: {
+                        $sum: 1
+                    }
+                }
+                    }, {
+                $project: {
+                    _id: 1,
+                    counter: 1
+                }
+                    }], function (err, result) {
+                if (err) {
+                    return console.error(err);
+                }
+
+                    var codes = [];
+
+                for (var l = 0; l < result.length; l++) {
+                    codes[result[l]._id] = result[l].counter;
+
+                }
+                modules = modules.map(function (subject) {
+                    subject.set('count', codes[subject.moduleCode] || 0, {
+                        strict: false
+                    });
+                    return subject;
+                });
+
+                res.format({
+                    json: function () {
+                        res.json({
+                            modules
+                        });
                     }
                 });
 
-
-    subjects = subjects.map(function (subject) {
-                            //  subject.set('thumbnail', 'test', {strict: false});
-                            //  console.log('Subject ' + subject );
-                            subject.set('count', codes[subject.moduleCode] || 0, {
-                                strict: false
-                            });
-                            //  console.log('Subject ' + subject );
-                            return subject;
-                        });
-
             });
-
 
         }
 
-    });
-
-    res.format({
-        //JSON response will show all blobs in JSON format
-        json: function () {
-            res.json({
-                subjects
-            });
-        }
     });
 });
 
 
+//
+//            res.format({
+//                //JSON response will show all blobs in JSON format
+//                json: function () {
+//                    res.json({
+//                        modules
+//                    });
+//                }
+//            });
 
 //
 //
