@@ -28,8 +28,8 @@ module.exports = React.createClass({
                                                             token={this.props.token}/></p>
 
                                 </Tab>
-                                <Tab eventKey={2} title="Subject">
-                                    <h4>Subjects </h4>
+                                <Tab eventKey={2} title="Students">
+                                    <h4>Students list </h4>
 
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                                         tempor

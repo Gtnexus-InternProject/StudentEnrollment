@@ -292,7 +292,6 @@ module.exports = React.createClass({
                     pagination={true}
                     selectRow={selectRowProp}
                     deleteRow={true}
-                    
                     columnFilter={true}
                     search={true}
                     options={options}

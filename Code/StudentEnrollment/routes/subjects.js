@@ -505,7 +505,39 @@ router.get('/student/:moduleCode', (function(req, res) {
         userName: 1,
         firstName: 1,
         lastName: 1,
-        email: 1
+        email: 1,
+        contactNumber:1
+    }, function(err, resultUser) {
+        if (err) {
+            console.log('GET Error: There was a problem retrieving: ' + err);
+        } else {
+            console.log('GET Retrieving ID: ' + resultUser);
+            res.format({
+                json: function() {
+                    res.json(resultUser);
+                }
+            });
+        }
+    });
+}));
+
+router.get('/coordinator/:moduleCode', (function(req, res) {
+    //if (req.type == "admin") {
+    //    return res.status(404).send({
+    //        success: false,
+    //        message: 'Wrong URL'
+    //    });
+    //}
+console.log("gdd");
+    mongoose.model('coordinator').find(
+         { subjects:req.params.moduleCode  
+      
+    }, {
+        userName: 1,
+        firstName: 1,
+        lastName: 1,
+        email: 1,
+        contactNumber:1
     }, function(err, resultUser) {
         if (err) {
             console.log('GET Error: There was a problem retrieving: ' + err);

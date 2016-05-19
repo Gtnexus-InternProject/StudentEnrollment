@@ -4,8 +4,6 @@
 
 var React = require('react'),
     ReactDOMServer = require('react-dom/server');
-
-import StyleSheet from 'react-stylesheet';
 import request from 'superagent';
 
 

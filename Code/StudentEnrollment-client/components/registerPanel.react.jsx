@@ -34,29 +34,28 @@ module.exports = React.createClass({
                 zScore: ''
             };
         },
-        //
-        //test12() {
-        //    //alert('rfcecr');
-        //
-        //    userName = this.state.userName.trim(),
-        //        setTimeout(() => {
-        //
-        //            request.get('http://localhost:3000/users/student/' + userName)
-        //                .set('Accept', 'application/json')
-        //                .end(function (err, res) {
-        //                    if (err) {
-        //
-        //                    } else if (res.status == 200) {
-        //                        alert('Username is already taken')
-        //                        retur
-        //                    }
-        //
-        //                    console.log(res.status);
-        //                });
-        //            //var statusCode=fetch(values.userName);
-        //        }, 1000)
-        //},
 
+        test12() {
+            alert('rfcecr');
+
+            userName = this.state.userName.trim(),
+                setTimeout(() => {
+
+                    request.get('http://localhost:3000/users/student/' + userName)
+                        .set('Accept', 'application/json')
+                        .end(function (err, res) {
+                            if (err) {
+
+                            } else if (res.status == 200) {
+                                alert('Username is already taken')
+                                retur
+                            }
+
+                            console.log(res.status);
+                        });
+                    //var statusCode=fetch(values.userName);
+                }, 1000)
+        },
         handleChangeUserName: function (event) {
             this.setState({userName: event.target.value});
         },
@@ -96,7 +95,7 @@ module.exports = React.createClass({
         },
 
         handleSubmit(data) {
-            //alert('ggg');
+            alert('ggg');
             data.preventDefault();
 
             var formR = {
@@ -112,7 +111,7 @@ module.exports = React.createClass({
                 contactNumber: this.state.telephone.trim(),
                 zScore: this.state.zScore.trim()
             };
-            //alert(JSON.stringify(formR));
+            alert(JSON.stringify(formR));
             request.post('http://localhost:3000/users/student')
                 .set('Accept', 'application/json')
                 .set('Content-Type', 'application/json')
