@@ -388,18 +388,6 @@ router.get('/moduleDetails/:moduleCodes', function (req, res) {
 });
 
 
-//
-//            res.format({
-//                //JSON response will show all blobs in JSON format
-//                json: function () {
-//                    res.json({
-//                        modules
-//                    });
-//                }
-//            });
-
-//
-//
 //router.get('/:moduleCode/:meta?', function (req, res) {
 //    var errors = req.validationErrors();
 //    if (errors) {
