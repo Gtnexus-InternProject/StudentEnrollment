@@ -518,7 +518,7 @@ router.route('/:type')
     //GET all blobs
     .get(function (req, res, next) {
 
-        if (req.decoded.type != 'admin') {
+        if (req.decoded.type == 'student') {
             return res.format({
 
 

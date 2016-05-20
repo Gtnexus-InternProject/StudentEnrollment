@@ -22,13 +22,60 @@ module.exports = React.createClass({
             userName: '',
             firstName: '',
             lastName: '',
+            userName1: '',
+            firstName1: '',
+            lastName1: '',
             email: '',
             contactNumber: '',
             showModal: false,
-
+            data1:[],
             data: []
         };
     },
+
+    getAllStudents(callback){
+        //alert('eee');
+        request
+            .get('http://localhost:3000/users/student')
+            .set('x-access-token', this.props.token)
+            .set('Accept', 'application/json')
+            .end(function (err, res) {
+                if (err || !res.ok) {
+                    // alert('Oh no! error');
+                    console.log('Oh no! error' + err);
+                } else {
+                    // alert('yay got ' + JSON.stringify(res.body));
+                    console.log('yay got ' + JSON.stringify(res.body));
+
+                    var jsonObj = res.body;
+                    var data = [];
+                    for (var i = 0; i < jsonObj.length; i++) {
+                        var row = {
+                            userName1: jsonObj[i].userName,
+                            firstName1: jsonObj[i].firstName,
+                            lastName1: jsonObj[i].lastName,
+
+
+                        }
+                        data.push(row);
+                    }
+                    ;
+
+
+                    // console.log("data: " + data);
+                    console.log(data);
+
+                    callback(data);
+
+
+
+                }
+            });
+    },
+
+
+
+
 
 
     close() {
@@ -36,6 +83,10 @@ module.exports = React.createClass({
     },
 
     open() {
+        this.getAllStudents(function (dataSe) {
+            this.setState({data1: dataSe});
+            // console.log(dataSe);
+        }.bind(this));
         this.setState({showModal: true});
     },
 
@@ -80,11 +131,7 @@ module.exports = React.createClass({
                     callback(data);
 
                 }
-
-
             });
-
-
     },
 
     componentDidMount: function () {
@@ -97,6 +144,8 @@ module.exports = React.createClass({
         //var data = this.getData();
 
     },
+
+
 
 
     afterDeleteRow (data) {
@@ -153,6 +202,8 @@ module.exports = React.createClass({
             bgColor: "rgb(238, 193, 213)",
             onSelect: this.onRowSelect
         };
+
+
         var options = {
             afterDeleteRow: this.afterDeleteRow,
 
@@ -162,10 +213,30 @@ module.exports = React.createClass({
             blurToSave: true,
             afterSaveCell: this.afterSaveCell
         };
+
+        //fro the student add table
+        var selectRowProp1 = {
+            mode: "checkbox",
+            clickToSelect: true,
+            bgColor: "rgb(238, 193, 213)",
+            onSelect: onRowSelect,
+            onSelectAll: onSelectAll
+        };
+        function onRowSelect(row, isSelected){
+            console.log(row);
+            console.log("selected: " + isSelected)
+        }
+
+        function onSelectAll(isSelected){
+            console.log("is select all: " + isSelected);
+        }
+
+// stuednt add table
+
         return (
             <div>
                 <div><Col mdOffset={10} md={2}> <Button bsStyle="success" bsSize="xsmall" onClick={this.open}>Add
-                    Subject</Button></Col></div>
+                    Students</Button></Col></div>
                 <h1>Subject List</h1>
 
 
@@ -187,6 +258,43 @@ module.exports = React.createClass({
                     <TableHeaderColumn dataField="contactNumber">Contact Number</TableHeaderColumn>
 
                 </BootstrapTable>
+
+                <div className="modal-container">
+                    <Modal
+                        show={this.state.showModal}
+                        onHide={this.close}
+                        //show={this.state.show}
+                        //onHide={close}
+                        //container={this}
+                        aria-labelledby="contained-modal-title"
+                        >
+                        <Modal.Header closeButton>
+                            <Modal.Title id="contained-modal-title">Add Students</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div>
+
+                                <BootstrapTable data={this.state.data1}
+                                                selectRow={selectRowProp1}
+                                                search={true}
+                                                pagination={true}
+                                    >
+                                    <TableHeaderColumn dataField="userName1" isKey={true}>Username</TableHeaderColumn>
+                                    <TableHeaderColumn dataField="firstName1">First Name</TableHeaderColumn>
+                                    <TableHeaderColumn dataField="lastName1">Last Name</TableHeaderColumn>
+                                </BootstrapTable>
+
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+
+                        </Modal.Footer>
+                    </Modal>
+
+
+                </div>
+
+
             </div>
         );
     }

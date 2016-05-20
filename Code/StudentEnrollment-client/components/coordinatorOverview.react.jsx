@@ -5,6 +5,7 @@ var request = require('superagent');
 var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
 
+
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
 
 
@@ -156,10 +157,7 @@ module.exports = React.createClass({
             .set('Accept', 'application/json')
             .set('x-access-token', this.props.token)
             .end(function (err, res) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
+                if (!err) {
                     if (res == null) {
                         console.log("Empty");
                         return;
@@ -167,11 +165,28 @@ module.exports = React.createClass({
                     // console.log(res.body);
                     var jsonObj = res.body;
                     console.log(jsonObj);
+                    var csv1;
+                    for (var i = 0; i < jsonObj.length; i++) {
+                        csv1 = csv1.append(jsonObj[i].moduleCode);
+                        if (i != (jsonObj.length - 1))
+                        {
+                            csv1.append(',');
+                        }
+                    }
+                    console.log(csv1)
+
+
+                    //json2csv({ data: jsonObj}, function(err, csv) {
+                    //    if (err) console.log(err);
+                    //    console.log(csv + 'regrhrhy');
+                    //    csv1=csv;
+                    //});
+
 
                     request
-                        .get('http://localhost:3000/subjects/moduleDetails/' + jsonObj[0].moduleCode + "," + jsonObj[2].moduleCode)
+                        .get('http://localhost:3000/subjects/moduleDetails/' + csv1)
                         .set('Accept', 'application/json')
-                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjM2NDg3NTksImV4cCI6MTQ2MzczNTE1OX0.v2KYsNkxci041HbBT53EZ_2wVccGUGgNGi4eLVxLwfU')
+                        //.set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjM2NTYzOTQsImV4cCI6MTQ2Mzc0Mjc5NH0.mLoQrgaUEHO5pa6F8G-kOzno9E8qa7urr0sd6ZelBEc')
                         .end(function (err, res) {
                             if (err) {
                                 console.log(err);
@@ -187,38 +202,37 @@ module.exports = React.createClass({
 
 
                                 var data = [];
-                                for (var i = 0; i < jsonObj1.modules.length; i++){
+                                for (var i = 0; i < jsonObj1.modules.length; i++) {
 
-                                     var row = {
-                                         count: jsonObj1.modules[i].count,
-                                         moduleCode: jsonObj1.modules[i].moduleCode,
-                                         moduleName: jsonObj1.modules[i].moduleName,
-                                         semester: jsonObj1.modules[i].semester,
-                                         day: jsonObj1.modules[i].day,
-                                         timeSlot: jsonObj1.modules[i].timeSlot,
-                                         description: jsonObj1.modules[i].description,
-                                         status: jsonObj1.modules[i].status
+                                    var row = {
+                                        count: jsonObj1.modules[i].count,
+                                        moduleCode: jsonObj1.modules[i].moduleCode,
+                                        moduleName: jsonObj1.modules[i].moduleName,
+                                        semester: jsonObj1.modules[i].semester,
+                                        day: jsonObj1.modules[i].day,
+                                        timeSlot: jsonObj1.modules[i].timeSlot,
+                                        description: jsonObj1.modules[i].description,
+                                        status: jsonObj1.modules[i].status
 
-                                     };
+                                    };
 
-                                data.push(row);
+                                    data.push(row);
+                                }
+
+                                // console.log("data: " + data);
+                                console.log(data);
+
+                                callback(data);
+
+
                             }
-
-                            // console.log("data: " + data);
-                            console.log(data);
-
-                            callback(data);
-
-
                         }
-                }
-                )
+                    )
 
 
-            }
-        ;
-
-
+                } else {
+                    console.log(err);
+                };
     });
 },
 

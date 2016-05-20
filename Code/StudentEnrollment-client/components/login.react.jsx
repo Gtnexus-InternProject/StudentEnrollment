@@ -6,6 +6,8 @@ var React = require('react'),
     ReactDOMServer = require('react-dom/server');
 import request from 'superagent';
 
+var nocache = require('superagent-no-cache');
+
 
 import {Router, Route, Link, browserHistory} from 'react-router';
 
