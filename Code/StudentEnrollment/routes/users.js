@@ -667,27 +667,34 @@ router.route('/:type/:userName/subjects')
 
 router.put('/decline', function (req, res) {
     console.log(req.body);
-    
+
     mongoose.model('student').find({
-        'userName': req.body.userName
+        'userName': {
+            $in: req.body.userName
+        }
     }, function (err, resultUser) {
         if (err) {
             console.log(err);
         } else {
-            for (var i = 0; i < resultUser[0].subjects.length; i++) {
-                if (resultUser[0].subjects[i].moduleCode == req.body.moduleCode) {
-                    resultUser[0].subjects[i].state = 0;
-                    resultUser[0].save(function (err) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log("ok");
-                        }
+            console.log('x');
+            for (var j = 0; j < resultUser.length; j++) {
+                console.log('y');
+                for (var i = 0; i < resultUser[j].subjects.length; i++) {
+                    console.log('z');
+                    if (resultUser[j].subjects[i].moduleCode == req.body.moduleCode[j]) {
+                        console.log('777');
+                        resultUser[j].subjects[i].state = 25;
+                        resultUser[j].save(function (err) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log("ok");
+                            }
 
-                    });
+                        });
+                    }
                 }
             }
-
         }
     });
 });
