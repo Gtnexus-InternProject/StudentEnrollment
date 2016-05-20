@@ -5,6 +5,7 @@ import './react-bootstrap-table.min.css';
 
 var findIndex = require('lodash/findIndex');
 var removeArray = require('lodash/remove');
+var sortByArray = require('lodash/sortBy');
 
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
@@ -12,7 +13,6 @@ var nocache = require('superagent-no-cache');
 import token from '../../config';
 
 module.exports = React.createClass({
-
 
     selectedRows: [],
     fetchData: function(callback) {
@@ -56,7 +56,7 @@ module.exports = React.createClass({
                 }
 
                 // console.log("Empty" + JSON.stringify(data));
-                  // console.log("Empty" + moduleCodeArray );
+                // console.log("Empty" + moduleCodeArray );
 
                 request.get('http://localhost:3000/subjects/' + moduleCodeArray + '/array'). //
                 set('Accept', 'application/json'). //
@@ -76,7 +76,7 @@ module.exports = React.createClass({
                         var associateArray = [];
                         for (var i = 0; i < jsonObj.length; i++) {
                             // if (associateArray[jsonObj[i].moduleCode]) {
-                                associateArray[jsonObj[i].moduleCode] = jsonObj[i].moduleName;
+                            associateArray[jsonObj[i].moduleCode] = jsonObj[i].moduleName;
                             // }
                         }
 
@@ -116,19 +116,19 @@ module.exports = React.createClass({
 
     },
     getInitialState() {
-        return {data: [] };
+        return {data: []};
     },
     onRowSelect(row, isSelected) {
 
         // console.log("selected: " + isSelected)
-        if(isSelected){
-          this.selectedRows.push(row);
-          console.log("Added" + row);
-        }else {
-          var remove = removeArray(this.selectedRows, function (o) {
-              return o.id = row.id;
-          });
-          console.log("Removed" + remove);
+        if (isSelected) {
+            this.selectedRows.push(row);
+            // console.log("Added" + JSON.stringify(row));
+        } else {
+            var remove = removeArray(this.selectedRows, function(o) {
+                return o.id == row.id;
+            });
+            // console.log("Removed" + JSON.stringify(remove));
         }
         // var index = findIndex(this.selectedRows, { 'id' : row.id } );
         // this.selectedRows.push(row);
@@ -136,26 +136,117 @@ module.exports = React.createClass({
 
     onSelectAll(isSelected, data) {
         console.log("is select all: " + isSelected);
-        if(isSelected){
-          this.selectedRows.push(data);
-          console.log("Added" + data);
-        }else {
-          this.selectedRows = [];
-          console.log("Removed" );
+        if (isSelected) {
+            this.selectedRows.push(data);
+            // console.log("Added" + JSON.stringify(data));
+        } else {
+            this.selectedRows = [];
+            // console.log("Removed" + JSON.stringify(data));
         }
     },
 
-    accept(event){
-        console.log("Selected data" + JSON.stringify(this.selectedRows) );
+    accept(event) {
+        // console.log("Selected data" + JSON.stringify(this.selectedRows));
+
+        var userNameArray = [],
+            moduleCodeArray = [],
+            send = [];
+
+        // if (userNameArray != null && moduleCodeArray != null) {
+        //     console.log("Selected data 1" + JSON.stringify(userNameArray));
+        //     console.log("Selected data 2" + JSON.stringify(moduleCodeArray));
+        // }
+        this.selectedRows = sortByArray(this.selectedRows, 'userName');
+        // console.log("Selected data 3" + JSON.stringify(this.selectedRows));
+        for (var i = 0; i < this.selectedRows.length; i++) {
+            userNameArray.push(this.selectedRows[i].userName);
+            moduleCodeArray.push(this.selectedRows[i].moduleCode);
+            // console.log("Selected data" + JSON.stringify(userNameArray) );
+            // console.log("Selected data" + JSON.stringify(moduleCodeArray) );
+        }
+        // send = send.map(function (o) {
+        //
+        // })
+        send = {
+            userName: userNameArray,
+            moduleCode: moduleCodeArray,
+            state : 1
+        };
+
+        request.put('http://localhost:3000/users/accept' ). //
+        set('Accept', 'application/json'). //
+        accept('application/json'). //
+        send(send). //
+        set('x-access-token', token). //
+        use(nocache). // Prevents caching of *only* this request
+        end(function(err, res) {
+            if (!err) {
+
+
+
+            } else {
+                console.log(err);
+            }
+
+            // console.log(JSON.parse(res.text));
+        });
+        // send.moduleCode = moduleCodeArray;
+        // console.log("Selected data 4" + JSON.stringify(send));
+
+        // userNameArray = [],
+        // moduleCodeArray = [],
+        // send = [];
+
     },
-    decline(event){
+    decline(event) {
+
+      var userNameArray = [],
+          moduleCodeArray = [],
+          send = [];
+
+      // if (userNameArray != null && moduleCodeArray != null) {
+      //     console.log("Selected data 1" + JSON.stringify(userNameArray));
+      //     console.log("Selected data 2" + JSON.stringify(moduleCodeArray));
+      // }
+      this.selectedRows = sortByArray(this.selectedRows, 'userName');
+      // console.log("Selected data 3" + JSON.stringify(this.selectedRows));
+      for (var i = 0; i < this.selectedRows.length; i++) {
+          userNameArray.push(this.selectedRows[i].userName);
+          moduleCodeArray.push(this.selectedRows[i].moduleCode);
+          // console.log("Selected data" + JSON.stringify(userNameArray) );
+          // console.log("Selected data" + JSON.stringify(moduleCodeArray) );
+      }
+      // send = send.map(function (o) {
+      //
+      // })
+      send = {
+          userName: userNameArray,
+          moduleCode: moduleCodeArray,
+          state : 2
+      };
+
+      request.put('http://localhost:3000/users/decline' ). //
+      set('Accept', 'application/json'). //
+      accept('application/json'). //
+      send(send). //
+      set('x-access-token', token). //
+      use(nocache). // Prevents caching of *only* this request
+      end(function(err, res) {
+          if (!err) {
+
+
+
+          } else {
+              console.log(err);
+          }
+
+          // console.log(JSON.parse(res.text));
+      });
 
     },
 
     // Render the component
     render: function() {
-
-
 
         var selectRowProp = {
             mode: "checkbox",
@@ -165,14 +256,13 @@ module.exports = React.createClass({
             onSelectAll: this.onSelectAll
         };
 
-
-// hidden={true}
+        // hidden={true}
         return (
             <div>
 
-                <BootstrapTable data={this.state.data} selectRow={selectRowProp} height='400' >
-                    <TableHeaderColumn dataField="id" isKey={true}  hidden={true} >ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField="userName" >User Name</TableHeaderColumn>
+                <BootstrapTable data={this.state.data} selectRow={selectRowProp} height='400'>
+                    <TableHeaderColumn dataField="id" isKey={true} hidden={true}>ID</TableHeaderColumn>
+                    <TableHeaderColumn dataField="userName">User Name</TableHeaderColumn>
                     <TableHeaderColumn dataField="firstName">First Name</TableHeaderColumn>
                     <TableHeaderColumn dataField="lastName">Last Name</TableHeaderColumn>
                     <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
@@ -180,8 +270,8 @@ module.exports = React.createClass({
                     <TableHeaderColumn dataField="moduleCode">Module Code</TableHeaderColumn>
                     <TableHeaderColumn dataField="moduleName">Module Name</TableHeaderColumn>
                 </BootstrapTable>
-                <Button bsStyle="success" onClick={this.accept} >Accept</Button>
-                <Button bsStyle="danger"  onClick={this.decline}>Decline</Button>
+                <Button bsStyle="success" onClick={this.accept}>Accept</Button>
+                <Button bsStyle="danger" onClick={this.decline}>Decline</Button>
             </div>
         );
 

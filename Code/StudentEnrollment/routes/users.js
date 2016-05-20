@@ -68,8 +68,8 @@ var checkUserName = function(userName, res, cb) {
                     // return false;
                     cb(false);
                 } else {
-                  // // return true;
-                  // cb(true);
+                    // // return true;
+                    // cb(true);
                     mongoose.model("student").findOne({
                         userName: userName
                     }, function(err, admin) {
@@ -91,8 +91,8 @@ var checkUserName = function(userName, res, cb) {
                             // return false;
                             cb(false);
                         } else {
-                          // return true;
-                          cb(true);
+                            // return true;
+                            cb(true);
                         }
 
                     });
@@ -129,46 +129,48 @@ router.route('/student').post(function(req, res) {
     //,subjects : subjects
     // profileImage = req.body.profileImage,
     // console.log(checkUserName(userName, res));
-    checkUserName(userName, res, function (availability) {
-      if(availability){
+    checkUserName(userName, res, function(availability) {
+        if (availability) {
 
-        //call the create function for our database
-        mongoose.model('student').create({
+            //call the create function for our database
+            mongoose.model('student').create({
 
-            userName: userName,
-            firstName: firstName,
-            password: password,
-            email: email,
-            adddress: adddress,
-            contactNumber: contactNumber,
-            lastName: lastName,
-            dob: dob,
-            gender: gender,
-            alStream: alStream,
-            zScore: zScore,
-            Department: Department,
-            registeredDate: registeredDate,
-            profileImage: profileImage,
-            subjects : subjects
-        }, function(err, user) {
-            if (err) {
-                res.send("There was a problem adding the information to the database.");
-                console.log(err);
-            } else {
-                //Blob has been created
-                console.log('POST creating new blob: ' + user);
-                res.format({
+                userName: userName,
+                firstName: firstName,
+                password: password,
+                email: email,
+                adddress: adddress,
+                contactNumber: contactNumber,
+                lastName: lastName,
+                dob: dob,
+                gender: gender,
+                alStream: alStream,
+                zScore: zScore,
+                Department: Department,
+                registeredDate: registeredDate,
+                profileImage: profileImage,
+                subjects: subjects
+            }, function(err, user) {
+                if (err) {
+                    res.send("There was a problem adding the information to the database.");
+                    console.log(err);
+                } else {
+                    //Blob has been created
+                    console.log('POST creating new blob: ' + user);
+                    res.format({
 
-                    //JSON response will show the newly created blob
-                    json: function() {
-                        res.json(user);
-                    }
-                });
-            }
-        });
+                        //JSON response will show the newly created blob
+                        json: function() {
+                            res.json(user);
+                        }
+                    });
+                }
+            });
 
 
-      }else{ return; }
+        } else {
+            return;
+        }
     });
 
 
@@ -484,8 +486,8 @@ router.route('/coordinator').post(function(req, res) {
 
     }
 
-    if( !checkUserName(userName, res)){
-      return;
+    if (!checkUserName(userName, res)) {
+        return;
     }
 
     //call the create function for our database
@@ -517,62 +519,64 @@ router.route('/:type/:meta?')
     //GET all blobs
     .get(function(req, res, next) {
 
-      if (req.decoded.type != 'admin') {
-          return res.format({
+        if (req.decoded.type != 'admin') {
+            return res.format({
 
 
-              json: function() {
+                json: function() {
 
-                  res.status(403).json({
-                      success: false,
-                      message: 'You don\'t have privilages to access '
-                  });
-              }
-          });
+                    res.status(403).json({
+                        success: false,
+                        message: 'You don\'t have privilages to access '
+                    });
+                }
+            });
 
-      }
+        }
 
-      if (req.params.meta){
+        if (req.params.meta) {
 
-        mongoose.model(req.type).find({ 'subjects.state' : 0 } , function (err, users) {
-              if (err) {
-                  return console.error(err);
-              } else {
-                // console.log(JSON.stringify(users));
-
-
-                  //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
-                  res.format({
-
-                    //JSON response will show all blobs in JSON format
-                    json: function(){
-                        res.json(users);
-                    }
-                });
-              }
-        });
+            mongoose.model(req.type).find({
+                'subjects.state': 0
+            }, function(err, users) {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    // console.log(JSON.stringify(users));
 
 
-      }else {
+                    //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+                    res.format({
+
+                        //JSON response will show all blobs in JSON format
+                        json: function() {
+                            res.json(users);
+                        }
+                    });
+                }
+            });
 
 
-        //retrieve all blobs from Monogo
-        mongoose.model(req.type).find({}, '-password' , function (err, users) {
-              if (err) {
-                  return console.error(err);
-              } else {
-                // console.log(JSON.stringify(users));
-                  //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
-                  res.format({
+        } else {
 
-                    //JSON response will show all blobs in JSON format
-                    json: function(){
-                        res.json(users);
-                    }
-                });
-              }
-        });
-      }
+
+            //retrieve all blobs from Monogo
+            mongoose.model(req.type).find({}, '-password', function(err, users) {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    // console.log(JSON.stringify(users));
+                    //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+                    res.format({
+
+                        //JSON response will show all blobs in JSON format
+                        json: function() {
+                            res.json(users);
+                        }
+                    });
+                }
+            });
+        }
 
 
 
@@ -663,36 +667,36 @@ router.route('/:type/:userName/subjects')
                 console.log('GET Error: There was a problem retrieving: ' + err);
             } else {
 
-              res.format({
-                  json: function() {
-                      res.json(subjects);
-                  }
-              });
+                res.format({
+                    json: function() {
+                        res.json(subjects);
+                    }
+                });
 
-              // var subjectCodeArray = [];
-              //
-              // subjects.subjects.map(function (subject, index) {
-              //   subjectCodeArray.push(subject.moduleCode);
-              // })
-              //
-              //   // console.log('Check Codes: ' + subjectCodeArray);
-              //   console.log('GET Retrieving Subject ID: ' + subjects);
-              //   mongoose.model("subject_model").find({
-              //       moduleCode: {
-              //           $in: subjectCodeArray
-              //       }
-              //   }, 'moduleCode', function(err, subject) {
-              //       if (err || subjects == null) {
-              //           console.log('GET Error: There was a problem retrieving: ' + err);
-              //       } else {
-              //           console.log('GET Retrieving Subjects: ' + subject);
-              //           res.format({
-              //               json: function() {
-              //                   res.json(subjects);
-              //               }
-              //           });
-              //       }
-              //   });
+                // var subjectCodeArray = [];
+                //
+                // subjects.subjects.map(function (subject, index) {
+                //   subjectCodeArray.push(subject.moduleCode);
+                // })
+                //
+                //   // console.log('Check Codes: ' + subjectCodeArray);
+                //   console.log('GET Retrieving Subject ID: ' + subjects);
+                //   mongoose.model("subject_model").find({
+                //       moduleCode: {
+                //           $in: subjectCodeArray
+                //       }
+                //   }, 'moduleCode', function(err, subject) {
+                //       if (err || subjects == null) {
+                //           console.log('GET Error: There was a problem retrieving: ' + err);
+                //       } else {
+                //           console.log('GET Retrieving Subjects: ' + subject);
+                //           res.format({
+                //               json: function() {
+                //                   res.json(subjects);
+                //               }
+                //           });
+                //       }
+                //   });
 
                 //var blobdob = student.userName.toISOString();
                 //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
@@ -709,7 +713,7 @@ router.put('/:type/:userName', function(req, res) {
 
     //find the document by ID
 
-    if ( req.body.subjects && req.body.subjects.state && req.body.subjects.state == 1) {
+    if (req.body.subjects && req.body.subjects.state && req.body.subjects.state == 1) {
         if (req.decoded.type == "student") {
             return res.format({
                 json: function() {
@@ -811,7 +815,7 @@ router.delete('/:type/:userName', function(req, res) {
 });
 
 
-//Enrrole a student for a subject
+//Enrrole or add a subject for a student or coordinator
 router.put('/:type/:userName/subjects', function(req, res) {
 
     //find the document by ID
@@ -879,7 +883,7 @@ router.put('/:type/:userName/subjects', function(req, res) {
 });
 
 
-//Unerrole a subject from student
+//Unerrole or remove a subject from student or coordinator
 router.delete('/:type/:userName/subjects', function(req, res) {
     //find blob by ID
 
@@ -887,10 +891,10 @@ router.delete('/:type/:userName/subjects', function(req, res) {
     // req.checkBody('subjects', 'Invalid body').notEmpty();
 
     if (req.type == "admin") {
-      return res.status(403).send({
-          success: false,
-          message: 'Wrong Information'
-      });
+        return res.status(403).send({
+            success: false,
+            message: 'Wrong Information'
+        });
     }
     // var errors = req.validationErrors();
     // if (errors) {
@@ -903,7 +907,11 @@ router.delete('/:type/:userName/subjects', function(req, res) {
         userName: req.userName
     }, {
         "$pull": {
-            subjects:   { moduleCode : { $in: req.body.subjects} }
+            subjects: {
+                moduleCode: {
+                    $in: req.body.subjects
+                }
+            }
         }
     }, {
         new: true
@@ -926,6 +934,198 @@ router.delete('/:type/:userName/subjects', function(req, res) {
 
     });
 
+
+
+});
+
+
+//Decline a students for a subject
+router.put('/decline', function(req, res) {
+
+    if (req.decoded.type == "student") {
+        return res.format({
+
+
+            json: function() {
+
+                res.status(403).json({
+                    success: false,
+                    message: 'You don\'t have privilages to access'
+                });
+            }
+        });
+    }
+
+    mongoose.model('student').find({
+        'userName': {
+            $in: req.body.userName
+        }
+    }, function(err, resultUser) {
+        if (err) {
+            console.log(err);
+        } else {
+            // console.log('x');
+            for (var j = 0; j < resultUser.length; j++) {
+                // console.log('y');
+                for (var i = 0; i < resultUser[j].subjects.length; i++) {
+                    // console.log('z');
+                    if (resultUser[j].subjects[i].moduleCode == req.body.moduleCode[j]) {
+                        // console.log('777');
+                        resultUser[j].subjects[i].state = 2;
+                        resultUser[j].save(function(err, data) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                if (j == resultUser.length - 1) {
+                                    res.format({
+
+                                        //JSON responds showing the updated values
+                                        json: function() {
+                                            res.json(data);
+                                        }
+                                    });
+                                }
+                                // return;
+                            }
+
+                        });
+                    }
+                }
+            }
+        }
+    });
+});
+
+
+//Accept a students for a subject
+router.put('/accept', function(req, res) {
+
+    if (req.decoded.type == "student") {
+        return res.format({
+
+
+            json: function() {
+
+                res.status(403).json({
+                    success: false,
+                    message: 'You don\'t have privilages to access'
+                });
+            }
+        });
+    }
+
+
+    mongoose.model('student').find({
+        'userName': {
+            $in: req.body.userName
+        }
+    }, function(err, resultUser) {
+        if (err) {
+            console.log(err);
+        } else {
+            // console.log('x');
+            for (var j = 0; j < resultUser.length; j++) {
+                // console.log('y');
+                for (var i = 0; i < resultUser[j].subjects.length; i++) {
+                    // console.log('z');
+                    if (resultUser[j].subjects[i].moduleCode == req.body.moduleCode[j]) {
+                        // console.log('777');
+                        resultUser[j].subjects[i].state = 1;
+                        resultUser[j].save(function(err, data) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                if (j == resultUser.length - 1) {
+                                    res.format({
+
+                                        //JSON responds showing the updated values
+                                        json: function() {
+                                            res.json(data);
+                                        }
+                                    });
+                                }
+                                // return;
+                            }
+
+                        });
+                    }
+                }
+            }
+        }
+    });
+
+
+    // var errors = req.validationErrors();
+    // if (errors) {
+    //     res.send('There have been validation errors: ' + errors, 400);
+    //     return;
+    // }
+
+    // mongoose.model('student').find({
+    //     $and : [{
+    //         userName: req.body.userName
+    //
+    //     }, {
+    //         'subjects.moduleCode': req.body.moduleCode
+    //     }]
+    // }, function(err, place) {
+    //     //update it
+    //
+    //
+    //     if (err) {
+    //         res.send("There was a problem updating the information to the database: " + err);
+    //     } else {
+    //
+    //         res.format({
+    //
+    //             //JSON responds showing the updated values
+    //             json: function() {
+    //                 res.json(place);
+    //             }
+    //         });
+    //     }
+    //
+    // });
+
+    // console.log("userName: " + req.body.userName + "moduleCode: " + req.body.moduleCode);
+    // mongoose.model('student').update({
+    //
+    //     userName: {
+    //         $in: req.body.userName
+    //     },
+    //     'subjects': {
+    //         '$elemMatch': {
+    //             moduleCode: {
+    //                 $in: req.body.moduleCode
+    //             }
+    //         }
+    //     }
+    //
+    // }, {
+    //     "$set": {
+    //         'subjects.$.state': 1
+    //     }
+    // }, {
+    //
+    //     multi: true
+    // }, function(err, place) {
+    //     //update it
+    //
+    //
+    //     if (err) {
+    //         res.send("There was a problem updating the information to the database: " + err);
+    //     } else {
+    //
+    //         res.format({
+    //
+    //             //JSON responds showing the updated values
+    //             json: function() {
+    //                 res.json(place);
+    //             }
+    //         });
+    //     }
+    //
+    // });
 
 
 });
@@ -994,10 +1194,10 @@ router.delete('/:type/:userName/subjects', function(req, res) {
 
 // catch 404 and forward to error handler
 router.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  // next(err);
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    // next(err);
+    next(err);
 });
 
 module.exports = router;
