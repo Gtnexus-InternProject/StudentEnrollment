@@ -6,8 +6,9 @@ var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
 
 
-import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
 
+import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
+import './../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css'
 
 module.exports = React.createClass({
     displayName: 'App',

@@ -10,7 +10,7 @@ var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
 
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
-
+import './../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css'
 
 module.exports = React.createClass({
 
@@ -54,8 +54,6 @@ module.exports = React.createClass({
                             userName1: jsonObj[i].userName,
                             firstName1: jsonObj[i].firstName,
                             lastName1: jsonObj[i].lastName,
-
-
                         }
                         data.push(row);
                     }
@@ -72,11 +70,6 @@ module.exports = React.createClass({
                 }
             });
     },
-
-
-
-
-
 
     close() {
         this.setState({showModal: false});
