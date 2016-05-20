@@ -165,17 +165,11 @@ module.exports = React.createClass({
                     // console.log(res.body);
                     var jsonObj = res.body;
                     console.log(jsonObj);
-                    var csv1;
-                    for (var i = 0; i < jsonObj.length; i++) {
-                        csv1 = csv1.append(jsonObj[i].moduleCode);
-                        if (i != (jsonObj.length - 1))
-                        {
-                            csv1.append(',');
-                        }
+                    var csv1=[];
+                    for (var i=0 ; i<jsonObj.length;i++) {
+                        csv1.push(jsonObj[i].moduleCode);
                     }
-                    console.log(csv1)
-
-
+console.log(csv1);
                     //json2csv({ data: jsonObj}, function(err, csv) {
                     //    if (err) console.log(err);
                     //    console.log(csv + 'regrhrhy');
