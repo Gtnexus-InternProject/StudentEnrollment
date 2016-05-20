@@ -666,8 +666,7 @@ router.route('/:type/:userName/subjects')
 
 
 router.put('/decline', function (req, res) {
-    console.log('test');
-    console.log(req.body.userName.firstName);
+    console.log(req.body);
     
     mongoose.model('student').find({
         'userName': req.body.userName
@@ -688,7 +687,7 @@ router.put('/decline', function (req, res) {
                     });
                 }
             }
-            console.log(resultUser[0].subjects[0].state);
+
         }
     });
 });
