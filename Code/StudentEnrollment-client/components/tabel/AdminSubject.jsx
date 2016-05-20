@@ -20,6 +20,7 @@ import './skylight.css';
 
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
+import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
 
 import token from  '../../config';
 
@@ -44,8 +45,23 @@ module.exports = React.createClass({
     getInitialState: function() {
       // var data = [];
 
-        return {data: []};
+        return {
+            moduleCode: '',
+            moduleName: '',
+            day: '',
+            semester: '',
+            timeSlot: '',
+            credits: '',
+            description: '',
+
+            data: []
+        };
     },
+
+
+
+
+
 
     fetchData: function(callback) {
 
@@ -117,7 +133,7 @@ module.exports = React.createClass({
       request
           .put('http://localhost:3000/subjects/update/' + data.moduleCode)
           .send(data)
-          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0')
+          .set('x-access-token',token)
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
@@ -133,7 +149,7 @@ module.exports = React.createClass({
     reamoveSub : function (data) {
       request
           .put('http://localhost:3000/subjects/delete/' + data.moduleCode)
-          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0')
+          .set('x-access-token',token)
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
@@ -223,6 +239,9 @@ module.exports = React.createClass({
           <div>
             <h1> Subject List</h1>
             <FullTable properties={ properties } style={this.style} columns={ subjectCol } remove= {this.reamoveSub} submit={this.submitSub} data ={this.state.data}/>
+
+
+
           </div>
         );
     }

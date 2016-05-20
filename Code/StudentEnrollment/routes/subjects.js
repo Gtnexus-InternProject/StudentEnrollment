@@ -212,6 +212,7 @@ router.route('/subjectAdd').post(function(req, res) {
     var credits = req.body.credits;
     var semester = req.body.semester;
     var day = req.body.day;
+    var timeSlot=req.body.timeSlot;
     var description = req.body.description;
     var preRequestSubjects = req.body.preRequestSubjects;
     var status = 1;
@@ -229,6 +230,7 @@ router.route('/subjectAdd').post(function(req, res) {
         credits: credits,
         semester: semester,
         day: day,
+        timeSlot:timeSlot,
         description: description,
         preRequestSubjects: preRequestSubjects,
         status: status,
@@ -310,6 +312,82 @@ router.route('/subjectAdd').post(function(req, res) {
 //    });
 
 
+
+router.get('/moduleDetails/:moduleCodes', function (req, res) {
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.send('There have been validation errors: ' + errors, 400);
+        return;
+    }
+    //converting modulecode string to array
+    var moduleCodeArr = req.params.moduleCodes.split(",");
+    mongoose.model('subject_model').find({
+        moduleCode: {
+            $in: moduleCodeArr
+        }
+    }, function (err, modules) {
+        if (err) {
+            console.log(err);
+        } else {
+            var moduleCodes = [];
+            //subjects is an array of the subjects with the module codes.
+            for (var i = 0; i < modules.length; i++) {
+                moduleCodes[i] = modules[i].moduleCode;
+            }
+            mongoose.model('student').aggregate([{
+                $match: {
+                    'subjects.moduleCode': {
+                        "$in": moduleCodes
+                    }
+                }
+                    }, {
+                "$unwind": "$subjects"
+                    }, {
+                $group: {
+                    _id: '$subjects.moduleCode',
+                    counter: {
+                        $sum: 1
+                    }
+                }
+                    }, {
+                $project: {
+                    _id: 1,
+                    counter: 1
+                }
+                    }], function (err, result) {
+                if (err) {
+                    return console.error(err);
+                }
+
+                    var codes = [];
+
+                for (var l = 0; l < result.length; l++) {
+                    codes[result[l]._id] = result[l].counter;
+
+                }
+                modules = modules.map(function (subject) {
+                    subject.set('count', codes[subject.moduleCode] || 0, {
+                        strict: false
+                    });
+                    return subject;
+                });
+
+                res.format({
+                    json: function () {
+                        res.json({
+                            modules
+                        });
+                    }
+                });
+
+            });
+
+        }
+
+    });
+});
+
 //GET the individual subject by Mongo ID
 router.get('/:moduleCode?', function(req, res) {
     var errors = req.validationErrors();
@@ -371,7 +449,8 @@ router.put('/update/:moduleCode', function(req, res) {
                 credits: credits,
                 semester: req.body.semester,
                 day: req.body.day,
-                //description : req.body.description,
+                timeSlot:req.body.timeSlot,
+                description : req.body.description,
                 preRequestSubjects: req.body.preRequestSubjects
                 //status:req.body.status,
             }, {
@@ -416,7 +495,7 @@ router.put('/delete/:moduleCode', function(req, res) { //find blob by ID
             deletesub.update({
                 status: 2
             }, {
-                "upsert": false
+                "upsert": true
             }, function(err, updt) {
                 if (err) {
                     console.log(('Error' + err))
@@ -441,6 +520,47 @@ router.put('/delete/:moduleCode', function(req, res) { //find blob by ID
     });
 });
 
+
+
+
+router.post('/timeTable/:subjects', function(req, res) {
+  
+
+    mongoose.model('student').find({
+        userName: req.userName
+    }, {
+        "$pull": {
+            subjects:   { moduleCode : { $in: req.body.subjects} }
+        }
+    }, {
+        new: true
+    }, function(err, place) {
+        //update it
+
+
+        if (err) {
+            res.send("There was a problem updating the information to the database: " + err);
+        } else {
+
+            res.format({
+
+                //JSON responds showing the updated values
+                json: function() {
+                    res.json(place);
+                }
+            });
+        }
+
+    });
+
+
+
+});
+
+
+
+
+
 // get students per particular subject
 
 router.get('/student/:moduleCode', (function(req, res) {
@@ -461,7 +581,39 @@ router.get('/student/:moduleCode', (function(req, res) {
         userName: 1,
         firstName: 1,
         lastName: 1,
-        email: 1
+        email: 1,
+        contactNumber:1
+    }, function(err, resultUser) {
+        if (err) {
+            console.log('GET Error: There was a problem retrieving: ' + err);
+        } else {
+            console.log('GET Retrieving ID: ' + resultUser);
+            res.format({
+                json: function() {
+                    res.json(resultUser);
+                }
+            });
+        }
+    });
+}));
+
+router.get('/coordinator/:moduleCode', (function(req, res) {
+    //if (req.type == "admin") {
+    //    return res.status(404).send({
+    //        success: false,
+    //        message: 'Wrong URL'
+    //    });
+    //}
+console.log("gdd");
+    mongoose.model('coordinator').find(
+         { subjects:req.params.moduleCode  
+      
+    }, {
+        userName: 1,
+        firstName: 1,
+        lastName: 1,
+        email: 1,
+        contactNumber:1
     }, function(err, resultUser) {
         if (err) {
             console.log('GET Error: There was a problem retrieving: ' + err);

@@ -4,9 +4,9 @@
 
 var React = require('react'),
     ReactDOMServer = require('react-dom/server');
-
-import StyleSheet from 'react-stylesheet';
 import request from 'superagent';
+
+var nocache = require('superagent-no-cache');
 
 
 import {Router, Route, Link, browserHistory} from 'react-router';
@@ -47,23 +47,30 @@ module.exports = React.createClass({
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .send(formL)
-
-            .withCredentials()
             .end(function (err, res) {
                 if (err || !res.ok) {
-                    alert('Oh no! error');
+                    //alert('Oh no! error');
                     console.log(err);
                 } else {
                     var token = (res.body.token);
 
                     if (token) {
-                        alert('token is - ' + (token));
-                        browserHistory.push('/home/'+formL.userName+ '/' +token);
+                        if(res.body.type == 'student') {
+                            //alert('token is - ' + (token));
+                            browserHistory.push('/home/' + formL.userName + '/' + token);
+                        }else if(res.body.type == 'admin'){
+                            //alert('token is - ' + (token));
+                            browserHistory.push('/admin');
+                        }else if(res.body.type == 'coordinator'){
+                            //alert('token is - ' + (token));
+                            browserHistory.push('/coordinator/' + formL.userName + '/' + token);
+
+                        }
 
                     }
                     else {
                         alert("wrong username or password");
-
+                        browserHistory.push('/login');
                         //res.send
                     }
                 }

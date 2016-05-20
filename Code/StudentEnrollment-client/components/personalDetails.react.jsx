@@ -38,7 +38,7 @@ module.exports = React.createClass({
             .set('x-access-token', this.props.token)
             .end(function (err, res) {
                 if (err) {
-                    alert('error' + err);
+                    console.log('error' + err)
                 }
                 else {
                     this.setState({
@@ -49,7 +49,7 @@ module.exports = React.createClass({
                         address: res.body.adddress,
                         zScore: res.body.zScore,
                         alStream: res.body.alStream,
-                        telephone: res.body.telephone,
+                        telephone: res.body.contactNumber,
                         gender: res.body.gender,
                         dateOfBirth: res.body.dateOfBirth
                     });

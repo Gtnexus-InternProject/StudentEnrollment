@@ -8,11 +8,12 @@ import Hello from './components/hello.react';
 import Home from './components/home.react';
 import Login from './components/login.react';
 import Register from './components/registerPanel.react';
+import AAAA from './components/coordinatorSubjectList.react'
 
 import Tab from './components/tabs';
 
 import Admin from './components/admin.react';
-
+import Coordinator from './components/homeCoordinator.react';
 import {Router, Route, Link, browserHistory} from 'react-router';
 
 
@@ -33,7 +34,8 @@ ReactDOM.render((
         <Route path="/" component={Login}>
             <Route path="ab" component={PageNotFound}/>
         </Route>
-        <Route path="/admin" component={Admin} ></Route>
+        <Route path="/admin" component={Admin}></Route>
+        <Route path="/coordinator/:userName/:token" component={Coordinator}></Route>
         <Route path="/tab" component={Tab}></Route>
         <Route path="/home/:userName/:token" component={Home}></Route>
         <Route path="/login" component={Login}></Route>

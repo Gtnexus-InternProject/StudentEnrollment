@@ -8,7 +8,7 @@ var React = require('react'),
     ReactDOMServer = require('react-dom/server');
 import request from 'superagent'
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Col} from 'react-bootstrap';
-
+import {Router, Route, Link, browserHistory} from 'react-router';
 
 const title = (
     <span>Panel title</span>
@@ -104,13 +104,14 @@ module.exports = React.createClass({
                 email: this.state.email.trim(),
                 firstName: this.state.firstName.trim(),
                 lastName: this.state.lastName.trim(),
-                gender: this.state.gender.trim() == '1' ? "Male" : "Female",
+                //gender: this.state.gender.trim() == '1' ? "Male" :"Female",
+                gender: this.state.gender.trim(),
                 alStream: this.state.alStream.trim(),
                 adddress: this.state.address.trim(),
                 contactNumber: this.state.telephone.trim(),
                 zScore: this.state.zScore.trim()
             };
-alert(JSON.stringify(formR));
+            alert(JSON.stringify(formR));
             request.post('http://localhost:3000/users/student')
                 .set('Accept', 'application/json')
                 .set('Content-Type', 'application/json')
@@ -121,15 +122,16 @@ alert(JSON.stringify(formR));
                         console.log('Oh no! error');
                     } else {
                         console.log('yay got ' + JSON.stringify(formR));
+                        browserHistory.push('/login');
                     }
                 })
 
 
         },
-
         render() {
 
             return (<div >
+
                 <Col mdOffset={2} md={8}>
                     <Panel header={title} bsStyle="primary">
                         <PageHeader>Register
@@ -180,8 +182,8 @@ alert(JSON.stringify(formR));
                                     <FormControl componentClass="select" ref="gender"
                                                  onChange={this.handleChangeGender}>
                                         <option value="">~Select ~</option>
-                                        <option value="1">Male</option>
-                                        <option value="2">Female</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
 
                                     </FormControl>
 
@@ -202,10 +204,10 @@ alert(JSON.stringify(formR));
                                 <FormControl componentClass="select" ref="alStresm"
                                              onChange={this.handleChangeALStream}>
                                     <option value="">~Select ~</option>
-                                    <option value="1">Maths</option>
-                                    <option value="2">Biology</option>
-                                    <option value="3">Commerce</option>
-                                    <option value="4">Art</option>
+                                    <option value="Maths">Maths</option>
+                                    <option value="Biology">Biology</option>
+                                    <option value="Commerce">Commerce</option>
+                                    <option value="Art">Art</option>
                                 </FormControl>
                             </FormGroup>
                         </Col><Col md={6}>
