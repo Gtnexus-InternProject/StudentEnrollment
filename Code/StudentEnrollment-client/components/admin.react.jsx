@@ -3,7 +3,11 @@ import ReactDOM from 'react-dom';
 import SubjectTabel from './tabel/AdminSubject';
 import StudentTabel from './tabel/AdminStudent';
 import CoordinatorTabel from './tabel/AdminCoordinator';
+
 import {Panel, Col} from 'react-bootstrap';
+
+import SubjectEnrollment from './tabel/subjectEnrollment';
+import SubjectApprove from './tabel/CoordinatorSubjectApprove';
 
 import 'purecss/build/pure.css';
 // var React = require('react'),
@@ -22,11 +26,16 @@ module.exports = React.createClass({
 
         return (
             <div>
+
                 <Panel header={title} bsStyle="primary">
-              <CoordinatorTabel/>
-              <SubjectTabel/>
-              <StudentTabel/>
-                    </Panel>
+
+                    <SubjectApprove/>
+                    <SubjectEnrollment/>
+
+                    <CoordinatorTabel/>
+                    <SubjectTabel/>
+                    <StudentTabel/>
+                </Panel>
             </div>
         );
 

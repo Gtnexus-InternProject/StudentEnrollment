@@ -139,7 +139,9 @@ module.exports = React.createClass({
 
         // var me = this;
 
-        request.get('http://localhost:3000/users/coordinator').set('Accept', 'application/json').accept('application/json').set('x-access-token',token).use(nocache). // Prevents caching of *only* this request
+        request.get('http://localhost:3000/users/coordinator') //
+        .set('Accept', 'application/json').accept('application/json') //
+        .set('x-access-token',token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
 
@@ -149,7 +151,7 @@ module.exports = React.createClass({
               }
                   // console.log(res.body);
                 var jsonObj = res.body;
-                console.log("data: " + JSON.stringify(jsonObj));
+                // console.log("data: " + JSON.stringify(jsonObj));
                 var data = [];
                 for (var i = 0; i < jsonObj.length; i++) {
                     // console.log("data: " + jsonObj[i] );
