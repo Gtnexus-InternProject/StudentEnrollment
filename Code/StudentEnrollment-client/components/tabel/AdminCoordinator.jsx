@@ -204,7 +204,7 @@ module.exports = React.createClass({
       request
           .put('http://localhost:3000/users/coordinator/' + data.userName)
           .send(data)
-          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0')
+          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzNzI2MzkwLCJleHAiOjE0NjM4MTI3OTB9.DKulbRge-U8HvgfOdMZMSwaYT0i-WEmehmnwocXJ2Mg')
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
@@ -220,7 +220,7 @@ module.exports = React.createClass({
     reamoveSub : function (data) {
       request
           .delete('http://localhost:3000/users/coordinator/' + data.userName)
-          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0')
+          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzNzI2MzkwLCJleHAiOjE0NjM4MTI3OTB9.DKulbRge-U8HvgfOdMZMSwaYT0i-WEmehmnwocXJ2Mg')
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
