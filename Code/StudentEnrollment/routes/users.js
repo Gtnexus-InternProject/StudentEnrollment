@@ -341,6 +341,8 @@ router.post('/authenticate', function (req, res) {
 
 
 
+
+
 // route middleware to validate :username
 router.param('userName', function (req, res, next, userName) {
     //console.log('validating ' + id + ' exists');
@@ -429,6 +431,34 @@ router.route('/:type/:userName/rfidvalidate/:rfid')
     });
 
 
+router.route('/:type/:user/validate')
+
+    .get(function (req, res) {
+        mongoose.model(req.type).findOne({
+            userName: req.params.user
+        }, function (err, student) {
+            // console.log('ID: ' + req.params.id);
+            if (err) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+                // console.log('GET Retrieving ID: ' + student.userName);
+                //var blobdob = student.userName.toISOString();
+                //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
+                var state;
+                if(student != null){
+                    state = "invalid";
+                }else{
+                    state = "valid"
+                }
+                res.format({
+
+                    json: function () {
+                        res.json({"message": state});
+                    }
+                });
+            }
+        });
+    });
 
 
 // route middleware to verify a token
