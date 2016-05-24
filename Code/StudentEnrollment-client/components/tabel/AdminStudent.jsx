@@ -60,7 +60,7 @@ module.exports = React.createClass({
               }
                   // console.log(res.body);
                 var jsonObj = res.body;
-                console.log("data: " + JSON.stringify(jsonObj));
+                // console.log("data: " + JSON.stringify(jsonObj));
                 var data = [];
                 for (var i = 0; i < jsonObj.length; i++) {
                     // console.log("data: " + jsonObj[i] );
@@ -199,7 +199,7 @@ module.exports = React.createClass({
 
         return (
           <div>
-            <h1> Subject List</h1>
+            <h1> Student List</h1>
             <FullTable properties={ properties } style={this.style} columns={ subjectCol } remove= {this.reamoveSub} submit={this.submitSub} data ={this.state.data}/>
           </div>
 

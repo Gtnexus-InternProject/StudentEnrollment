@@ -22,71 +22,40 @@ router.use(methodOverride(function(req, res) {
     }
 }))
 
-//// route middleware to verify a token
-//router.use(function(req, res, next) {
-//
-//  // check header or url parameters or post parameters for token
-//  var token = req.body.token || req.query.token || req.headers['x-access-token'];
-//
-//  // decode token
-//  if (token) {
-//
-//    // verifies secret and checks exp
-//    jwt.verify(token, config.secret, function(err, decoded) {
-//      if (err) {
-//        return res.json({ success: false, message: 'Failed to authenticate token.' });
-//      } else {
-//        // if everything is good, save to request for use in other routes
-//        req.decoded = decoded;
-//        next();
-//      }
-//    });
-//
-//  } else {
-//
-//    // if there is no token
-//    // return an error
-//    return res.status(403).send({
-//        success: false,
-//        message: 'No token provided.'
-//    });
-//
-//  }
-//});
-
-
-
 // route middleware to verify a token
-//  router.use(function(req, res, next) {
+router.use(function (req, res, next) {
 
-//    // check header or url parameters or post parameters for token
-//    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    // check header or url parameters or post parameters for token
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-//    // decode token
-//    if (token) {
+    // decode token
+    if (token) {
 
-//      // verifies secret and checks exp
-//      jwt.verify(token, config.secret, function(err, decoded) {
-//        if (err) {
-//          return res.json({ success: false, message: 'Failed to authenticate token.' });
-//        } else {
-//          // if everything is good, save to request for use in other routes
-//          req.decoded = decoded;
-//          next();
-//        }
-//      });
+        // verifies secret and checks exp
+        jwt.verify(token, config.secret, function (err, decoded) {
+            if (err) {
+                return res.status(401).send({
+                    success: false,
+                    message: 'Failed to authenticate token.'
+                });
+            } else {
+                // if everything is good, save to request for use in other routes
+                req.decoded = decoded;
+                next();
+            }
+        });
 
-//    } else {
+    } else {
 
-//      // if there is no token
-//      // return an error
-//      return res.status(403).send({
-//          success: false,
-//          message: 'No token provided.'
-//      });
+        // if there is no token
+        // return an error
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided.'
+        });
 
-//    }
-//  });
+    }
+});
 
 router.route('/:meta?')
 
@@ -313,6 +282,7 @@ router.route('/subjectAdd').post(function(req, res) {
 
 
 
+
 router.get('/moduleDetails/:moduleCodes', function (req, res) {
 
     var errors = req.validationErrors();
@@ -388,32 +358,64 @@ router.get('/moduleDetails/:moduleCodes', function (req, res) {
     });
 });
 
-//GET the individual subject by Mongo ID
-router.get('/:moduleCode?', function(req, res) {
+
+//With meta array of moduleCodes
+router.get('/:moduleCode/:meta?', function(req, res) {
+
     var errors = req.validationErrors();
     if (errors) {
         res.send('There have been validation errors: ' + errors, 400);
         return;
     }
-    //search for the blob within Mongo
-    mongoose.model('subject_model').findOne({
-        moduleCode: req.params.moduleCode
-    }, function(err, subject) {
-        if (err) {
-            console.log('GET Error: There was a problem retrieving: ' + err);
-        } else {
-            //console.log('GET Retrieving ID: ' + subject.moduleCode);
+
+    if (req.params.meta){
+
+      console.log('Params moduleCode ' + req.params.moduleCode);
+      var moduleCode = req.params.moduleCode.split(",");
+      console.log('Params moduleCode ' + moduleCode);
+      //search for the blob within Mongo
+      mongoose.model('subject_model').find({
+          moduleCode: {$in : moduleCode}
+      }, function(err, subject) {
+          if (err) {
+              console.log('GET Error: There was a problem retrieving: ' + err);
+          } else {
+              //console.log('GET Retrieving ID: ' + subject.moduleCode);
 
 
 
-            res.format({
-                //JSON response will return the JSON output
-                json: function() {
-                    res.json(subject);
-                }
-            });
-        }
-    });
+              res.format({
+                  //JSON response will return the JSON output
+                  json: function() {
+                      res.json(subject);
+                  }
+              });
+          }
+      });
+
+    }
+    else{
+      //search for the blob within Mongo
+      mongoose.model('subject_model').findOne({
+          moduleCode: req.params.moduleCode
+      }, function(err, subject) {
+          if (err) {
+              console.log('GET Error: There was a problem retrieving: ' + err);
+          } else {
+              //console.log('GET Retrieving ID: ' + subject.moduleCode);
+
+
+
+              res.format({
+                  //JSON response will return the JSON output
+                  json: function() {
+                      res.json(subject);
+                  }
+              });
+          }
+      });
+    }
+
 });
 
 
@@ -524,7 +526,7 @@ router.put('/delete/:moduleCode', function(req, res) { //find blob by ID
 
 
 router.post('/timeTable/:subjects', function(req, res) {
-  
+
 
     mongoose.model('student').find({
         userName: req.userName
@@ -604,10 +606,10 @@ router.get('/coordinator/:moduleCode', (function(req, res) {
     //        message: 'Wrong URL'
     //    });
     //}
-console.log("gdd");
+// console.log("gdd");
     mongoose.model('coordinator').find(
-         { subjects:req.params.moduleCode  
-      
+         { subjects:req.params.moduleCode
+
     }, {
         userName: 1,
         firstName: 1,

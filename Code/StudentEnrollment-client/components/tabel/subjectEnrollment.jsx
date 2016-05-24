@@ -35,6 +35,7 @@ module.exports = React.createClass({
         // var me = this;
 
         request.get('http://localhost:3000/subjects' ).
+
             set('Accept', 'application/json').
             accept('application/json').
             set('x-access-token', this.props.token).
@@ -67,6 +68,7 @@ module.exports = React.createClass({
                         set('Accept', 'application/json').
                         accept('application/json').
                         set('x-access-token', this.props.token).
+
                         use(nocache). // Prevents caching of *only* this request
                         end(function(err, res) {
                             if (!err) {
@@ -76,7 +78,9 @@ module.exports = React.createClass({
                                 var subjectCodeArray = [];
                                 var statusArray = [];
                                 for (var i = 0; i < jsonObj.length; i++) {
+
                                     // console.log("data: " + jsonObj[i] );
+
                                     var row = {
                                         moduleCode: jsonObj[i].moduleCode,
                                         status : jsonObj[i].state,
@@ -92,6 +96,7 @@ module.exports = React.createClass({
                                 // console.log("Status" + statusArray["c01"]);
 
                                 data = data.map(function (subject, index) {
+
                                     if( statusArray[subject.moduleCode] == 0 ||  statusArray[subject.moduleCode]){
                                         subject.status = statusArray[subject.moduleCode] == 0 ? "Pending" : "Accepted";
                                     }else{
@@ -107,11 +112,14 @@ module.exports = React.createClass({
                                 callback(data, subjectCodeArray);
 
                             }else{
+
                                 console.log(err);
+
                             }
 
                             // console.log(JSON.parse(res.text));
                         });
+
 
                 }else{
                     console.log(err);
@@ -119,12 +127,15 @@ module.exports = React.createClass({
 
                 // console.log(JSON.parse(res.text));
             }.bind(this));
+
     },
     componentWillMount: function() {
 
         this.fetchData(function(dataSe, subjectCodeArray) {
             this.setState({data: dataSe,
+
                 subjectCode:subjectCodeArray });
+
             // console.log(dataSe );
         }.bind(this));
         //var data = this.getData();
@@ -147,7 +158,9 @@ module.exports = React.createClass({
                 var idx = findIndex(this.state.data, {id: celldata[rowIndex].id});
 
                 var enrrolle = findIndex(this.state.subjectCode, {'moduleCode': this.state.data[idx].moduleCode } );
+
                 buttonText = enrrolle == -1 ? "Enroll" : "Disenroll";
+
                 baStyle =  enrrolle == -1 ? "success" : "danger";
                 // if(enrrolle){
                 //
@@ -190,6 +203,7 @@ module.exports = React.createClass({
 
                             }
 
+
                         }.bind(this));
 
                 };
@@ -228,6 +242,7 @@ module.exports = React.createClass({
 
                             }
 
+
                         }.bind(this));
 
                 };
@@ -248,9 +263,11 @@ module.exports = React.createClass({
                 // </span>
 
                 return {value: (
+
                     <Button onClick={onClick} bsStyle={this.state.buttonData.style || baStyle }>{this.state.buttonData.text || buttonText}</Button>
 
                 )};
+
             }.bind(this)
         } ];
 
@@ -275,6 +292,7 @@ module.exports = React.createClass({
                 property: 'status',
                 header: 'Status'
             }
+
 
 
         ];
@@ -328,7 +346,9 @@ module.exports = React.createClass({
         // if you don't want an header, just return;
         return (
             <thead>
+
             <ColumnNames config={headerConfig} columns={columns}/>
+
 
             </thead>
         );
@@ -352,8 +372,10 @@ module.exports = React.createClass({
 
         var paginated = paginate(data, pagination);
         var pages = Math.ceil(data.length / Math.max(isNaN(pagination.perPage)
+
                 ? 1
                 : pagination.perPage, 1));
+
 
 
 
@@ -457,4 +479,5 @@ function find(arr, key, value) {
     return arr.reduce((a, b) => a[key] === value
         ? a
         : b[key] === value && b);
+
 }
