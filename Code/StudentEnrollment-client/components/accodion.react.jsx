@@ -28,9 +28,9 @@ module.exports = React.createClass({
 
 
         request
-            .get('http://localhost:3000/users/coordinator/coor/subjects')
+            .get('http://localhost:3000/users/coordinator/'+this.props.userName+'/subjects')
             .set('Accept', 'application/json')
-            .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjM2NTE5MjgsImV4cCI6MTQ2MzczODMyOH0.fhVMx0MfAm0z3k_0ENmvolZ56yRrqhffCD2sI1DnCOo')
+            .set('x-access-token',this.props.token)
             .end(function (err, res) {
                 if (err) {
                     console.log(err);

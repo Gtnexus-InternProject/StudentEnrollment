@@ -212,12 +212,13 @@ module.exports = React.createClass({
             mode: "checkbox",
             clickToSelect: true,
             bgColor: "rgb(238, 193, 213)",
-            onSelect: onRowSelect,
-            onSelectAll: onSelectAll
+            onSelect: this.onRowSelect,
+            onSelectAll: this.onSelectAll
         };
         function onRowSelect(row, isSelected){
             console.log(row);
             console.log("selected: " + isSelected)
+            console.log();
         }
 
         function onSelectAll(isSelected){
