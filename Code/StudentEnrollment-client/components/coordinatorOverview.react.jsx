@@ -10,6 +10,11 @@ import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, 
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
 import './../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css'
 
+
+function enumFormatter(cell, row, enumObject){
+    return enumObject[cell];
+}
+
 module.exports = React.createClass({
     displayName: 'App',
 
@@ -27,6 +32,8 @@ module.exports = React.createClass({
         padding: '10px',
         boxShadow: '0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28)'
     },
+
+
 
     getInitialState: function () {
         // var data = [];
@@ -297,6 +304,7 @@ onRowSelect(row, isSelected)
 }
 ,
 
+
 render()
 {
 
@@ -314,6 +322,35 @@ render()
         mode: "click",
         blurToSave: true,
         afterSaveCell: this.afterSaveCell
+    };
+
+    var semesters = {
+        0: "Semester 1",
+        1: "Semester 2",
+        2: "Semester 3",
+        3: "Semester 4",
+        4: "Semester 5",
+        5: "Semester 6",
+        6: "Semester 7",
+        7: "Semester 8",
+
+    };
+    var days = {
+        0: "Sunday",
+        1: "Monday",
+        2: "Tuesday",
+        3: "Wednesday",
+        4: "Thursday",
+        5: "Friday",
+        6: "Saturday",
+
+    };
+    var timeSlots = {
+        0: "08.15-10.15",
+        1: "10.30-12.30",
+        2: "13.15-15.15",
+        3: "15.30-17.30"
+
     };
     return (
         <div>
@@ -337,9 +374,9 @@ render()
 
                 <TableHeaderColumn dataField="moduleCode" isKey={true}>Module Code</TableHeaderColumn>
                 <TableHeaderColumn dataField="moduleName">Module Name</TableHeaderColumn>
-                <TableHeaderColumn dataField="semester">Semester</TableHeaderColumn>
-                <TableHeaderColumn dataField="day">Day</TableHeaderColumn>
-                <TableHeaderColumn dataField="timeSlot">timeSlot</TableHeaderColumn>
+                <TableHeaderColumn dataField="semester"  dataFormat={enumFormatter} formatExtraData={semesters} editable={{type: "select",defaultValue:{semester:this.state.semester}, options: {values: [0,1,2,3,4,5,6,7]}}}>Semester</TableHeaderColumn>
+                <TableHeaderColumn dataField="day"  dataFormat={enumFormatter} formatExtraData={days} editable={{type: "select",defaultValue:{day:this.state.day}, options: {values: [0,1,2,3,4,5,6]}}}>Day</TableHeaderColumn>
+                <TableHeaderColumn dataField="timeSlot" dataFormat={enumFormatter} formatExtraData={timeSlots} editable={{type: "select",defaultValue:{timeSlot:this.state.timeSlot}, options: {values: [0,1,2,3]}}}>timeSlot</TableHeaderColumn>
                 <TableHeaderColumn dataField="status" editable={false}>Status</TableHeaderColumn>
                 <TableHeaderColumn dataField="count" editable={false}>Student Count</TableHeaderColumn>
                 <TableHeaderColumn dataField="description">Description </TableHeaderColumn>
@@ -394,10 +431,10 @@ render()
                                                      onChange={this.handleSelectSem}>
 
                                             <option value="">~Select ~</option>
-                                            <option value="Semester 1">Semester 1</option>
-                                            <option value="Semester 2">Semester 2</option>
-                                            <option value="Semester 3">Semester 3</option>
-                                            <option value="Semester 4">Semester 4</option>
+                                            <option value="0">Semester 1</option>
+                                            <option value="1">Semester 2</option>
+                                            <option value="2">Semester 3</option>
+                                            <option value="3">Semester 4</option>
                                         </FormControl>
                                     </FormGroup>
 
@@ -408,13 +445,13 @@ render()
                                         <FormControl componentClass="select" placeholder="select" ref="day"
                                                      onChange={this.handleSelectDay}>
                                             <option value="">~Select ~</option>
-                                            <option value="Sunday">Sunday</option>
-                                            <option value="Monday">Monday</option>
-                                            <option value="Tuesday">Tuesday</option>
-                                            <option value="Wednesday">Wednesday</option>
-                                            <option value="Thuesday">Thuesday</option>
-                                            <option value="Friday">Friday</option>
-                                            <option value="Saturday">Saturday</option>
+                                            <option value="0">Sunday</option>
+                                            <option value="1">Monday</option>
+                                            <option value="2">Tuesday</option>
+                                            <option value="3">Wednesday</option>
+                                            <option value="4">Thuesday</option>
+                                            <option value="5">Friday</option>
+                                            <option value="6">Saturday</option>
                                         </FormControl>
                                     </FormGroup>
 
@@ -424,10 +461,10 @@ render()
                                     <FormControl componentClass="select" placeholder="select" ref="timeSlot"
                                                  onChange={this.handleSelectTimeSlt}>
                                         <option value="">~Select ~</option>
-                                        <option value="08.15-10.15">08.15-10.15</option>
-                                        <option value="10.30-12.30">10.30-12.30</option>
-                                        <option value="13.15-15.15">13.15-15.15</option>
-                                        <option value="15.30-17.30">15.30-17.30</option>
+                                        <option value="0">08.15-10.15</option>
+                                        <option value="1">10.30-12.30</option>
+                                        <option value="2">13.15-15.15</option>
+                                        <option value="3">15.30-17.30</option>
                                     </FormControl>
                                 </FormGroup>
 
