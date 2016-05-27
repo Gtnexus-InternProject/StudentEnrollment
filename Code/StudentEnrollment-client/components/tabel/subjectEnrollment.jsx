@@ -35,38 +35,40 @@ module.exports = React.createClass({
         // var me = this;
 
         request.get('http://localhost:3000/subjects' ).
-        set('Accept', 'application/json').
-        accept('application/json').
-        set('x-access-token', token).
-        use(nocache). // Prevents caching of *only* this request
-        end(function(err, res) {
-            if (!err) {
 
-                var jsonObj = res.body;
-                // console.log("data: " + JSON.stringify(jsonObj));
-                var data = [];
-                for (var i = 0; i < jsonObj.length; i++) {
-                  // console.log("data: " + jsonObj[i] );
-                    var row = {
-                      moduleCode: jsonObj[i].moduleCode,
-                      moduleName: jsonObj[i].moduleName,
-                      semester: jsonObj[i].semester,
-                      day: jsonObj[i].day,
-                      description: jsonObj[i].description,
-                        id: i
-                    };
+            set('Accept', 'application/json').
+            accept('application/json').
+            set('x-access-token', this.props.token).
+            use(nocache). // Prevents caching of *only* this request
+            end(function(err, res) {
+                if (!err) {
 
-                    data.push(row);
-                }
+                    var jsonObj = res.body;
+                    // console.log("data: " + JSON.stringify(jsonObj));
+                    var data = [];
+                    for (var i = 0; i < jsonObj.length; i++) {
+                        // console.log("data: " + jsonObj[i] );
+                        var row = {
+                            moduleCode: jsonObj[i].moduleCode,
+                            moduleName: jsonObj[i].moduleName,
+                            semester: jsonObj[i].semester,
+                            day: jsonObj[i].day,
+                            description: jsonObj[i].description,
+                            id: i
+                        };
 
-                // console.log("data: " + data);
-                // console.log(res.body);
+                        data.push(row);
+                    }
+
+                    // console.log("data: " + data);
+                    // console.log(res.body);
 
 // + this.props.userName
-                request.get('http://localhost:3000/users/student/'  + "TK/subjects" ).
+                    request.get('http://localhost:3000/users/student/'  +this.props.userName+  "/subjects" ).
                         set('Accept', 'application/json').
                         accept('application/json').
-                        set('x-access-token', token).
+                        set('x-access-token', this.props.token).
+
                         use(nocache). // Prevents caching of *only* this request
                         end(function(err, res) {
                             if (!err) {
@@ -76,7 +78,9 @@ module.exports = React.createClass({
                                 var subjectCodeArray = [];
                                 var statusArray = [];
                                 for (var i = 0; i < jsonObj.length; i++) {
-                                  // console.log("data: " + jsonObj[i] );
+
+                                    // console.log("data: " + jsonObj[i] );
+
                                     var row = {
                                         moduleCode: jsonObj[i].moduleCode,
                                         status : jsonObj[i].state,
@@ -92,13 +96,14 @@ module.exports = React.createClass({
                                 // console.log("Status" + statusArray["c01"]);
 
                                 data = data.map(function (subject, index) {
-                                  if( statusArray[subject.moduleCode] == 0 ||  statusArray[subject.moduleCode]){
-                                    subject.status = statusArray[subject.moduleCode] == 0 ? "Pending" : "Accepted";
-                                  }else{
-                                    subject.status = "Not Registered";
-                                  }
 
-                                  return subject;
+                                    if( statusArray[subject.moduleCode] == 0 ||  statusArray[subject.moduleCode]){
+                                        subject.status = statusArray[subject.moduleCode] == 0 ? "Pending" : "Accepted";
+                                    }else{
+                                        subject.status = "Not Registered";
+                                    }
+
+                                    return subject;
                                 });
 
                                 // console.log("data: " + subjectCodeArray);
@@ -107,24 +112,30 @@ module.exports = React.createClass({
                                 callback(data, subjectCodeArray);
 
                             }else{
-                              console.log(err);
+
+                                console.log(err);
+
                             }
 
                             // console.log(JSON.parse(res.text));
                         });
 
-            }else{
-              console.log(err);
-            }
 
-            // console.log(JSON.parse(res.text));
-        });
+                }else{
+                    console.log(err);
+                }
+
+                // console.log(JSON.parse(res.text));
+            }.bind(this));
+
     },
     componentWillMount: function() {
 
         this.fetchData(function(dataSe, subjectCodeArray) {
             this.setState({data: dataSe,
-            subjectCode:subjectCodeArray });
+
+                subjectCode:subjectCodeArray });
+
             // console.log(dataSe );
         }.bind(this));
         //var data = this.getData();
@@ -147,7 +158,9 @@ module.exports = React.createClass({
                 var idx = findIndex(this.state.data, {id: celldata[rowIndex].id});
 
                 var enrrolle = findIndex(this.state.subjectCode, {'moduleCode': this.state.data[idx].moduleCode } );
-                buttonText = enrrolle == -1 ? "Enrrole" : "Remove";
+
+                buttonText = enrrolle == -1 ? "Enroll" : "Disenroll";
+
                 baStyle =  enrrolle == -1 ? "success" : "danger";
                 // if(enrrolle){
                 //
@@ -161,34 +174,35 @@ module.exports = React.createClass({
                     console.log("Enrrolle Data"  );
 
                     request
-                        .put('http://localhost:3000/users/student/' + "TK" + '/subjects')
-                        .set('x-access-token', token)
+                        .put('http://localhost:3000/users/student/' + this.props.userName+ '/subjects')
+                        .set('x-access-token', this.props.token)
                         .set('Accept', 'application/json')
                         .send({subjects: { moduleCode : this.state.data[idx].moduleCode } })
                         .end(function(err, res){
-                          if (err || !res.ok) {
-                            // alert('Oh no! error');
-                            // console.log('Oh no! error' + err);
-                          } else {
+                            if (err || !res.ok) {
+                                // alert('Oh no! error');
+                                // console.log('Oh no! error' + err);
+                            } else {
 
-                            // console.log('yay got ' + JSON.stringify(res.body));
-                            this.state.subjectCode.push(
-                              {
-                                moduleCode : this.state.data[idx].moduleCode
-                              }
-                            );
+                                // console.log('yay got ' + JSON.stringify(res.body));
+                                this.state.subjectCode.push(
+                                    {
+                                        moduleCode : this.state.data[idx].moduleCode
+                                    }
+                                );
 
-                            this.state.data[idx].status = "Pending";
+                                this.state.data[idx].status = "Pending";
 
-                            this.setState(
-                              {
-                                subjectCode: this.state.subjectCode,
-                                columns : this.state.columns,
-                                data : this.state.data
-                              }
-                            );
+                                this.setState(
+                                    {
+                                        subjectCode: this.state.subjectCode,
+                                        columns : this.state.columns,
+                                        data : this.state.data
+                                    }
+                                );
 
-                          }
+                            }
+
 
                         }.bind(this));
 
@@ -202,31 +216,32 @@ module.exports = React.createClass({
                     // this.setState({data: this.state.data});
 
                     request
-                        .delete('http://localhost:3000/users/student/' + "TK" + '/subjects')
-                        .set('x-access-token', token)
+                        .delete('http://localhost:3000/users/student/' +this.props.userName + '/subjects')
+                        .set('x-access-token', this.props.token)
                         .set('Accept', 'application/json')
                         .send({subjects: this.state.data[idx].moduleCode })
                         .end(function(err, res){
-                          if (err || !res.ok) {
-                            // alert('Oh no! error');
-                            // console.log('Oh no! error' + err);
-                          } else {
+                            if (err || !res.ok) {
+                                // alert('Oh no! error');
+                                // console.log('Oh no! error' + err);
+                            } else {
 
-                            // console.log('yay got ' + JSON.stringify(res.body));
+                                // console.log('yay got ' + JSON.stringify(res.body));
 
-                            var remove = removeArray(this.state.subjectCode, function (n) {
-                              return n.moduleCode == this.state.data[idx].moduleCode;
-                            }.bind(this) );
-                            this.state.data[idx].status = "Not Registered";
-                            this.setState(
-                              {
-                                subjectCode: this.state.subjectCode,
-                                columns : this.state.columns,
-                                data : this.state.data
-                              }
-                            );
+                                var remove = removeArray(this.state.subjectCode, function (n) {
+                                    return n.moduleCode == this.state.data[idx].moduleCode;
+                                }.bind(this) );
+                                this.state.data[idx].status = "Not Registered";
+                                this.setState(
+                                    {
+                                        subjectCode: this.state.subjectCode,
+                                        columns : this.state.columns,
+                                        data : this.state.data
+                                    }
+                                );
 
-                          }
+                            }
+
 
                         }.bind(this));
 
@@ -248,33 +263,36 @@ module.exports = React.createClass({
                 // </span>
 
                 return {value: (
-                  <Button onClick={onClick} bsStyle={this.state.buttonData.style || baStyle }>{this.state.buttonData.text || buttonText}</Button>
 
-                    )};
+                    <Button onClick={onClick} bsStyle={this.state.buttonData.style || baStyle }>{this.state.buttonData.text || buttonText}</Button>
+
+                )};
+
             }.bind(this)
         } ];
 
         var columns = [
 
-          {
-              property: 'moduleCode',
-              header: "Module Code"
-          }, {
-              property: 'moduleName',
-              header: 'Module Name'
-          }, {
-              property: 'semester',
-              header: 'Semester'
-          }, {
-              property: 'day',
-              header: 'Day'
-          }, {
-              property: 'description',
-              header: 'Description'
-          }, {
-              property: 'status',
-              header: 'Status'
-          }
+            {
+                property: 'moduleCode',
+                header: "Module Code"
+            }, {
+                property: 'moduleName',
+                header: 'Module Name'
+            }, {
+                property: 'semester',
+                header: 'Semester'
+            }, {
+                property: 'day',
+                header: 'Day'
+            }, {
+                property: 'description',
+                header: 'Description'
+            }, {
+                property: 'status',
+                header: 'Status'
+            }
+
 
 
         ];
@@ -328,7 +346,9 @@ module.exports = React.createClass({
         // if you don't want an header, just return;
         return (
             <thead>
-                <ColumnNames config={headerConfig} columns={columns}/>
+
+            <ColumnNames config={headerConfig} columns={columns}/>
+
 
             </thead>
         );
@@ -352,8 +372,10 @@ module.exports = React.createClass({
 
         var paginated = paginate(data, pagination);
         var pages = Math.ceil(data.length / Math.max(isNaN(pagination.perPage)
-            ? 1
-            : pagination.perPage, 1));
+
+                ? 1
+                : pagination.perPage, 1));
+
 
 
 
@@ -373,8 +395,6 @@ module.exports = React.createClass({
                 </div>
                 <Table className='pure-table pure-table-striped' columnNames={this.columnFilters} columns={columns} data={paginated.data} row={(d, rowIndex) => {
                     return {
-
-
                         className: rowIndex % 2
                             ? 'odd-row'
                             : 'even-row',
@@ -459,4 +479,5 @@ function find(arr, key, value) {
     return arr.reduce((a, b) => a[key] === value
         ? a
         : b[key] === value && b);
+
 }
