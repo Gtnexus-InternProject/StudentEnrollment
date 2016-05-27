@@ -5,31 +5,34 @@ var React = require('react');
 import {Navbar} from 'react-bootstrap';
 import {Link} from 'react-router'
 
-    module.exports = React.createClass({
-    render(){
+module.exports = React.createClass({
+
+    logout(event) {
+      localStorage.removeItem('token' );
+    },
+    render() {
         return (
-        //<h1> Test </h1>
-            <Navbar inverse>
-                <Navbar.Header>
-                    <Navbar.Brand>
-                        <a href="#">Student Enrollment System</a>
-                    </Navbar.Brand>
-                    <Navbar.Toggle />
-                </Navbar.Header>
-                <Navbar.Collapse>
-                    <Navbar.Text>
-                        Signed in as: <Navbar.Link href="#">{this.props.userName}</Navbar.Link>
-                    </Navbar.Text>
-                    <Navbar.Text  pullRight>
-                    <Navbar.Link >
-                    <Link to="/login" >
-                    logout
-                    </Link>
-                    </Navbar.Link> </Navbar.Text>
-                </Navbar.Collapse>
-            </Navbar>
-    )
+        //<h1> Test </h1> < Navbar inverse > <Navbar.Header>
+        <Navbar>
+   <Navbar.Header>
+            <Navbar.Brand>
+                <a href="#">Student Enrollment System</a>
+            </Navbar.Brand>
+            <Navbar.Toggle/>
+        </Navbar.Header>
+        < Navbar.Collapse >
+        <Navbar.Text>
+            Signed in as:
+            <Navbar.Link href="#">{this.props.userName}</Navbar.Link>
+        </Navbar.Text>
+        < Navbar.Text pullRight >
+        <Navbar.Link >
+            <Link onClick={this.logout} to="/login">
+                logout
+            </Link>
+        </Navbar.Link>
+        < /Navbar.Text>
+                </Navbar.Collapse >
+               </Navbar>)
     }
 });
-
-
