@@ -11,7 +11,7 @@ import {Router, Route, Link, browserHistory} from 'react-router';
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table';
 module.exports = React.createClass({
 
-        getInitialState: function() {
+        getInitialState: function () {
             // var data = [];
 
             return {
@@ -29,15 +29,15 @@ module.exports = React.createClass({
 
 
             request
-                .get('http://localhost:3000/users/student/'+this.props.userName + '/subjects/timeTable')
+                .get('http://localhost:3000/users/student/' + this.props.userName + '/subjects/timeTable1')
                 .set('Accept', 'application/json')
                 .set('x-access-token', this.props.token)
                 .end(function (err, res) {
-                    if(err){
+                    if (err) {
                         console.log(err);
                     }
-                    else{
-                        if(res == null ){
+                    else {
+                        if (res == null) {
                             console.log("Empty");
                             return;
                         }
@@ -57,10 +57,8 @@ module.exports = React.createClass({
                                 semester: jsonObj[i].semester,
                                 day: jsonObj[i].day,
                                 timeSlot: jsonObj[i].timeSlot,
-
                             };
-
-                            data.push(row);
+                                data.push(row);
                         }
 
                         // console.log("data: " + data);
@@ -69,24 +67,18 @@ module.exports = React.createClass({
                         callback(data);
 
                     };
-
-
                 });
-
-
 
 
         },
         componentWillMount(){
 
-            this.fetchData(function(data) {
+            this.fetchData(function (data) {
                 this.setState({data: data});
                 // console.log(dataSe);
             }.bind(this));
 
         },
-
-
 
 
         render()        {

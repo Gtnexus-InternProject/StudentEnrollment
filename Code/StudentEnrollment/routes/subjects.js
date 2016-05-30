@@ -565,7 +565,7 @@ router.post('/timeTable/:subjects', function(req, res) {
 
 // get students per particular subject
 
-router.get('/student/:moduleCode', (function(req, res) {
+router.get('/student/:moduleCode/per', (function(req, res) {
     //if (req.type == "admin") {
     //    return res.status(404).send({
     //        success: false,

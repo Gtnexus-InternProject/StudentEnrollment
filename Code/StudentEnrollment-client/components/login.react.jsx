@@ -56,13 +56,13 @@ module.exports = React.createClass({
                     var token = (res.body.token);
 
                     if (token) {
-                        if(res.body.type == 'student') {
+                        if (res.body.type == 'student') {
                             //alert('token is - ' + (token));
                             browserHistory.push('/home/' + formL.userName + '/' + token);
-                        }else if(res.body.type == 'admin'){
+                        } else if (res.body.type == 'admin') {
                             //alert('token is - ' + (token));
                             browserHistory.push('/admin');
-                        }else if(res.body.type == 'coordinator'){
+                        } else if (res.body.type == 'coordinator') {
                             //alert('token is - ' + (token));
                             browserHistory.push('/coordinator/' + formL.userName + '/' + token);
 
@@ -81,28 +81,7 @@ module.exports = React.createClass({
 
 
         return (
-
-            <Carousel>
-                <Carousel.Item>
-                    <img width={1366} height={768} alt="900x500" src="img/Hydrangeas.jpg"/>
-                    <Carousel.Caption>
-
-                    </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                    <img width={1366} height={768} alt="900x500" src="img/Penguins.jpg"/>
-                    <Carousel.Caption>
-
-                    </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                    <img width={1366} height={768} alt="900x500" src="img/Tulips.jpg"/>
-
-                    <Carousel.Caption>
-
-                    </Carousel.Caption>
-                </Carousel.Item>
-
+            <div>
 
                 <Grid>
                     <Row className="show-grid">
@@ -161,7 +140,9 @@ module.exports = React.createClass({
                         </Col>
                         <Col xs={6} md={3}></Col>
                     </Row></Grid>
-            </Carousel>
+
+
+            </div>
         )
     }
 });

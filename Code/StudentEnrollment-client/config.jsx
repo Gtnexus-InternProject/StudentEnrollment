@@ -1,4 +1,4 @@
 
-var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDY0MDgxMTU4LCJleHAiOjE0NjQxNjc1NTh9.CDR7Bl5EQ6ZpBhfwqd5QgJP_MA2SxY_s_sM_iAuXu7A';
+var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjQzMjE5MTUsImV4cCI6MTQ2NDQwODMxNX0.4R4nHfeyTn4jfSl-u29MgQKlk2eCo6wysAVtD0qjeUQ';
 
 module.exports = token;

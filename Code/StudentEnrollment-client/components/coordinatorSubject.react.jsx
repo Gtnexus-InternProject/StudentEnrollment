@@ -11,6 +11,7 @@ import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, 
 
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
 import './../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css'
+var addstd = [];
 
 module.exports = React.createClass({
 
@@ -28,8 +29,9 @@ module.exports = React.createClass({
             email: '',
             contactNumber: '',
             showModal: false,
-            data1:[],
-            data: []
+            data1: [],
+            data: [],
+            addStd: []
         };
     },
 
@@ -66,7 +68,6 @@ module.exports = React.createClass({
                     callback(data);
 
 
-
                 }
             });
     },
@@ -94,7 +95,7 @@ module.exports = React.createClass({
 
 
         request
-            .get('http://localhost:3000/subjects/student/' + this.props.moduleCode)
+            .get('http://localhost:3000/subjects/student/' + this.props.moduleCode + '/per')
             .set('Accept', 'application/json')
             .set('x-access-token', this.props.token)
             .end(function (err, res) {
@@ -139,8 +140,6 @@ module.exports = React.createClass({
     },
 
 
-
-
     afterDeleteRow (data) {
 
         request
@@ -182,9 +181,46 @@ module.exports = React.createClass({
     },
 
     onRowSelect(row, isSelected){
+
+
         console.log(row);
-        console.log("selected: " + isSelected)
     },
+
+
+    onRowSelectAddStd(row, isSelected){
+        addstd.push(row.userName1);
+
+    },
+    addStudent(event){
+        event.preventDefault();
+        //console.log(addstd);
+        this.setState({addStd: addstd});
+        console.log(this.state.addStd );
+
+        for(var i=0;i<this.state.addStd.length;i++){
+
+            request
+                .put('http://localhost:3000/users/student/' + this.state.addStd[i]+ '/subjectsSS')
+                .send({subjects:{moduleCode:this.state.addStd[i],status:1}})
+                .set('x-access-token', this.props.token)
+                .set('Accept', 'application/json')
+                .end(function (err, res) {
+                    if (err || !res.ok) {
+                        // alert('Oh no! error');
+                        console.log('Oh no! error' + err);
+                    } else {
+                        // alert('yay got ' + JSON.stringify(res.body));
+                        console.log('yay got ' + JSON.stringify(res.body));
+                    }
+                }.bind(this));
+
+        }
+
+
+        addstd=[];
+
+    },
+
 
     render()
     {
@@ -212,16 +248,12 @@ module.exports = React.createClass({
             mode: "checkbox",
             clickToSelect: true,
             bgColor: "rgb(238, 193, 213)",
-            onSelect: this.onRowSelect,
+            onSelect: this.onRowSelectAddStd,
             onSelectAll: this.onSelectAll
         };
-        function onRowSelect(row, isSelected){
-            console.log(row);
-            console.log("selected: " + isSelected)
-            console.log();
-        }
 
-        function onSelectAll(isSelected){
+
+        function onSelectAll(isSelected) {
             console.log("is select all: " + isSelected);
         }
 
@@ -257,9 +289,6 @@ module.exports = React.createClass({
                     <Modal
                         show={this.state.showModal}
                         onHide={this.close}
-                        //show={this.state.show}
-                        //onHide={close}
-                        //container={this}
                         aria-labelledby="contained-modal-title"
                         >
                         <Modal.Header closeButton>
@@ -267,17 +296,22 @@ module.exports = React.createClass({
                         </Modal.Header>
                         <Modal.Body>
                             <div>
+                                <Form onSubmit={this.addStudent}>
+                                    <BootstrapTable data={this.state.data1}
+                                                    selectRow={selectRowProp1}
+                                                    search={true}
+                                                    pagination={true}
+                                        >
+                                        <TableHeaderColumn dataField="userName1"
+                                                           isKey={true}>Username</TableHeaderColumn>
+                                        <TableHeaderColumn dataField="firstName1">First Name</TableHeaderColumn>
+                                        <TableHeaderColumn dataField="lastName1">Last Name</TableHeaderColumn>
+                                    </BootstrapTable>
 
-                                <BootstrapTable data={this.state.data1}
-                                                selectRow={selectRowProp1}
-                                                search={true}
-                                                pagination={true}
-                                    >
-                                    <TableHeaderColumn dataField="userName1" isKey={true}>Username</TableHeaderColumn>
-                                    <TableHeaderColumn dataField="firstName1">First Name</TableHeaderColumn>
-                                    <TableHeaderColumn dataField="lastName1">Last Name</TableHeaderColumn>
-                                </BootstrapTable>
 
+                                    <Button bsStyle="warning" type="submit" onClick={this.close}>
+                                        Submit</Button>
+                                </Form>
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
