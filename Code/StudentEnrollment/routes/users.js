@@ -1027,7 +1027,7 @@ router.put('/:type/:userName/subjects', function(req, res) {
 
 
 
-//Unerrole or remove a subject from student or coordinator
+//Unenrrole or remove a subject from student or coordinator
 router.delete('/:type/:userName/subjects', function(req, res) {
     //find blob by ID
 

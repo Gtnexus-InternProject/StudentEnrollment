@@ -4,40 +4,106 @@ import ReactDOM from 'react-dom';
 // ReactDOMServer = require('react-dom/server');
 
 import Header from './header.react'
+import {Col} from 'react-bootstrap'
+import request from 'superagent'
+import { browserHistory} from 'react-router';
+
+
 import Tab from './tabs'
 import Profile from './profileView.react'
-import {Col} from 'react-bootstrap'
 
 module.exports = React.createClass({
     getInitialState() {
-        if(!this.props.params.token || this.props.params.token == null){
-            browserHistory.push('/login');
-        }
+
         return ({
-            userName: this.props.params.userName,
-            token: this.props.params.token
+            userName: localStorage.getItem('user' ),
+
+            data: {},
+            token: localStorage.getItem('token' )
+
         });
     },
-    //contextTypes: {
-    //    token:  React.PropTypes.string
-    //},
+
+    fetchData(callback){
+
+      request
+          .get('http://localhost:3000/users/student/' + this.state.userName+ '/per')
+          .set('Accept', 'application/json')
+          .set('x-access-token', this.state.token)
+          .end(function (err, res) {
+              if (err) {
+                  console.log('error' + err);
+              }
+              else if(!res) {
+
+              }
+              else {
+                  //alert('aaaa')
+                  var data = {
+                    firstName: res.body.firstName || " ",
+                    lastName: res.body.lastName || " ",
+                    email: res.body.email || " ",
+                    userName: res.body.userName || " ",
+                    dob : res.body.dob || " ",
+                    //password: ,
+                    adddress: res.body.adddress || " ",
+                    gender: res.body.gender || " ",
+                    alStream: res.body.alStream || " ",
+                    contactNumber: res.body.contactNumber || " ",
+                    zScore: res.body.zScore || " "
+                  };
+                  // console.log("Respond " + JSON.stringify(res.body));
+                  // console.log("Check Data " + JSON.stringify( data ));
+                  callback(data);
+                  // this.setState({
+                  //     firstName: res.body.firstName,
+                  //     lastName: res.body.lastName,
+                  //     email: res.body.email,
+                  //     userName: res.body.userName,
+                  //     //password: ,
+                  //     adddress: res.body.adddress,
+                  //     gender: res.body.gender,
+                  //     alStream: res.body.alStream,
+                  //     contactNumber: res.body.contactNumber,
+                  //     zScore: res.body.zScore
+                  // });
+              }
+          }.bind(this));
+
+    },
+
+    componentWillMount(){
 
 
+
+      this.fetchData(function(data) {
+          this.setState({data: data});
+          // console.log(dataSe);
+      }.bind(this));
+
+    },
+
+    updateData(data){
+      this.setState({data: data});
+    },
 
 // Render the component
     render()
     {
 
+
+
+
         return (
             <div>
                 <Col md={12}>
-                    {  <Header userName={this.props.params.userName} /> || this.props.children}
+                    {  <Header userName={this.state.userName} /> || this.props.children}
                 </Col>
                 <Col md={3}>
-                    {  <Profile userName={this.props.params.userName} token={this.props.params.token }/> || this.props.children}
+                    {  <Profile data={this.state.data} updateData={this.updateData} userName={this.state.userName} token={this.state.token }/> || this.props.children}
                 </Col>
                 <Col md={9}>
-                    { <Tab userName={this.props.params.userName} token={this.props.params.token}/> || this.props.children}
+                    { <Tab data={this.state.data} updateData={this.updateData} userName={this.state.userName} token={this.state.token }/> || this.props.children}
                 </Col>
             </div>
 

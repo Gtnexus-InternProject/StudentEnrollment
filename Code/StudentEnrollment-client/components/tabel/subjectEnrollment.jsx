@@ -329,7 +329,8 @@ module.exports = React.createClass({
                 perPage:5
             },
             subjectCode: [],
-            buttonData : { style: baStyle, text: buttonText }
+            buttonData : { style: baStyle, text: buttonText },
+            token: localStorage.getItem('token' )
         };
     },
 
