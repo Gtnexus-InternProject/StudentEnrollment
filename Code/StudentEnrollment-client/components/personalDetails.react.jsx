@@ -18,11 +18,41 @@ module.exports = React.createClass({
             lastName: '',
             email: '',
             gender: '',
-            address: '',
+            adddress: '',
             zScore: '',
             alStream: '',
-            telephone: '',
+            contactNumber: '',
             dateOfBirth: ''
+        }
+
+    },
+
+    componentWillReceiveProps: function(newProps) {
+      console.log("Check Data (componentDidMount) " + JSON.stringify(this.props.data));
+      // this.state.firstName = this.props.data.firstName,
+      // this.state.lastName = this.props.data.lastName,
+      // this.state.email = this.props.data.email,
+      // this.state.userName = this.props.data.userName,
+      // //password: ,
+      // this.state.adddress = this.props.data.adddress,
+      // this.state.gender = this.props.data.gender,
+      // this.state.alStream = this.props.data.alStream,
+      // this.state.contactNumber = this.props.data.contactNumber,
+      // this.state.zScore = this.props.data.zScore
+        if (newProps.data != this.state.data) {
+            this.setState({
+
+                firstName: newProps.data.firstName,
+                lastName: newProps.data.lastName,
+                email: newProps.data.email,
+                adddress: newProps.data.adddress,
+                zScore: newProps.data.zScore,
+                alStream: newProps.data.alStream,
+                contactNumber: newProps.data.contactNumber,
+                gender: newProps.data.gender,
+                dateOfBirth: newProps.data.dateOfBirth
+            });
+
         }
 
     },
@@ -30,38 +60,39 @@ module.exports = React.createClass({
 
     componentWillMount(){
 
-        var userName = this.props.userName;
-        console.log(userName)
-        request
-            .get('http://localhost:3000/users/student/' + userName + '/per')
-            .set('Accept', 'application/json')
-            .set('x-access-token', this.props.token)
-            .end(function (err, res) {
-                if (err) {
-                    console.log('error' + err)
-                }
-                else {
-                    this.setState({
-                        userName: res.body.userName,
-                        firstName: res.body.firstName,
-                        lastName: res.body.lastName,
-                        email: res.body.email,
-                        address: res.body.adddress,
-                        zScore: res.body.zScore,
-                        alStream: res.body.alStream,
-                        telephone: res.body.contactNumber,
-                        gender: res.body.gender,
-                        dateOfBirth: res.body.dateOfBirth
-                    });
-
-
-                }
-            }.bind(this));
+        // var userName = this.props.userName;
+        // console.log(userName)
+        // request
+        //     .get('http://localhost:3000/users/student/' + userName + '/per')
+        //     .set('Accept', 'application/json')
+        //     .set('x-access-token', this.props.token)
+        //     .end(function (err, res) {
+        //         if (err) {
+        //             console.log('error' + err)
+        //         }
+        //         else {
+        //             this.setState({
+        //                 userName: res.body.userName,
+        //                 firstName: res.body.firstName,
+        //                 lastName: res.body.lastName,
+        //                 email: res.body.email,
+        //                 adddress: res.body.adddress,
+        //                 zScore: res.body.zScore,
+        //                 alStream: res.body.alStream,
+        //                 contactNumber: res.body.contactNumber,
+        //                 gender: res.body.gender,
+        //                 dateOfBirth: res.body.dateOfBirth
+        //             });
+        //
+        //
+        //         }
+        //     }.bind(this));
 
     },
     render()
     {
 
+        // console.log("Check Data (render) " + JSON.stringify(this.props.data));
         return (<div>
 
             <Panel >
@@ -96,12 +127,12 @@ module.exports = React.createClass({
                     <Col md={6}>
                         <FormGroup>
                             <h5><strong>Address
-                            </strong>: {this.state.address}</h5>
+                            </strong>: {this.state.adddress}</h5>
 
                         </FormGroup></Col>
                     <Col md={6}>
                         <FormGroup>
-                            <h5><strong>Contact Number </strong>: {this.state.telephone}</h5>
+                            <h5><strong>Contact Number </strong>: {this.state.contactNumber}</h5>
                         </FormGroup>
                     </Col>
 

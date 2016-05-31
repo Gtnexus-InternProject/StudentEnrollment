@@ -13,10 +13,12 @@ module.exports = React.createClass({
     render() {
         return (
         //<h1> Test </h1> < Navbar inverse > <Navbar.Header>
-        <Navbar>
+        // <a href="#"></a>
+        <Navbar inverse>
    <Navbar.Header>
             <Navbar.Brand>
-                <a href="#">Student Enrollment System</a>
+              <Navbar.Link href="#">Student Enrollment System</Navbar.Link>
+
             </Navbar.Brand>
             <Navbar.Toggle/>
         </Navbar.Header>

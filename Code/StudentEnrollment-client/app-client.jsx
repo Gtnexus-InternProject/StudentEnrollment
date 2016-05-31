@@ -37,7 +37,7 @@ ReactDOM.render((
         <Route path="/admin" component={Admin}></Route>
         <Route path="/coordinator/:userName/:token" component={Coordinator}></Route>
         <Route path="/tab" component={Tab}></Route>
-        <Route path="/home/:userName/:token" component={Home}></Route>
+        <Route path="/home" component={Home}></Route>
         <Route path="/login" component={Login}></Route>
         <Route path="/register" component={Register}></Route>
         <Route path="*" component={PageNotFound}/>

@@ -51,7 +51,9 @@ module.exports = React.createClass({
 
         // var me = this;
 
-        request.get('http://localhost:3000/users/student').set('Accept', 'application/json').accept('application/json').set('x-access-token',this.state.token).use(nocache). // Prevents caching of *only* this request
+        request.get('http://localhost:3000/users/student')//
+        .set('Accept', 'application/json').accept('application/json')//
+        .set('x-access-token',this.state.token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
 
