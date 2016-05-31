@@ -20,6 +20,7 @@ var userName;
 var boolGaurd = true;
 var tick = 0;
 var previousTime = 0;
+var _URL = window.URL || window.webkitURL;
 
 module.exports = React.createClass({
 
@@ -36,41 +37,36 @@ module.exports = React.createClass({
                 alStream: '',
                 telephone: '',
                 zScore: '',
-                imgURL: 'http://localhost:5000/img/pro.PNG'
+                imgURL: 'http://localhost:5000/img/pro.PNG',
+                hiddenURL: ''
             };
         },
 
         handleChange() {
             var fff = this.refs.myInput;
-            var loc = fff.value.replace("C:\\fakepath\\", "");
+            // var loc = fff.value.replace("C:\\fakepath\\", "");
             var file = fff.files[0];
             var reader = new FileReader();
 
-var image;
-            if (file) {
-console.log("1");
-                image = new Image();
-
-                image.onload = function () {
-console.log("2");
-                    alert("The image width is " + this.width + " and image height is " + this.height);
-                };
-
-                //image.src = _URL.createObjectURL(file);
-
-
-            }
-
-
-
             reader.addEventListener("load", function () {  
                 console.log("xxxxx");
-                console.log("W" + fff.width);
-                console.log("H" + fff.height);
-                // console.log(reader.result);
+
                 this.setState({
-                    imgURL: reader.result
+                    hiddenURL: reader.result
                 });
+
+                console.log("zzzzz");
+                var imgWidth = this.refs.hiddenImg.width;
+                var imgHeight = this.refs.hiddenImg.height;
+                console.log(imgHeight);
+                console.log(imgWidth);
+                if (imgHeight <= 256 && imgWidth <= 256) {
+                    this.setState({
+                        imgURL: reader.result
+                    });
+                } else {
+                    alert('Image is too big, please resize!!');
+                }
             }.bind(this), false);
             if (file) {  
                 reader.readAsDataURL(file); 
@@ -326,7 +322,7 @@ console.log("2");
             < Image src = {
                 this.state.imgURL
             }
-            circle / >
+            responsive / >
                 < div class = "upload-button" > Upload Image < /div> < input class = "file-upload"
             onChange = {
                 this.handleChange
@@ -335,7 +331,16 @@ console.log("2");
             type = "file"
             accept = "image/*" / >
 
-                < Button bsStyle = "danger"
+                < div className = "hidden" >
+                < img src = {
+                    this.state.hiddenURL
+                }
+            ref = "hiddenImg" / >
+
+
+                < /div> 
+
+            < Button bsStyle = "danger"
             type = "button" >
                 Cancel < /Button> < Button bsStyle = "success"
             type = "submit" >
