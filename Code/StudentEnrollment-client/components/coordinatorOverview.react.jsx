@@ -183,7 +183,7 @@ module.exports = React.createClass({
                         .get('http://localhost:3000/subjects/moduleDetails/' + csv1)
                         .set('Accept', 'application/json')
                         //.set('x-access-token', this.props.token)
-                        .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjQ1ODY2ODEsImV4cCI6MTQ2NDY3MzA4MX0.c9TD767wMnv5Kapf8UxUw_RTZdrSbqwJbuXUMpHSXjw' )
+                        .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjQ2NzMxMTYsImV4cCI6MTQ2NDc1OTUxNn0.dpReFCMjuu8a44N7EfNAnu3ZHCBxEGSwoYgj7_Me3CU' )
                         .end(function (err, res) {
                             if (err) {
                                 console.log(err);

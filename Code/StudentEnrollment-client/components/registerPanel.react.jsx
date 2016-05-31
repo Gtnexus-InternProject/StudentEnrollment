@@ -191,8 +191,8 @@ module.exports = React.createClass({
                                     <FormControl componentClass="select" ref="gender"
                                                  onChange={this.handleChangeGender}>
                                         <option value="">~Select ~</option>
-                                        <option value="1">Male</option>
-                                        <option value="2">Female</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
 
                                     </FormControl>
 
@@ -213,10 +213,10 @@ module.exports = React.createClass({
                                 <FormControl componentClass="select" ref="alStresm"
                                              onChange={this.handleChangeALStream}>
                                     <option value="">~Select ~</option>
-                                    <option value="1">Maths</option>
-                                    <option value="2">Biology</option>
-                                    <option value="3">Commerce</option>
-                                    <option value="4">Art</option>
+                                    <option value="Maths">Maths</option>
+                                    <option value="Biology">Biology</option>
+                                    <option value="Commerce">Commerce</option>
+                                    <option value="Art">Art</option>
                                 </FormControl>
                             </FormGroup>
                         </Col><Col md={6}>

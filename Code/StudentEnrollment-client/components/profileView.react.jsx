@@ -170,6 +170,7 @@ module.exports = React.createClass({
                                             <FormControl type="text"
                                                          ref="userName"
                                                          value={this.state.userName}
+                                                         disabled
                                                          onChange={this.handleChangeUserName}/>
                                         </FormGroup>
                                     </Col>

@@ -7,11 +7,13 @@
 var React = require('react');
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
+var removeArray = require('lodash/remove');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
 
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
 import './../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css'
 var addstd = [];
+var addstd2 = [];
 
 module.exports = React.createClass({
 
@@ -20,18 +22,14 @@ module.exports = React.createClass({
         // var data = [];
 
         return {
-            userName: '',
-            firstName: '',
-            lastName: '',
-            userName1: '',
-            firstName1: '',
-            lastName1: '',
-            email: '',
-            contactNumber: '',
+
             showModal: false,
             data1: [],
             data: [],
-            addStd: []
+            addStd: [],
+            compArry: []
+
+
         };
     },
 
@@ -46,30 +44,32 @@ module.exports = React.createClass({
                     // alert('Oh no! error');
                     console.log('Oh no! error' + err);
                 } else {
-                    // alert('yay got ' + JSON.stringify(res.body));
-                    console.log('yay got ' + JSON.stringify(res.body));
 
                     var jsonObj = res.body;
                     var data = [];
+                    var test = [];
+                    console.log("fggfccg " + this.state.compArry);
+
                     for (var i = 0; i < jsonObj.length; i++) {
-                        var row = {
-                            userName1: jsonObj[i].userName,
-                            firstName1: jsonObj[i].firstName,
-                            lastName1: jsonObj[i].lastName,
+                        if (this.state.compArry.indexOf(jsonObj[i].userName) != -1) {
+                            console.log('notselecterd')
+
                         }
-                        data.push(row);
-                    }
-                    ;
-
-
-                    // console.log("data: " + data);
-                    console.log(data);
-
+                        else {
+                            console.log('Selected');
+                            var row = {
+                                userName: jsonObj[i].userName,
+                                firstName: jsonObj[i].firstName,
+                                lastName: jsonObj[i].lastName,
+                                email: jsonObj[i].email,
+                                contactNumber: jsonObj[i].contactNumber,
+                            }
+                            data.push(row);
+                        }
+                    };
                     callback(data);
-
-
                 }
-            });
+            }.bind(this));
     },
 
     close() {
@@ -83,7 +83,6 @@ module.exports = React.createClass({
         }.bind(this));
         this.setState({showModal: true});
     },
-
 
     handleSubmit(data) {
 
@@ -105,6 +104,7 @@ module.exports = React.createClass({
                 else {
                     var jsonObj = res.body;
                     var data = [];
+                    var compArry = [];
                     for (var i = 0; i < jsonObj.length; i++) {
                         var row = {
                             userName: jsonObj[i].userName,
@@ -115,14 +115,11 @@ module.exports = React.createClass({
 
                         }
                         data.push(row);
+                        compArry.push(row.userName);
                     }
                     ;
-
-
-                    // console.log("data: " + data);
-                    console.log(data);
-
-                    callback(data);
+                    console.log(compArry);
+                    callback(data, compArry);
 
                 }
             });
@@ -130,22 +127,25 @@ module.exports = React.createClass({
 
     componentDidMount: function () {
 
-        this.fetchData(function (dataSe) {
-            this.setState({data: dataSe});
-            // console.log(dataSe);
-        }.bind(this));
-        // console.log("Check 2");
-        //var data = this.getData();
+        this.fetchData(function (dataSe, datacompArry) {
+            this.setState({
+                    data: dataSe,
+                    compArry: datacompArry
+                }
+            );
 
-    },
+
+            // console.log(dataSe);
+        }.bind(this)); },
 
 
     afterDeleteRow (data) {
 
         request
-            .put('http://localhost:3000/subjects/delete/' + data)
+            .delete('http://localhost:3000/users/student/'+ data +'/subjects')
             .set('x-access-token', this.props.token)
             .set('Accept', 'application/json')
+            .send({subjects:this.props.moduleCode})
             .end(function (err, res) {
                 if (err || !res.ok) {
                     // alert('Oh no! error');
@@ -155,26 +155,17 @@ module.exports = React.createClass({
                     console.log('yay got ' + JSON.stringify(res.body));
                 }
             });
+        var test= this.state.data;
+        var remove = removeArray(test, function(o) {
+            return o.userName == data;
+        });
+        this.setState({
+            data: test,
+            //compArry: comparry
+        });
+
+
     },
-
-    afterSaveCell(row){
-        console.log(row.moduleCode)
-        request
-            .put('http://localhost:3000/subjects/update/' + row.moduleCode)
-            .send(row)
-            .set('x-access-token', this.props.token)
-            .set('Accept', 'application/json')
-            .end(function (err, res) {
-                if (err || !res.ok) {
-
-                    console.log('Oh no! error' + err);
-                } else {
-
-                    console.log('yay got ' + JSON.stringify(res.body));
-                }
-            });
-    },
-
 
     format(cell, row){
         return '<i class="glyphicon glyphicon-usd"></i> ' + cell;
@@ -188,20 +179,48 @@ module.exports = React.createClass({
 
 
     onRowSelectAddStd(row, isSelected){
-        addstd.push(row.userName1);
+
+        if (isSelected) {
+            addstd.push(row.userName);
+            addstd2.push(row);
+            // console.log("Added" + JSON.stringify(row));
+        } else {
+            var remove = removeArray(addstd2, function(o) {
+                return o.userName == row.userName;
+            });
+            var removeuserName = removeArray(addstd, function(o) {
+                return o == row.userName;
+            });
+            // console.log("Removed" + JSON.stringify(remove));
+        }
+
+
+
+        console.log('Size' + addstd);
 
     },
+
+
+    onSelectAll(isSelected, data) {
+
+        if (isSelected) {
+            addstd.push(data.userName);
+            addstd2.push(data);
+
+        } else {
+            addstd=[];
+            addstd2=[];
+        }
+    },
+
     addStudent(event){
         event.preventDefault();
-        //console.log(addstd);
-        this.setState({addStd: addstd});
-        console.log(this.state.addStd );
 
-        for(var i=0;i<this.state.addStd.length;i++){
+        for (var i = 0; i < this.state.addStd.length; i++) {
 
             request
-                .put('http://localhost:3000/users/student/' + this.state.addStd[i]+ '/subjectsSS')
-                .send({subjects:{moduleCode:this.state.addStd[i],status:1}})
+                .put('http://localhost:3000/users/student/' + this.state.addStd[i] + '/subjectsSS')
+                .send({subjects: {moduleCode: this.props.moduleCode, state: 1}})
                 .set('x-access-token', this.props.token)
                 .set('Accept', 'application/json')
                 .end(function (err, res) {
@@ -209,15 +228,23 @@ module.exports = React.createClass({
                         // alert('Oh no! error');
                         console.log('Oh no! error' + err);
                     } else {
-                        // alert('yay got ' + JSON.stringify(res.body));
-                        console.log('yay got ' + JSON.stringify(res.body));
+                        console.log('ok');
+
+
                     }
                 }.bind(this));
-
         }
 
-
-        addstd=[];
+        var tablelData = this.state.data.concat(addstd2);
+        var comparry = this.state.compArry.concat(addstd);
+        this.setState({
+            addStd: addstd,
+            data: tablelData,
+            compArry: comparry
+        });
+        console.log('rfvrvrvvrvr  ' + this.state.compArry);
+        addstd = [];
+        addstd2 = [];
 
     },
 
@@ -299,13 +326,15 @@ module.exports = React.createClass({
                                 <Form onSubmit={this.addStudent}>
                                     <BootstrapTable data={this.state.data1}
                                                     selectRow={selectRowProp1}
+                                                    onSelectAll= {this.onSelectAll}
                                                     search={true}
                                                     pagination={true}
+
                                         >
-                                        <TableHeaderColumn dataField="userName1"
+                                        <TableHeaderColumn dataField="userName"
                                                            isKey={true}>Username</TableHeaderColumn>
-                                        <TableHeaderColumn dataField="firstName1">First Name</TableHeaderColumn>
-                                        <TableHeaderColumn dataField="lastName1">Last Name</TableHeaderColumn>
+                                        <TableHeaderColumn dataField="firstName">First Name</TableHeaderColumn>
+                                        <TableHeaderColumn dataField="lastName">Last Name</TableHeaderColumn>
                                     </BootstrapTable>
 
 
