@@ -19,19 +19,19 @@ module.exports = React.createClass({
             <div className="row">
                 <div className="col-lg-12">
                     <Panel>
-                        <Tabs defaultActiveKey={1}>
-                            <Tab id="profile" eventKey={1} title="Profile">
+                        <Tabs id="student-tab" defaultActiveKey={1}>
+                            <Tab  eventKey={1} title="Profile">
                                 <h4>Student Profile</h4>
 
-                                <p>
+                                <div>
                                   <PersonalD data={this.props.data} updateData={this.props.updateData} userName={this.props.userName} token={this.props.token}/>
-                                </p>
+                                </div>
                                 <h4>Time Table</h4>
 
-                                <p><TimeTable userName={this.props.userName} token={this.props.token}/>
-                                </p>
+                                <div><TimeTable userName={this.props.userName} token={this.props.token}/>
+                                </div>
                             </Tab>
-                            <Tab id="subject" eventKey={2} title="Subject">
+                            <Tab  eventKey={2} title="Subject">
                                 <h4>Subject Profile</h4>
                                 <SubjectTabel userName={this.props.userName} token={this.props.token}/>
 

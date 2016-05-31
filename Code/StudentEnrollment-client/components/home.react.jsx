@@ -14,9 +14,6 @@ import Profile from './profileView.react'
 
 module.exports = React.createClass({
     getInitialState() {
-        if(!localStorage.getItem('token' ) || localStorage.getItem('token' ) == ""){
-            browserHistory.push('/login');
-        }
 
         return ({
             userName: localStorage.getItem('user' ),
@@ -36,6 +33,9 @@ module.exports = React.createClass({
           .end(function (err, res) {
               if (err) {
                   console.log('error' + err);
+              }
+              else if(!res) {
+
               }
               else {
                   //alert('aaaa')
@@ -74,6 +74,8 @@ module.exports = React.createClass({
 
     componentWillMount(){
 
+
+
       this.fetchData(function(data) {
           this.setState({data: data});
           // console.log(dataSe);
@@ -88,6 +90,9 @@ module.exports = React.createClass({
 // Render the component
     render()
     {
+
+
+
 
         return (
             <div>
