@@ -13,12 +13,12 @@ module.exports = React.createClass({
             firstName: '',
             lastName: '',
             email: '',
-
             address: '',
             gender: '',
             alStream: '',
             telephone: '',
-            zScore: ''
+            zScore: '',
+            imgURL: 'http://localhost:5000/img/pro.PNG'
 
         }
 
@@ -44,7 +44,6 @@ module.exports = React.createClass({
                     console.log('error' + err);
                 }
                 else {
-                    //alert('aaaa')
 
                     this.setState({
                         firstName: res.body.firstName,
@@ -56,7 +55,8 @@ module.exports = React.createClass({
                         gender: res.body.gender,
                         alStream: res.body.alStream,
                         telephone: res.body.contactNumber,
-                        zScore: res.body.zScore
+                        zScore: res.body.zScore,
+                        imgURL:res.body.profileImage
                     });
                 }
             }.bind(this));
@@ -137,7 +137,7 @@ module.exports = React.createClass({
             <div>
                 <Panel bsStyle="danger">
                     <Col md={12}>
-                        <Image src="http://localhost:5000/img/pro.PNG" circle/>
+                        <Image src={this.state.imgURL} circle/>
                     </Col><Col md={12}>
                     <h3 ><strong>{this.state.firstName} {this.state.lastName}</strong></h3>
                 </Col> <Col md={12}>

@@ -8,7 +8,8 @@ import Hello from './components/hello.react';
 import Home from './components/home.react';
 import Login from './components/login.react';
 import Register from './components/registerPanel.react';
-import AAAA from './components/coordinatorSubjectList.react'
+import AAAA from './components/coordinatorSubjectList.react';
+    import ImageUpload from './components/profilePicture.react'
 
 import Tab from './components/tabs';
 

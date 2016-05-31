@@ -124,6 +124,7 @@ router.route('/student').post(function (req, res) {
         registeredDate = req.body.registeredDate,
         profileImage = "testS";
     var subjects = req.body.subjects;
+    var profileImage=req.body.imgURL;
 
     //, subjects =  {moduleCode:req.body.subjects}
     //,subjects : subjects
@@ -152,6 +153,7 @@ router.route('/student').post(function (req, res) {
                 registeredDate: registeredDate,
                 profileImage: profileImage,
                 subjects: subjects
+                
 
             }, function(err, user) {
 
