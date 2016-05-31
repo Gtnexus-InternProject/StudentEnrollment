@@ -139,10 +139,11 @@ module.exports = React.createClass({
         }.bind(this)); },
 
 
-    afterDeleteRow (data) {
+    afterDeleteRow  (row) {
+        //console.log(JSON.stringify(row));
 
         request
-            .delete('http://localhost:3000/users/student/'+ data +'/subjects')
+            .delete('http://localhost:3000/users/student/'+ row +'/subjects')
             .set('x-access-token', this.props.token)
             .set('Accept', 'application/json')
             .send({subjects:this.props.moduleCode})
@@ -156,12 +157,17 @@ module.exports = React.createClass({
                 }
             });
         var test= this.state.data;
+        var test2=this.state.compArry;
+
         var remove = removeArray(test, function(o) {
-            return o.userName == data;
+            return o.userName == row;
         });
+        var removecomp = removeArray(test2, function(o) {
+            return o == row;
+        })
         this.setState({
             data: test,
-            //compArry: comparry
+            compArry: test2
         });
 
 
@@ -262,12 +268,8 @@ module.exports = React.createClass({
 
         var options = {
             afterDeleteRow: this.afterDeleteRow,
+            onDeleteRow :this.onDeleteRow,
 
-        };
-        var cellEdit = {
-            mode: "click",
-            blurToSave: true,
-            afterSaveCell: this.afterSaveCell
         };
 
         //fro the student add table
