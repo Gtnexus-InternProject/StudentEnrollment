@@ -20,12 +20,13 @@ var userName;
 var boolGaurd = true;
 var tick = 0;
 var previousTime = 0;
-var _URL = window.URL || window.webkitURL;
+var changeCounter=0;
 
 module.exports = React.createClass({
 
 
     getInitialState() {
+        changeCounter=0;
             return {
                 userName: '',
                 password: '',
@@ -39,27 +40,22 @@ module.exports = React.createClass({
                 zScore: '',
                 imgURL: 'http://localhost:5000/img/pro.PNG',
                 hiddenURL: ''
+
             };
         },
 
         handleChange() {
+            changeCounter++;
             var fff = this.refs.myInput;
-            // var loc = fff.value.replace("C:\\fakepath\\", "");
             var file = fff.files[0];
             var reader = new FileReader();
 
             reader.addEventListener("load", function () {  
-                console.log("xxxxx");
-
                 this.setState({
                     hiddenURL: reader.result
                 });
-
-                console.log("zzzzz");
                 var imgWidth = this.refs.hiddenImg.width;
                 var imgHeight = this.refs.hiddenImg.height;
-                console.log(imgHeight);
-                console.log(imgWidth);
                 if (imgHeight <= 256 && imgWidth <= 256) {
                     this.setState({
                         imgURL: reader.result
@@ -78,7 +74,7 @@ module.exports = React.createClass({
             var myVar = setInterval(function () {
                 tick++;
                 //console.log("x" + tick);
-                if (tick - previousTime >= 3) {
+                if (tick - previousTime >= 2) {
                     clearTimeout(myVar);
                     boolGaurd = true;
                     request.get('http://localhost:3000/users/student/' + this.state.userName.trim() + '/validate')
@@ -151,6 +147,23 @@ module.exports = React.createClass({
             this.setState({
                 gender: event.target.value
             });
+            if(changeCounter==0){
+                            if (event.target.value == 1) {
+                this.setState({
+                    imgURL: 'http://localhost:5000/img/PRO_M.jpg'
+                });
+            } else if (event.target.value == 2) {
+                this.setState({
+                    imgURL: 'http://localhost:5000/img/PRO_F.jpg'
+                });
+            } else {
+                this.setState({
+                    imgURL: 'http://localhost:5000/img/PRO.PNG'
+                });
+            }
+            }
+
+
         },
         handleChangeALStream(event) {
             this.setState({
@@ -222,8 +235,11 @@ module.exports = React.createClass({
                     onChange = {
                         this.handleChangeUserName
                     }
-                    /> < /FormGroup > < /Col><Col md={12}> < FormGroup > < ControlLabel > Password < /ControlLabel > < FormControl type = "password"
+                    required = "true" / > < /FormGroup > < /Col > < Col md = {
+                        12
+                    } > < FormGroup > < ControlLabel > Password < /ControlLabel > < FormControl type = "password"
                     ref = "password"
+                    required = "true"
                     value = {
                         this.state.password
                     }
@@ -238,6 +254,7 @@ module.exports = React.createClass({
                     < FormGroup >
                     < ControlLabel > First Name < /ControlLabel> < FormControl type = "text"
                     placeholder = "Enter First Name"
+                    required = "true"
                     ref = "firstName"
                     value = {
                         this.state.firstName
@@ -248,6 +265,7 @@ module.exports = React.createClass({
                     /> < /FormGroup > < /Col><Col md={6}> < FormGroup > < ControlLabel > Last Name < /ControlLabel > < FormControl type = "text"
                     placeholder = "Enter last Name"
                     ref = "lastName"
+                    required = "true"
                     value = {
                         this.state.lastName
                     }
@@ -276,6 +294,7 @@ module.exports = React.createClass({
                 < ControlLabel > Email address < /ControlLabel> < FormControl type = "email"
             placeholder = "abc@def.com"
             ref = "email"
+            required = "true"
             value = {
                 this.state.email
             }
