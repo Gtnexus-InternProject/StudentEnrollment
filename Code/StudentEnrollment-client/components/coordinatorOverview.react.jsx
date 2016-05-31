@@ -123,7 +123,6 @@ module.exports = React.createClass({
             .set('Content-Type', 'application/json')
             .set('x-access-token', this.props.token)
             .send(formAddSub)
-            .withCredentials()
             .end(function (err, res) {
                 if (err || !res.ok) {
                     console.log('Oh no! error');
@@ -134,7 +133,7 @@ module.exports = React.createClass({
 
             });
 
-        //alert('ggg coordinator');
+        alert('ggg coordinator');
         //dataX.preventDefault();
 
         console.log(formAddSub.moduleCode);
@@ -142,7 +141,7 @@ module.exports = React.createClass({
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set('x-access-token', this.props.token)
-            .send('{ "moduleCode" : ' + formAddSub.moduleCode + '}')
+            .send( formAddSub)
             .end(function (err, res) {
                 if (err || !res.ok) {
                     console.log('Oh no! error to add it coordinator');
@@ -150,11 +149,7 @@ module.exports = React.createClass({
                     console.log('yay got ');
                 }
             })
-
-
     },
-
-
     fetchData(callback){
 
 

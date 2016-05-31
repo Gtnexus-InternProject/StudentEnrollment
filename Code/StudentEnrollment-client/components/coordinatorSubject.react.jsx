@@ -47,7 +47,6 @@ module.exports = React.createClass({
 
                     var jsonObj = res.body;
                     var data = [];
-                    var test = [];
                     console.log("fggfccg " + this.state.compArry);
 
                     for (var i = 0; i < jsonObj.length; i++) {
@@ -358,6 +357,3 @@ module.exports = React.createClass({
         );
     }
 });
-
-// module.exports = SubjectTabelAdmin;
-// module.exports = hello;

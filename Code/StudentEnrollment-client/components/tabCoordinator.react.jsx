@@ -11,10 +11,63 @@ import {Router, Route, Link, browserHistory} from 'react-router';
 
 import {Panel,Tabs,Tab,Col,Row} from 'react-bootstrap';
 import CoordinatorOverview from './coordinatorOverview.react'
+var request = require('superagent');
 
 import CoordinatorSubjectList from './coordinatorSubjectList.react'
 
 module.exports = React.createClass({
+
+        getInitialState: function () {
+            return {
+                moduleCode: '',
+                moduleName: '',
+                data: []
+            };
+        },
+
+        fetchData(callback){
+            request
+                .get('http://localhost:3000/users/coordinator/'+this.props.userName+'/subjects')
+                .set('Accept', 'application/json')
+                .set('x-access-token',this.props.token)
+                .end(function (err, res) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        if (res == null) {
+                            console.log("Empty");
+                            return;
+                        }
+                        // console.log(res.body);
+
+                       var jsonObjSub = res.body.subjects;
+                        console.log(jsonObjSub);
+                        callback(jsonObjSub);
+                    } ;
+                });
+
+        },
+
+        oneEnter(){
+
+            this.fetchData(function (dataSe) {
+                this.setState({data: dataSe});
+                console.log(this.state.data);
+            }.bind(this));
+
+        },
+
+        componentWillMount() {
+
+            this.fetchData(function (dataSe) {
+                this.setState({data: dataSe});
+                console.log(this.state.data);
+            }.bind(this));
+
+        },
+
+
         render(){
 
             return (
@@ -29,10 +82,10 @@ module.exports = React.createClass({
                                                             token={this.props.token}/></p>
 
                                 </Tab>
-                                <Tab eventKey={2} title="Students">
+                                <Tab eventKey={2} title="Students" onEnter={this.onEnter}>
                                     <h4>Students list </h4>
                                     <p><CoordinatorSubjectList userName={this.props.userName}
-                                                            token={this.props.token}/></p>
+                                                            token={this.props.token} data={this.state.data}/></p>
                                 </Tab>
 
                                 <Tab eventKey={3} title="Student Request">

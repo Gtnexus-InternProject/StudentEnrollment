@@ -11,13 +11,26 @@ import Accordiona from './accodion.react'
 
 module.exports = React.createClass(
     {
+
+        getInitialState: function () {
+            return {
+
+                data: []
+            };
+        },
+        componentWillReceiveProps(newProps){
+            this.setState({data: newProps.data})
+
+        },
+
+
         render(){
             return (
                 <div>
                     <Col md={3}>
                     </Col>
                     <Col md={9}>
-                        <Accordiona userName={this.props.userName} token={this.props.token}/>
+                        <Accordiona userName={this.props.userName} token={this.props.token} data={this.state.data}/>
                     </Col>
                 </div>
             )
