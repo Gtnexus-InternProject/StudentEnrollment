@@ -60,7 +60,8 @@ var student = userSchema.extend({
     registeredDate: Date,
     profileImage: String,
     rfid: String,
-    subjects:[subjectsChild]
+    subjects:[subjectsChild],
+    profileImage:String
 
 });
 

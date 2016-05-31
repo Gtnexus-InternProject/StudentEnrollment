@@ -52,7 +52,8 @@ module.exports = React.createClass({
                     gender: res.body.gender || " ",
                     alStream: res.body.alStream || " ",
                     contactNumber: res.body.contactNumber || " ",
-                    zScore: res.body.zScore || " "
+                    zScore: res.body.zScore || " ",
+                      imgURL:res.body.profileImage
                   };
                   // console.log("Respond " + JSON.stringify(res.body));
                   // console.log("Check Data " + JSON.stringify( data ));
