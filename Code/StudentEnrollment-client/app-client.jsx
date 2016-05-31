@@ -32,6 +32,21 @@ class PageNotFound extends React.Component {
     }
 }
 
+class SessionExpired extends React.Component {
+
+    render() {
+        return (
+            <div>
+                <h1>Session Expired.</h1>
+
+                <p>Please
+                    <Link to="/"> Login </Link>
+                </p>
+            </div>
+        )
+    }
+}
+
 var validateLogin = function(nextState, replace) {
 
 
@@ -54,6 +69,7 @@ ReactDOM.render((
         <Route path="/home" component={Home} onEnter={validateLogin}></Route>
         <Route path="/login" component={Login}></Route>
         <Route path="/register" component={Register}></Route>
+        <Route path="/ivalid" component={SessionExpired}></Route>
         <Route path="*" component={PageNotFound}/>
 
     </Router>

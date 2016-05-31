@@ -250,9 +250,9 @@ var passwordAuthintacte = function (user, password, res) {
                 userName: user.userName,
                 type: user.__t || 'student'
             };
-
+            //1440
             var token = jwt.sign(claims, config.secret, {
-                expiresInMinutes: 1440 // expires in 24 hours (in Mini)
+                expiresInMinutes: 1 // expires in 24 hours (in Mini)
             });
 
             res.json({

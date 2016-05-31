@@ -7,6 +7,7 @@ import Header from './header.react'
 import {Col} from 'react-bootstrap'
 import request from 'superagent'
 import { browserHistory} from 'react-router';
+import ErrorHandling from './Utils/ErrorHandling';
 
 
 import Tab from './tabs'
@@ -32,7 +33,8 @@ module.exports = React.createClass({
           .set('x-access-token', this.state.token)
           .end(function (err, res) {
               if (err) {
-                  console.log('error' + err);
+                  // console.log('error' + JSON.stringify(err) );
+                  ErrorHandling.tokenErrorHandling(err.response);
               }
               else if(!res) {
 
