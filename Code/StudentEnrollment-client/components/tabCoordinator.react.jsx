@@ -49,7 +49,7 @@ module.exports = React.createClass({
 
         },
 
-        oneEnter(){
+        onEnter(){
 
             this.fetchData(function (dataSe) {
                 this.setState({data: dataSe});
