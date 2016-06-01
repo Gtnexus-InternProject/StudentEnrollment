@@ -162,13 +162,14 @@ module.exports = React.createClass({
                     console.log('Oh no! error');
                 } else {
                     console.log('yay got ' + JSON.stringify(formAddSub));
-                    //console.log('yay got ' + JSON.stringify(formAddSub));
+                this.close;
+
+
                 }
 
-            });
+            }.bind(this));
 
 
-        console.log(formAddSub.moduleCode);
         request.put('http://localhost:3000/users/coordinator/' + this.props.userName + '/subjectAdd')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
@@ -426,24 +427,32 @@ module.exports = React.createClass({
                                             <FormControl type="text"
                                                          ref="moduleCode"
                                                          value={this.state.moduleCode}
-                                                         onChange={this.handleChangeModuleCode}/>
+                                                         onChange={this.handleChangeModuleCode}
+                                                         required  = "true"
+                                                />
                                         </FormGroup>
                                     </Col><Col md={12}>
-                                    <FormGroup>
+
+
+                                        <FormGroup>
                                         <ControlLabel>Module Name</ControlLabel>
                                         <FormControl type="text"
                                                      ref="moduleName"
                                                      value={this.state.moduleName}
-                                                     onChange={this.handleChangeModuleName}/>
+                                                     onChange={this.handleChangeModuleName}
+                                                     required = "true" />
                                     </FormGroup>
 
                                 </Col> <Col md={6}>
                                     <FormGroup>
                                         <ControlLabel>Credits</ControlLabel>
-                                        <FormControl type="text"
+                                        <FormControl
                                                      ref="credits"
                                                      value={this.state.credits}
-                                                     onChange={this.handleChangeCredits}/>
+                                                     onChange={this.handleChangeCredits}
+                                                     required = "true"
+                                                     type="number" min="0" max="4" step="0.1"
+                                            />
                                     </FormGroup>
 
                                 </Col>
@@ -451,7 +460,9 @@ module.exports = React.createClass({
                                         <FormGroup >
                                             <ControlLabel>Semester</ControlLabel>
                                             <FormControl componentClass="select" placeholder="select" ref="semester"
-                                                         onChange={this.handleSelectSem}>
+                                                         onChange={this.handleSelectSem}
+                                                         required = "true"
+                                                >
 
                                                 <option value="">~Select ~</option>
                                                 <option value="0">Semester 1</option>
@@ -466,7 +477,8 @@ module.exports = React.createClass({
                                         <FormGroup >
                                             <ControlLabel>Day</ControlLabel>
                                             <FormControl componentClass="select" placeholder="select" ref="day"
-                                                         onChange={this.handleSelectDay}>
+                                                         onChange={this.handleSelectDay}
+                                                         required = "true">
                                                 <option value="">~Select ~</option>
                                                 <option value="0">Sunday</option>
                                                 <option value="1">Monday</option>
@@ -482,7 +494,8 @@ module.exports = React.createClass({
                                     <FormGroup >
                                         <ControlLabel>Time Slot</ControlLabel>
                                         <FormControl componentClass="select" placeholder="select" ref="timeSlot"
-                                                     onChange={this.handleSelectTimeSlt}>
+                                                     onChange={this.handleSelectTimeSlt}
+                                                     required = "true">
                                             <option value="">~Select ~</option>
                                             <option value="0">08.15-10.15</option>
                                             <option value="1">10.30-12.30</option>
@@ -506,7 +519,7 @@ module.exports = React.createClass({
 
                                     <Col sm={6}>
                                         <Button bsStyle="danger" onClick={this.close}>Close</Button>
-                                        <Button bsStyle="success" onClick={this.close} type="submit">Submit</Button>
+                                        <Button bsStyle="success"  type="submit">Submit</Button>
                                     </Col>
                                 </Form>
                             </div>

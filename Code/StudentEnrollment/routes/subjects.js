@@ -57,7 +57,7 @@ router.use(function (req, res, next) {
     }
 });
 
-router.route('/:meta?')
+router.route('/all/:meta?')
 
     //GET all blobs
     .get(function (req, res, next) {
