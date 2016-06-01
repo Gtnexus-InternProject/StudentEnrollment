@@ -79,8 +79,7 @@ module.exports = React.createClass({
                     .end(function (err, res) {
                         if (err) {
                         } else {
-                            if (res.body || res.body.moduleCode || res.body === null || res.body === 'null')
-                            {
+                            if (res.body || res.body.moduleCode || res.body === null || res.body === 'null') {
                                 alert("Module Code is already taken");
                             }
                         }
@@ -162,7 +161,7 @@ module.exports = React.createClass({
                     console.log('Oh no! error');
                 } else {
                     console.log('yay got ' + JSON.stringify(formAddSub));
-                this.close;
+                    this.close;
 
 
                 }
@@ -227,23 +226,22 @@ module.exports = React.createClass({
 
                                 var data = [];
                                 for (var i = 0; i < jsonObj1.modules.length; i++) {
+                                    if (jsonObj1.modules[i].status == 1) {
+                                        var row = {
+                                            count: jsonObj1.modules[i].count,
+                                            moduleCode: jsonObj1.modules[i].moduleCode,
+                                            moduleName: jsonObj1.modules[i].moduleName,
+                                            semester: jsonObj1.modules[i].semester,
+                                            day: jsonObj1.modules[i].day,
+                                            timeSlot: jsonObj1.modules[i].timeSlot,
+                                            description: jsonObj1.modules[i].description,
 
-                                    var row = {
-                                        count: jsonObj1.modules[i].count,
-                                        moduleCode: jsonObj1.modules[i].moduleCode,
-                                        moduleName: jsonObj1.modules[i].moduleName,
-                                        semester: jsonObj1.modules[i].semester,
-                                        day: jsonObj1.modules[i].day,
-                                        timeSlot: jsonObj1.modules[i].timeSlot,
-                                        description: jsonObj1.modules[i].description,
-                                        status: jsonObj1.modules[i].status
+                                        };
+                                        data.push(row);
+                                    }
 
-                                    };
-
-                                    data.push(row);
                                 }
 
-                                // console.log("data: " + data);
                                 console.log(data);
 
                                 callback(data);
@@ -401,7 +399,7 @@ module.exports = React.createClass({
                                        editable={{type: "select",defaultValue:{day:this.state.day}, options: {values: [0,1,2,3,4,5,6]}}}>Day</TableHeaderColumn>
                     <TableHeaderColumn dataField="timeSlot" dataFormat={enumFormatter} formatExtraData={timeSlots}
                                        editable={{type: "select",defaultValue:{timeSlot:this.state.timeSlot}, options: {values: [0,1,2,3]}}}>timeSlot</TableHeaderColumn>
-                    <TableHeaderColumn dataField="status" editable={false}>Status</TableHeaderColumn>
+
                     <TableHeaderColumn dataField="count" editable={false}>Student Count</TableHeaderColumn>
                     <TableHeaderColumn dataField="description">Description </TableHeaderColumn>
                 </BootstrapTable>
@@ -428,30 +426,30 @@ module.exports = React.createClass({
                                                          ref="moduleCode"
                                                          value={this.state.moduleCode}
                                                          onChange={this.handleChangeModuleCode}
-                                                         required  = "true"
+                                                         required="true"
                                                 />
                                         </FormGroup>
                                     </Col><Col md={12}>
 
 
-                                        <FormGroup>
+                                    <FormGroup>
                                         <ControlLabel>Module Name</ControlLabel>
                                         <FormControl type="text"
                                                      ref="moduleName"
                                                      value={this.state.moduleName}
                                                      onChange={this.handleChangeModuleName}
-                                                     required = "true" />
+                                                     required="true"/>
                                     </FormGroup>
 
                                 </Col> <Col md={6}>
                                     <FormGroup>
                                         <ControlLabel>Credits</ControlLabel>
                                         <FormControl
-                                                     ref="credits"
-                                                     value={this.state.credits}
-                                                     onChange={this.handleChangeCredits}
-                                                     required = "true"
-                                                     type="number" min="0" max="4" step="0.1"
+                                            ref="credits"
+                                            value={this.state.credits}
+                                            onChange={this.handleChangeCredits}
+                                            required="true"
+                                            type="number" min="0" max="4" step="0.1"
                                             />
                                     </FormGroup>
 
@@ -461,7 +459,7 @@ module.exports = React.createClass({
                                             <ControlLabel>Semester</ControlLabel>
                                             <FormControl componentClass="select" placeholder="select" ref="semester"
                                                          onChange={this.handleSelectSem}
-                                                         required = "true"
+                                                         required="true"
                                                 >
 
                                                 <option value="">~Select ~</option>
@@ -478,7 +476,7 @@ module.exports = React.createClass({
                                             <ControlLabel>Day</ControlLabel>
                                             <FormControl componentClass="select" placeholder="select" ref="day"
                                                          onChange={this.handleSelectDay}
-                                                         required = "true">
+                                                         required="true">
                                                 <option value="">~Select ~</option>
                                                 <option value="0">Sunday</option>
                                                 <option value="1">Monday</option>
@@ -495,7 +493,7 @@ module.exports = React.createClass({
                                         <ControlLabel>Time Slot</ControlLabel>
                                         <FormControl componentClass="select" placeholder="select" ref="timeSlot"
                                                      onChange={this.handleSelectTimeSlt}
-                                                     required = "true">
+                                                     required="true">
                                             <option value="">~Select ~</option>
                                             <option value="0">08.15-10.15</option>
                                             <option value="1">10.30-12.30</option>
@@ -519,7 +517,7 @@ module.exports = React.createClass({
 
                                     <Col sm={6}>
                                         <Button bsStyle="danger" onClick={this.close}>Close</Button>
-                                        <Button bsStyle="success"  type="submit">Submit</Button>
+                                        <Button bsStyle="success" type="submit">Submit</Button>
                                     </Col>
                                 </Form>
                             </div>

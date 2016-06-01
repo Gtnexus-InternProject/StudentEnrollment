@@ -48,18 +48,18 @@ module.exports = React.createClass({
                         var jsonObj = res.body;
 
                         var data = [];
-                        for (var i = 0; i < jsonObj.length; i++) {
-                            // console.log("data: " + jsonObj[i] );
-                            // jsonObj[i].subjects.forEach(function(entry) {
-                            //     console.log(entry);
-                            // });
 
+                        var semesters = ["Semester 1", "Semester 2","Semester 3","Semester 4","Semester 5","Semester 6",  "Semester 7", "Semester 8",]
+                        var days =[ "Sunday", "Monday", "Tuesday", "Wednesday","Thursday","Friday", "Saturday",]
+                        var timeSlots = [  "08.15-10.15", "10.30-12.30","13.15-15.15","15.30-17.30"]
+
+                        for (var i = 0; i < jsonObj.length; i++) {
                             var row = {
                                 moduleCode: jsonObj[i].moduleCode,
                                 moduleName: jsonObj[i].moduleName,
-                                semester: jsonObj[i].semester,
-                                day: jsonObj[i].day,
-                                timeSlot: jsonObj[i].timeSlot,
+                                semester: semesters[jsonObj[i].semester] ,
+                                day:days[jsonObj[i].day] ,
+                                timeSlot: timeSlots[jsonObj[i].timeSlot],
                             };
                                 data.push(row);
                         }
