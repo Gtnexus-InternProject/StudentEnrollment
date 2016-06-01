@@ -243,7 +243,7 @@ module.exports = React.createClass({
         var tablelData = this.state.data.concat(addstd2);
         var comparry = this.state.compArry.concat(addstd);
         this.setState({
-            addStd: addstd,
+
             data: tablelData,
             compArry: comparry
         });

@@ -4,7 +4,8 @@ var React = require('react');
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
-
+var Validation = require('react-validation');
+var validator = require('validator')
 
 
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
@@ -14,6 +15,34 @@ import './../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.cs
 function enumFormatter(cell, row, enumObject) {
     return enumObject[cell];
 }
+var boolGaurd = true;
+var tick = 0;
+var previousTime = 0;
+
+
+Validation.extendErrors({
+    //isNotValidUser: {
+    //    className: 'ui-input_state_invalid-user',
+    //    message: 'not equal to "Alex"',
+    //    rule: function(value) {
+    //        // Validation provides ref to 'validator' module, so you don't need to install it separately
+    //        return validator.trim(value) === 'Alex';
+    //    }
+    //},
+    isRequired: {
+        className: 'ui-input_state_empty',
+        message: 'required',
+        rule: function (value) {
+            return Boolean(validator.trim(value));
+        }
+    },
+//    isEmail: {
+//        className: 'ui-input_state_email-pattern-failed',
+//        // validator already has strong email-pattern, so we don't have to extend it by custom
+//        message: 'should be email'
+//    }
+});
+
 
 module.exports = React.createClass({
     displayName: 'App',
@@ -61,8 +90,42 @@ module.exports = React.createClass({
     open() {
         this.setState({showModal: true});
     },
+
+
+    startTimer() {
+        var myVar = setInterval(function () {
+            tick++;
+            //console.log("x" + tick);
+            if (tick - previousTime >= 3) {
+                clearTimeout(myVar);
+                boolGaurd = true;
+                request.get('http://localhost:3000/subjects/' + this.state.moduleCode.trim())
+                    .set('Accept', 'application/json')
+                    .set('x-access-token', this.props.token)
+                    .end(function (err, res) {
+                        if (err) {
+                        } else {
+                            if (res.body.subjects != null) {
+                                alert("Module Code is already taken");
+                                this.setState({moduleCode: " "});
+                            }
+                        }
+                    });
+            }
+        }.bind(this), 1000);
+    },
+
+
     handleChangeModuleCode: function (event) {
-        this.setState({moduleCode: event.target.value});
+        //console.log("er");
+        previousTime = tick;
+        this.setState({
+            moduleCode: event.target.value
+        });
+        if (boolGaurd) {
+            boolGaurd = false;
+            this.startTimer();
+        }
     },
     handleChangeModuleName: function (event) {
         //if(this.state.password.trim().length>1){
@@ -139,7 +202,7 @@ module.exports = React.createClass({
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set('x-access-token', this.props.token)
-            .send( formAddSub)
+            .send(formAddSub)
             .end(function (err, res) {
                 if (err || !res.ok) {
                     console.log('Oh no! error to add it coordinator');
@@ -175,8 +238,7 @@ module.exports = React.createClass({
                     request
                         .get('http://localhost:3000/subjects/moduleDetails/' + csv1)
                         .set('Accept', 'application/json')
-                        //.set('x-access-token', this.props.token)
-                        .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjQ2NzMxMTYsImV4cCI6MTQ2NDc1OTUxNn0.dpReFCMjuu8a44N7EfNAnu3ZHCBxEGSwoYgj7_Me3CU' )
+                        .set('x-access-token', this.props.token)
                         .end(function (err, res) {
                             if (err) {
                                 console.log(err);
@@ -224,7 +286,7 @@ module.exports = React.createClass({
                     console.log(err);
                 }
                 ;
-            });
+            }.bind(this));
     },
 
     componentDidMount: function () {
@@ -388,7 +450,7 @@ module.exports = React.createClass({
                         </Modal.Header>
                         <Modal.Body>
                             <div>
-                                <Form onSubmit={this.handleSubmit}>
+                                <Validation.Form onSubmit={this.handleSubmit}>
                                     <Col md={12}>
                                         <FormGroup>
                                             <ControlLabel>Module Code</ControlLabel>
@@ -406,10 +468,26 @@ module.exports = React.createClass({
                                                      onChange={this.handleChangeModuleName}/>
                                     </FormGroup>
 
+                                    <Validation.Input
+                                        blocking='input'
+                                        className='form-control'
+                                        validations={[
+                          {
+                              rule: 'isRequired'
+                          },
+                          {
+                              rule: 'isNotValidUser'
+                          }
+                        ]}
+                                        invalidClassName='ui-input_state_custom-error-classname'
+                                        name='username'
+                                        type='text'/>
+
                                 </Col> <Col md={6}>
                                     <FormGroup>
                                         <ControlLabel>Credits</ControlLabel>
                                         <FormControl type="text"
+                                                     type="number" min="0" max="4" step="0.1"
                                                      ref="credits"
                                                      value={this.state.credits}
                                                      onChange={this.handleChangeCredits}/>
@@ -477,7 +555,7 @@ module.exports = React.createClass({
                                         <Button bsStyle="danger" onClick={this.close}>Close</Button>
                                         <Button bsStyle="success" onClick={this.close} type="submit">Submit</Button>
                                     </Col>
-                                </Form>
+                                </Validation.Form>
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
