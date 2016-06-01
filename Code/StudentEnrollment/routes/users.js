@@ -153,7 +153,7 @@ router.route('/student').post(function (req, res) {
                 registeredDate: registeredDate,
                 profileImage: profileImage,
                 subjects: subjects
-                
+
 
             }, function(err, user) {
 
@@ -254,7 +254,7 @@ var passwordAuthintacte = function (user, password, res) {
             };
             //1440
             var token = jwt.sign(claims, config.secret, {
-                expiresInMinutes: 1 // expires in 24 hours (in Mini)
+                expiresInMinutes: 1440 // expires in 24 hours (in Mini)
             });
 
             res.json({

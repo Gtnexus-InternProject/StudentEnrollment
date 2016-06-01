@@ -21,7 +21,7 @@ import './skylight.css';
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
-
+import ErrorHandling from '../Utils/ErrorHandling';
 // import token from  '../../config';
 
 module.exports = React.createClass({
@@ -102,6 +102,7 @@ module.exports = React.createClass({
 
             } else {
                 console.log(err);
+                ErrorHandling.tokenErrorHandling(err.response);
             }
 
             // console.log(JSON.parse(res.text));
@@ -140,6 +141,7 @@ module.exports = React.createClass({
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));
@@ -156,6 +158,7 @@ module.exports = React.createClass({
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));

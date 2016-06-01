@@ -3,14 +3,13 @@ var React = require('react'),
 import request from 'superagent'
 import {
     Modal, Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Col, Image
-}
-from 'react-bootstrap';
+}from 'react-bootstrap';
 
 import {
     Router, Route, Link, browserHistory
-}
-from 'react-router';
+}from 'react-router';
 //import Img from './profilePicture.react';
+import ErrorHandling from './Utils/ErrorHandling';
 
 const title = ( < span > Panel title < /span>
 
@@ -80,7 +79,9 @@ module.exports = React.createClass({
                     request.get('http://localhost:3000/users/student/' + this.state.userName.trim() + '/validate')
                         .set('Accept', 'application/json')
                         .end(function (err, res) {
-                            if (err) {} else {
+                            if (err) {
+                              ErrorHandling.tokenErrorHandling(err.response);
+                            } else {
                                 if (res.body.message == "invalid") {
                                     alert("User Name already taken");
                                 }
@@ -197,6 +198,7 @@ module.exports = React.createClass({
                 .end(function (err, res) {
                     if (err || !res.ok) {
                         console.log('Oh no! error');
+                        ErrorHandling.tokenErrorHandling(err.response);
                     } else {
                         browserHistory.push('/login');
                     }
@@ -336,7 +338,7 @@ module.exports = React.createClass({
             onChange = {
                 this.handleChangeTelephone
             }
-            /> < /FormGroup > < /Col> 
+            /> < /FormGroup > < /Col>
 
             < Image src = {
                 this.state.imgURL
@@ -357,7 +359,7 @@ module.exports = React.createClass({
             ref = "hiddenImg" / >
 
 
-                < /div> 
+                < /div>
 
             < Button bsStyle = "danger"
             type = "button" >
@@ -370,7 +372,7 @@ module.exports = React.createClass({
             < /Form> < /Panel > < /Col>
 
 
-            < /div>                   
+            < /div>
         )
 }
 })

@@ -25,7 +25,7 @@ var request = require('superagent');
 var nocache = require('superagent-no-cache');
 import {Button} from 'react-bootstrap';
 
-import token from  '../../config';
+import ErrorHandling from '../Utils/ErrorHandling';
 
 module.exports = React.createClass({
     displayName: 'FullTable',
@@ -114,6 +114,7 @@ module.exports = React.createClass({
                             }else{
 
                                 console.log(err);
+                                ErrorHandling.tokenErrorHandling(err.response);
 
                             }
 
@@ -123,6 +124,7 @@ module.exports = React.createClass({
 
                 }else{
                     console.log(err);
+                    ErrorHandling.tokenErrorHandling(err.response);
                 }
 
                 // console.log(JSON.parse(res.text));
@@ -182,6 +184,7 @@ module.exports = React.createClass({
                             if (err || !res.ok) {
                                 // alert('Oh no! error');
                                 // console.log('Oh no! error' + err);
+                                ErrorHandling.tokenErrorHandling(err.response);
                             } else {
 
                                 // console.log('yay got ' + JSON.stringify(res.body));
@@ -224,6 +227,7 @@ module.exports = React.createClass({
                             if (err || !res.ok) {
                                 // alert('Oh no! error');
                                 // console.log('Oh no! error' + err);
+                                ErrorHandling.tokenErrorHandling(err.response);
                             } else {
 
                                 // console.log('yay got ' + JSON.stringify(res.body));

@@ -13,7 +13,7 @@ var nocache = require('superagent-no-cache');
 import {Router, Route, Link, browserHistory} from 'react-router';
 
 import {Grid,Row,Carousel,Panel,Col,Form ,FormControl,FormGroup,ControlLabel,HelpBlock,Checkbox,Radio,Button,PageHeader} from 'react-bootstrap';
-
+import ErrorHandling from './Utils/ErrorHandling';
 const title = (
     <h2>Login</h2>
 );
@@ -52,12 +52,14 @@ module.exports = React.createClass({
                 if (err || !res.ok) {
                     //alert('Oh no! error');
                     console.log(err);
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
                     var token = (res.body.token);
 
                     if (token) {
                       localStorage.setItem('token', token );
                       localStorage.setItem('user', formL.userName );
+                      localStorage.setItem('type', res.body.type );
                         if(res.body.type == 'student') {
                             //alert('token is - ' + (token));
                             browserHistory.push( '/home' );

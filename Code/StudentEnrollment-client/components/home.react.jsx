@@ -53,7 +53,7 @@ module.exports = React.createClass({
                     alStream: res.body.alStream || " ",
                     contactNumber: res.body.contactNumber || " ",
                     zScore: res.body.zScore || " ",
-                      imgURL:res.body.profileImage
+                      profileImage:res.body.profileImage
                   };
                   // console.log("Respond " + JSON.stringify(res.body));
                   // console.log("Check Data " + JSON.stringify( data ));

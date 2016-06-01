@@ -31,22 +31,44 @@ class PageNotFound extends React.Component {
             </div>
         )
     }
-}
+};
 
-class SessionExpired extends React.Component {
 
-    render() {
-        return (
-            <div>
-                <h1>Session Expired.</h1>
+var SessionExpired = React.createClass({
+  getInitialState(){
+    return( {
+      type: this.props.params.type
+    });
+  },
 
-                <p>Please
-                    <Link to="/"> Login </Link>
-                </p>
-            </div>
-        )
+  render() {
+
+    var comp;
+    if(this.state.type === "admin"){
+      comp = (  <div>
+        <h1>Access Denied.</h1>
+
+        <p>Yuo don't have Permission to access this page.
+            <Link to="/"> Login </Link>
+        </p>
+        </div> );
+    }else if(this.state.type === "tokenexpire"){
+        comp = (  <div>
+              <h1>Session Expired.</h1>
+
+              <p>Please
+                  <Link to="/"> Login </Link>
+              </p>
+          </div> );
     }
-}
+
+      return (
+        <div> {comp}</div>
+      )
+  }
+
+});
+
 
 var validateLogin = function(nextState, replace) {
 
@@ -54,6 +76,33 @@ var validateLogin = function(nextState, replace) {
         if (!localStorage.getItem('token') || localStorage.getItem('token') == "") {
             // browserHistory.push('/login');
             replace('/login');
+            return false;
+
+        }
+
+        return true;
+
+};
+
+var validateadmin = function(nextState, replace) {
+
+          console.log("Type: " +  localStorage.getItem('type'));
+        // validateLogin(nextState, replace);
+        if ( validateLogin(nextState, replace) && localStorage.getItem('type') != "admin" ) {
+            // browserHistory.push('/login');
+            replace('/invalid/admin');
+            // return null;
+        }
+
+};
+
+var validateCoordinator = function(nextState, replace) {
+
+          console.log("Type: " +  localStorage.getItem('type'));
+        // validateLogin(nextState, replace);
+        if ( validateLogin(nextState, replace) && localStorage.getItem('type') != "coordinator" ) {
+            // browserHistory.push('/login');
+            replace('/invalid/admin');
             // return null;
         }
 
@@ -64,13 +113,13 @@ ReactDOM.render((
     <Router history={browserHistory}>
 
         <Route path="/" component={Login}></Route>
-        <Route path="/admin" component={Admin} onEnter={validateLogin}></Route>
-        <Route path="/coordinator/:userName/:token" component={Coordinator} onEnter={validateLogin}></Route>
+        <Route path="/admin" component={Admin} onEnter={validateadmin}></Route>
+        <Route path="/coordinator/:userName/:token" component={Coordinator} onEnter={validateCoordinator}></Route>
         <Route path="/tab" component={Tab}></Route>
         <Route path="/home" component={Home} onEnter={validateLogin}></Route>
         <Route path="/login" component={Login}></Route>
         <Route path="/register" component={Register}></Route>
-        <Route path="/ivalid" component={SessionExpired}></Route>
+        <Route path="/invalid/:type" component={SessionExpired}></Route>
         <Route path="*" component={PageNotFound}/>
 
     </Router>

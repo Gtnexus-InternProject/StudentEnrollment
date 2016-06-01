@@ -9,8 +9,8 @@ var sortByArray = require('lodash/sortBy');
 
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
-
-import token from '../../config';
+import ErrorHandling from '../Utils/ErrorHandling';
+// import token from '../../config';
 
 module.exports = React.createClass({
 
@@ -94,6 +94,7 @@ module.exports = React.createClass({
 
                     } else {
                         console.log(err);
+                        ErrorHandling.tokenErrorHandling(err.response);
                     }
 
                     // console.log(JSON.parse(res.text));
@@ -101,6 +102,7 @@ module.exports = React.createClass({
 
             } else {
                 console.log(err);
+                ErrorHandling.tokenErrorHandling(err.response);
             }
 
             // console.log(JSON.parse(res.text));
@@ -180,7 +182,9 @@ module.exports = React.createClass({
         set('x-access-token', this.state.token). //
         use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
-            if (!err) {} else {
+            if (!err) {
+              ErrorHandling.tokenErrorHandling(err.response);
+            } else {
                 console.log(err);
             }
 
@@ -228,7 +232,9 @@ module.exports = React.createClass({
         set('x-access-token', this.state.token). //
         use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
-            if (!err) {} else {
+            if (!err) {
+              ErrorHandling.tokenErrorHandling(err.response);
+            } else {
                 console.log(err);
             }
 
