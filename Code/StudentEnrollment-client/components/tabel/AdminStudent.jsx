@@ -20,8 +20,8 @@ import './skylight.css';
 
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
-
-import token from  '../../config';
+import ErrorHandling from '../Utils/ErrorHandling';
+// import token from  '../../config';
 
 module.exports = React.createClass({
     displayName: 'App',
@@ -43,19 +43,23 @@ module.exports = React.createClass({
 
     getInitialState: function() {
 
-        return {data: []};
+        return {data: [],
+        token: localStorage.getItem('token' )};
     },
 
     fetchData: function(callback) {
 
         // var me = this;
 
-        request.get('http://localhost:3000/users/student').set('Accept', 'application/json').accept('application/json').set('x-access-token',token).use(nocache). // Prevents caching of *only* this request
+        request.get('http://localhost:3000/users/student')//
+        .set('Accept', 'application/json').accept('application/json')//
+        .set('x-access-token',this.state.token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
 
               if(res == null ){
                 console.log("Empty");
+
                 return;
               }
                   // console.log(res.body);
@@ -91,6 +95,7 @@ module.exports = React.createClass({
 
             } else {
                 console.log(err);
+                ErrorHandling.tokenErrorHandling(err.response);
             }
 
             // console.log(JSON.parse(res.text));
@@ -114,12 +119,13 @@ module.exports = React.createClass({
       request
           .put('http://localhost:3000/users/student/' + data.userName)
           .send(data)
-          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0')
+          .set('x-access-token', this.state.token)
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));
@@ -130,12 +136,13 @@ module.exports = React.createClass({
     reamoveSub : function (data) {
       request
           .delete('http://localhost:3000/users/student/' + data.userName)
-          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMDIxMjIzLCJleHAiOjE0NjMxMDc2MjN9.IlYA4xeFW_qBFR0fpLYM-vS_HRP2Aav-aJhOcmwtxR0')
+          .set('x-access-token', this.state.token)
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));

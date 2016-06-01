@@ -124,6 +124,7 @@ router.route('/student').post(function (req, res) {
         registeredDate = req.body.registeredDate,
         profileImage = "testS";
     var subjects = req.body.subjects;
+    var profileImage=req.body.imgURL;
 
     //, subjects =  {moduleCode:req.body.subjects}
     //,subjects : subjects
@@ -153,7 +154,7 @@ router.route('/student').post(function (req, res) {
                 profileImage: profileImage,
                 subjects: subjects
 
-            }, function (err, user) {
+            }, function(err, user) {
 
                 if (err) {
                     res.send("There was a problem adding the information to the database.");
@@ -250,7 +251,7 @@ var passwordAuthintacte = function (user, password, res) {
                 userName: user.userName,
                 type: user.__t || 'student'
             };
-
+            //1440
             var token = jwt.sign(claims, config.secret, {
                 expiresInMinutes: 1440 // expires in 24 hours (in Mini)
             });
@@ -525,9 +526,9 @@ router.route('/coordinator').post(function (req, res) {
 
     }
 
-    if (!checkUserName(userName, res)) {
-        return;
-    }
+    // if (!checkUserName(userName, res)) {
+    //     return;
+    // }
 
     //call the create function for our database
     mongoose.model('coordinator').create(req.body, function (err, user) {
@@ -768,7 +769,7 @@ router.route('/:type/:userName/subjects/timeTable1')
 
             console.log(userT[0].subjects.length);
             var ary = [];
-            
+
             userT[0].subjects.forEach(function (element) {
                 console.log(element.state);
                 if (req.type == "student" && element.state === 1) {
@@ -780,8 +781,8 @@ router.route('/:type/:userName/subjects/timeTable1')
                     ary.push(element)
                 }
             }, this);
-            
-            
+
+
             // console.log("dddd"+ ary);
 
           console.log('GET Retrieving Subject ID: ' + ary);
@@ -1075,7 +1076,7 @@ router.put('/:type/:userName/subjectsSS', function (req, res) {
             message: 'Wrong URL'
         });
     }
-  
+
     mongoose.model(req.type).findOneAndUpdate({
         userName: req.userName
     }, {
@@ -1109,8 +1110,9 @@ router.put('/:type/:userName/subjectsSS', function (req, res) {
 });
 
 
-//Unerrole or remove a subject from student or coordinator
-router.delete('/:type/:userName/subjects', function (req, res) {
+//Unenrrole or remove a subject from student or coordinator
+router.delete('/:type/:userName/subjects', function(req, res) {
+
     //find blob by ID
 
     // console.log('Unerrole Subject: ');

@@ -56,6 +56,7 @@ module.exports = React.createClass({
             email:'',
             address: '',
             telephone:'',
+            token: localStorage.getItem('token' ),
             showModal: false
 
         };
@@ -111,15 +112,28 @@ module.exports = React.createClass({
             contactNumber: this.state.telephone.trim(),
             adddress: this.state.address.trim(),
 
-        }
+        };
 
+        var tableData={
+            userName:  this.state.userName.trim(),
+            firstName:  this.state.firstName.trim(),
+            lastName: this.state.lastName.trim(),
+            email: this.state.email.trim(),
+            adddress: this.state.address.trim(),
+            contactNumber:this.state.telephone.trim(),
+            subjects:"" ,
+            id: this.state.data.length
+        };
+        var data = this.state.data;
+        data.push(tableData);
+        this.setState({data: data});
+        console.log(this.state.data)
 
         request.post('http://localhost:3000/users/coordinator')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
-            .set('x-access-token',token)
+            .set('x-access-token',this.state.token)
             .send(formAddSub)
-            .withCredentials()
             .end(function (err, res) {
                 if (err || !res.ok) {
                     console.log('Oh no! error');
@@ -141,7 +155,7 @@ module.exports = React.createClass({
 
         request.get('http://localhost:3000/users/coordinator') //
         .set('Accept', 'application/json').accept('application/json') //
-        .set('x-access-token',token).use(nocache). // Prevents caching of *only* this request
+        .set('x-access-token',this.state.token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
 
@@ -206,7 +220,7 @@ module.exports = React.createClass({
       request
           .put('http://localhost:3000/users/coordinator/' + data.userName)
           .send(data)
-          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzNzI2MzkwLCJleHAiOjE0NjM4MTI3OTB9.DKulbRge-U8HvgfOdMZMSwaYT0i-WEmehmnwocXJ2Mg')
+          .set('x-access-token', this.state.token)
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
@@ -222,7 +236,7 @@ module.exports = React.createClass({
     reamoveSub : function (data) {
       request
           .delete('http://localhost:3000/users/coordinator/' + data.userName)
-          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzNzI2MzkwLCJleHAiOjE0NjM4MTI3OTB9.DKulbRge-U8HvgfOdMZMSwaYT0i-WEmehmnwocXJ2Mg')
+          .set('x-access-token', this.state.token)
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {

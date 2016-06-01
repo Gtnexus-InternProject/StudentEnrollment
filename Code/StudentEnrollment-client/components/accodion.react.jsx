@@ -7,6 +7,8 @@ var request = require('superagent');
 import {Panel,Accordion, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
 import StdTable from './coordinatorSubject.react'
 
+import ErrorHandling from './Utils/ErrorHandling';
+
 
 module.exports = React.createClass({
     getInitialState: function () {
@@ -14,8 +16,10 @@ module.exports = React.createClass({
             data: []
         };
     },
+
     componentWillReceiveProps(newProps){
         this.setState({data: newProps.data})
+
     },
 
 
