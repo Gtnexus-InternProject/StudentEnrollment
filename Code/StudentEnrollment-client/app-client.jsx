@@ -24,9 +24,7 @@ class PageNotFound extends React.Component {
             <div>
                 <h1>Page Not Found.</h1>
 
-                <p>Go to
-                    <Link to="/">
-                        Home Page</Link>
+                <p>Go to <Link to="/home"> Home</Link>
                 </p>
             </div>
         )
