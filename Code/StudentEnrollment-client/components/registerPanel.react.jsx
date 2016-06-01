@@ -1,9 +1,7 @@
 var React = require('react'),
     ReactDOMServer = require('react-dom/server');
-import request from 'superagent'
-<<<<<<< HEAD
-import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Col} from 'react-bootstrap';
-=======
+import request from 'superagent';
+
 import {
     Modal, Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Col, Image
 }from 'react-bootstrap';
@@ -13,9 +11,9 @@ import {
 }from 'react-router';
 //import Img from './profilePicture.react';
 import ErrorHandling from './Utils/ErrorHandling';
->>>>>>> login-token
 
-import {Router, Route, Link, browserHistory} from 'react-router';
+
+
 const title = (
     <span>Panel title</span>
 

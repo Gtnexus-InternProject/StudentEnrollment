@@ -78,18 +78,18 @@ module.exports = React.createClass({
                 <div className="row">
                     <div className="col-lg-12">
                         <Panel>
-                            <Tabs defaultActiveKey={1}>
+                            <Tabs id="coordinator" defaultActiveKey={1}>
                                 <Tab eventKey={1} title="Overview">
                                     <h4>Overview</h4>
 
-                                    <p><CoordinatorOverview userName={this.props.userName}
-                                                            token={this.props.token}/></p>
+                                    <CoordinatorOverview userName={this.props.userName}
+                                                            token={this.props.token}/>
 
                                 </Tab>
                                 <Tab eventKey={2} title="Students" onEnter={this.onEnter}>
                                     <h4>Students list </h4>
-                                    <p><CoordinatorSubjectList userName={this.props.userName}
-                                                            token={this.props.token} data={this.state.data}/></p>
+                                    <CoordinatorSubjectList userName={this.props.userName}
+                                                            token={this.props.token} data={this.state.data}/>
                                 </Tab>
 
                                 <Tab eventKey={3} title="Student Request">

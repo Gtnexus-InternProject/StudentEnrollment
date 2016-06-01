@@ -106,7 +106,7 @@ module.exports = React.createClass({
             }
 
             // console.log(JSON.parse(res.text));
-        });
+        }.bind(this));
     },
     componentWillMount: function() {
 

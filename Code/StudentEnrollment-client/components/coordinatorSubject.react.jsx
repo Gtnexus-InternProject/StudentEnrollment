@@ -175,7 +175,7 @@ module.exports = React.createClass({
                         compArry: test2
                     });
                 }
-            });
+            }.bind(this));
 
 
     },
