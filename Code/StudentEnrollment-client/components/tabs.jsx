@@ -14,22 +14,24 @@ import SubjectTabel from './tabel/subjectEnrollment'
 module.exports = React.createClass({
     render() {
 
+        // console.log("Check Data " + JSON.stringify(this.props.data));
         return (
             <div className="row">
                 <div className="col-lg-12">
                     <Panel>
-                        <Tabs defaultActiveKey={1}>
-                            <Tab eventKey={1} title="Profile">
+                        <Tabs id="student-tab" defaultActiveKey={1}>
+                            <Tab  eventKey={1} title="Profile">
                                 <h4>Student Profile</h4>
 
-                                <p><PersonalD userName={this.props.userName} token={this.props.token}/>
-                                </p>
+                                <div>
+                                  <PersonalD data={this.props.data} updateData={this.props.updateData} userName={this.props.userName} token={this.props.token}/>
+                                </div>
                                 <h4>Time Table</h4>
 
-                                <p><TimeTable userName={this.props.userName} token={this.props.token}/>
-                                </p>
+                                <div><TimeTable userName={this.props.userName} token={this.props.token}/>
+                                </div>
                             </Tab>
-                            <Tab eventKey={2} title="Subject">
+                            <Tab  eventKey={2} title="Subject">
                                 <h4>Subject Profile</h4>
                                 <SubjectTabel userName={this.props.userName} token={this.props.token}/>
 

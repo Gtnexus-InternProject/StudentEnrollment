@@ -9,8 +9,8 @@ var sortByArray = require('lodash/sortBy');
 
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
-
-import token from '../../config';
+import ErrorHandling from '../Utils/ErrorHandling';
+// import token from '../../config';
 
 module.exports = React.createClass({
 
@@ -19,7 +19,7 @@ module.exports = React.createClass({
 
         request.get('http://localhost:3000/users/student/state'). //
         set('Accept', 'application/json').accept('application/json'). //
-        set('x-access-token', token). //
+        set('x-access-token', this.state.token). //
         use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
@@ -61,7 +61,7 @@ module.exports = React.createClass({
                 request.get('http://localhost:3000/subjects/' + moduleCodeArray + '/array'). //
                 set('Accept', 'application/json'). //
                 accept('application/json'). //
-                set('x-access-token', token). //
+                set('x-access-token', this.state.token). //
                 use(nocache). // Prevents caching of *only* this request
                 end(function(err, res) {
                     if (!err) {
@@ -94,6 +94,7 @@ module.exports = React.createClass({
 
                     } else {
                         console.log(err);
+                        ErrorHandling.tokenErrorHandling(err.response);
                     }
 
                     // console.log(JSON.parse(res.text));
@@ -101,6 +102,7 @@ module.exports = React.createClass({
 
             } else {
                 console.log(err);
+                ErrorHandling.tokenErrorHandling(err.response);
             }
 
             // console.log(JSON.parse(res.text));
@@ -116,7 +118,7 @@ module.exports = React.createClass({
 
     },
     getInitialState() {
-        return {data: []};
+        return {token: localStorage.getItem('token'), data: []};
     },
     onRowSelect(row, isSelected) {
 
@@ -170,20 +172,18 @@ module.exports = React.createClass({
         send = {
             userName: userNameArray,
             moduleCode: moduleCodeArray,
-            state : 1
+            state: 1
         };
 
-        request.put('http://localhost:3000/users/accept' ). //
+        request.put('http://localhost:3000/users/accept'). //
         set('Accept', 'application/json'). //
         accept('application/json'). //
         send(send). //
-        set('x-access-token', token). //
+        set('x-access-token', this.state.token). //
         use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
-
-
-
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
                 console.log(err);
             }
@@ -200,48 +200,46 @@ module.exports = React.createClass({
     },
     decline(event) {
 
-      var userNameArray = [],
-          moduleCodeArray = [],
-          send = [];
+        var userNameArray = [],
+            moduleCodeArray = [],
+            send = [];
 
-      // if (userNameArray != null && moduleCodeArray != null) {
-      //     console.log("Selected data 1" + JSON.stringify(userNameArray));
-      //     console.log("Selected data 2" + JSON.stringify(moduleCodeArray));
-      // }
-      this.selectedRows = sortByArray(this.selectedRows, 'userName');
-      // console.log("Selected data 3" + JSON.stringify(this.selectedRows));
-      for (var i = 0; i < this.selectedRows.length; i++) {
-          userNameArray.push(this.selectedRows[i].userName);
-          moduleCodeArray.push(this.selectedRows[i].moduleCode);
-          // console.log("Selected data" + JSON.stringify(userNameArray) );
-          // console.log("Selected data" + JSON.stringify(moduleCodeArray) );
-      }
-      // send = send.map(function (o) {
-      //
-      // })
-      send = {
-          userName: userNameArray,
-          moduleCode: moduleCodeArray,
-          state : 2
-      };
+        // if (userNameArray != null && moduleCodeArray != null) {
+        //     console.log("Selected data 1" + JSON.stringify(userNameArray));
+        //     console.log("Selected data 2" + JSON.stringify(moduleCodeArray));
+        // }
+        this.selectedRows = sortByArray(this.selectedRows, 'userName');
+        // console.log("Selected data 3" + JSON.stringify(this.selectedRows));
+        for (var i = 0; i < this.selectedRows.length; i++) {
+            userNameArray.push(this.selectedRows[i].userName);
+            moduleCodeArray.push(this.selectedRows[i].moduleCode);
+            // console.log("Selected data" + JSON.stringify(userNameArray) );
+            // console.log("Selected data" + JSON.stringify(moduleCodeArray) );
+        }
+        // send = send.map(function (o) {
+        //
+        // })
+        send = {
+            userName: userNameArray,
+            moduleCode: moduleCodeArray,
+            state: 2
+        };
 
-      request.put('http://localhost:3000/users/decline' ). //
-      set('Accept', 'application/json'). //
-      accept('application/json'). //
-      send(send). //
-      set('x-access-token', token). //
-      use(nocache). // Prevents caching of *only* this request
-      end(function(err, res) {
-          if (!err) {
+        request.put('http://localhost:3000/users/decline'). //
+        set('Accept', 'application/json'). //
+        accept('application/json'). //
+        send(send). //
+        set('x-access-token', this.state.token). //
+        use(nocache). // Prevents caching of *only* this request
+        end(function(err, res) {
+            if (!err) {
+              ErrorHandling.tokenErrorHandling(err.response);
+            } else {
+                console.log(err);
+            }
 
-
-
-          } else {
-              console.log(err);
-          }
-
-          // console.log(JSON.parse(res.text));
-      });
+            // console.log(JSON.parse(res.text));
+        });
 
     },
 
