@@ -4,8 +4,7 @@ var React = require('react');
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
-var Validation = require('react-validation');
-var validator = require('validator')
+
 
 
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
@@ -18,31 +17,6 @@ function enumFormatter(cell, row, enumObject) {
 var boolGaurd = true;
 var tick = 0;
 var previousTime = 0;
-
-
-Validation.extendErrors({
-    //isNotValidUser: {
-    //    className: 'ui-input_state_invalid-user',
-    //    message: 'not equal to "Alex"',
-    //    rule: function(value) {
-    //        // Validation provides ref to 'validator' module, so you don't need to install it separately
-    //        return validator.trim(value) === 'Alex';
-    //    }
-    //},
-    isRequired: {
-        className: 'ui-input_state_empty',
-        message: 'required',
-        rule: function (value) {
-            return Boolean(validator.trim(value));
-        }
-    },
-//    isEmail: {
-//        className: 'ui-input_state_email-pattern-failed',
-//        // validator already has strong email-pattern, so we don't have to extend it by custom
-//        message: 'should be email'
-//    }
-});
-
 
 module.exports = React.createClass({
     displayName: 'App',
@@ -105,9 +79,9 @@ module.exports = React.createClass({
                     .end(function (err, res) {
                         if (err) {
                         } else {
-                            if (res.body.subjects != null) {
+                            if (res.body || res.body.moduleCode || res.body === null || res.body === 'null')
+                            {
                                 alert("Module Code is already taken");
-                                this.setState({moduleCode: " "});
                             }
                         }
                     });
@@ -128,11 +102,8 @@ module.exports = React.createClass({
         }
     },
     handleChangeModuleName: function (event) {
-        //if(this.state.password.trim().length>1){
         this.setState({moduleName: event.target.value});
     },
-
-
     handleChangeCredits: function (event) {
         this.setState({credits: event.target.value});
     },
@@ -295,8 +266,6 @@ module.exports = React.createClass({
             this.setState({data: dataSe});
             // console.log(dataSe);
         }.bind(this));
-        // console.log("Check 2");
-        //var data = this.getData();
 
     }
     ,
@@ -450,7 +419,7 @@ module.exports = React.createClass({
                         </Modal.Header>
                         <Modal.Body>
                             <div>
-                                <Validation.Form onSubmit={this.handleSubmit}>
+                                <Form onSubmit={this.handleSubmit}>
                                     <Col md={12}>
                                         <FormGroup>
                                             <ControlLabel>Module Code</ControlLabel>
@@ -468,26 +437,10 @@ module.exports = React.createClass({
                                                      onChange={this.handleChangeModuleName}/>
                                     </FormGroup>
 
-                                    <Validation.Input
-                                        blocking='input'
-                                        className='form-control'
-                                        validations={[
-                          {
-                              rule: 'isRequired'
-                          },
-                          {
-                              rule: 'isNotValidUser'
-                          }
-                        ]}
-                                        invalidClassName='ui-input_state_custom-error-classname'
-                                        name='username'
-                                        type='text'/>
-
                                 </Col> <Col md={6}>
                                     <FormGroup>
                                         <ControlLabel>Credits</ControlLabel>
                                         <FormControl type="text"
-                                                     type="number" min="0" max="4" step="0.1"
                                                      ref="credits"
                                                      value={this.state.credits}
                                                      onChange={this.handleChangeCredits}/>
@@ -555,7 +508,7 @@ module.exports = React.createClass({
                                         <Button bsStyle="danger" onClick={this.close}>Close</Button>
                                         <Button bsStyle="success" onClick={this.close} type="submit">Submit</Button>
                                     </Col>
-                                </Validation.Form>
+                                </Form>
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
