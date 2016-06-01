@@ -133,8 +133,6 @@ module.exports = React.createClass({
 
             });
 
-        alert('ggg coordinator');
-        //dataX.preventDefault();
 
         console.log(formAddSub.moduleCode);
         request.put('http://localhost:3000/users/coordinator/' + this.props.userName + '/subjectAdd')

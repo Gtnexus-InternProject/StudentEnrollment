@@ -29,15 +29,24 @@ class PageNotFound extends React.Component {
         )
     }
 }
+var validateLogin = function(nextState, replace) {
+
+
+    if (!localStorage.getItem('token') || localStorage.getItem('token') == "") {
+        // browserHistory.push('/login');
+        replace('/login');
+        // return null;
+    }
+
+};
+
 ReactDOM.render((
     <Router history={browserHistory}>
-        <Route path="/" component={Login}>
-            <Route path="ab" component={PageNotFound}/>
-        </Route>
-        <Route path="/admin" component={Admin}></Route>
-        <Route path="/coordinator/:userName/:token" component={Coordinator}></Route>
+        <Route path="/" component={Login}></Route>
+        <Route path="/admin" component={Admin} onEnter={validateLogin}></Route>
+        <Route path="/coordinator" component={Coordinator} onEnter={validateLogin}></Route>
         <Route path="/tab" component={Tab}></Route>
-        <Route path="/home/:userName/:token" component={Home}></Route>
+        <Route path="/home" component={Home} onEnter={validateLogin}></Route>
         <Route path="/login" component={Login}></Route>
         <Route path="/register" component={Register}></Route>
         <Route path="*" component={PageNotFound}/>

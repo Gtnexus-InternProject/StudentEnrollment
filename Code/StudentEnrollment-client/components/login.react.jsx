@@ -56,15 +56,17 @@ module.exports = React.createClass({
                     var token = (res.body.token);
 
                     if (token) {
-                        if (res.body.type == 'student') {
+                        localStorage.setItem('token', token );
+                        localStorage.setItem('user', formL.userName );
+                        if(res.body.type == 'student') {
                             //alert('token is - ' + (token));
-                            browserHistory.push('/home/' + formL.userName + '/' + token);
-                        } else if (res.body.type == 'admin') {
+                            browserHistory.push( '/home' );
+                        }else if(res.body.type == 'admin'){
                             //alert('token is - ' + (token));
                             browserHistory.push('/admin');
-                        } else if (res.body.type == 'coordinator') {
+                        }else if(res.body.type == 'coordinator'){
                             //alert('token is - ' + (token));
-                            browserHistory.push('/coordinator/' + formL.userName + '/' + token);
+                            browserHistory.push('/coordinator');
 
                         }
 
