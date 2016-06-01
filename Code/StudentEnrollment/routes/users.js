@@ -525,9 +525,9 @@ router.route('/coordinator').post(function (req, res) {
 
     }
 
-    if (!checkUserName(userName, res)) {
-        return;
-    }
+    // if (!checkUserName(userName, res)) {
+    //     return;
+    // }
 
     //call the create function for our database
     mongoose.model('coordinator').create(req.body, function (err, user) {

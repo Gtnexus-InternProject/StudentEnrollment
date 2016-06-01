@@ -111,15 +111,28 @@ module.exports = React.createClass({
             contactNumber: this.state.telephone.trim(),
             adddress: this.state.address.trim(),
 
-        }
+        };
 
+        var tableData={
+            userName:  this.state.userName.trim(),
+            firstName:  this.state.firstName.trim(),
+            lastName: this.state.lastName.trim(),
+            email: this.state.email.trim(),
+            adddress: this.state.address.trim(),
+            contactNumber:this.state.telephone.trim(),
+            subjects:"" ,
+            id: this.state.data.length
+        };
+        var data = this.state.data;
+        data.push(tableData);
+        this.setState({data: data});
+        console.log(this.state.data)
 
         request.post('http://localhost:3000/users/coordinator')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set('x-access-token',token)
             .send(formAddSub)
-            .withCredentials()
             .end(function (err, res) {
                 if (err || !res.ok) {
                     console.log('Oh no! error');

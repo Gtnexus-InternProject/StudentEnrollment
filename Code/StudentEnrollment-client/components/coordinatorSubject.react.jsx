@@ -216,15 +216,17 @@ module.exports = React.createClass({
             addstd=[];
             addstd2=[];
         }
+
+
     },
 
     addStudent(event){
         event.preventDefault();
 
-        for (var i = 0; i < this.state.addStd.length; i++) {
+        for (var i = 0; i < addstd.length; i++) {
 
             request
-                .put('http://localhost:3000/users/student/' + this.state.addStd[i] + '/subjectsSS')
+                .put('http://localhost:3000/users/student/' + addstd[i] + '/subjectsSS')
                 .send({subjects: {moduleCode: this.props.moduleCode, state: 1}})
                 .set('x-access-token', this.props.token)
                 .set('Accept', 'application/json')
@@ -243,7 +245,7 @@ module.exports = React.createClass({
         var tablelData = this.state.data.concat(addstd2);
         var comparry = this.state.compArry.concat(addstd);
         this.setState({
-            addStd: addstd,
+
             data: tablelData,
             compArry: comparry
         });
