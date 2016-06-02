@@ -30,8 +30,8 @@ module.exports = React.createClass({
             showModal: false,
             data1: [],
             data: [],
-            addStd: [],
             compArry: [],
+            count:'',
             moduleCode:''
 
 
@@ -39,7 +39,10 @@ module.exports = React.createClass({
     },
 
     componentWillReceiveProps(newProps){
-        this.setState({moduleCode: newProps.data})
+        this.setState({moduleCode: newProps.moduleCode,
+        count:newProps.count});
+        console.log('+++++++' +JSON.stringify(this.state.moduleCode));
+        console.log('+++++++' + newProps.count );
 
     },
 
@@ -105,7 +108,7 @@ module.exports = React.createClass({
 
 
         request
-            .get('http://localhost:3000/subjects/student/' + this.props.moduleCode + '/per')
+            .get('http://localhost:3000/subjects/student/' + this.props.moduleCode.moduleCode + '/per')
             .set('Accept', 'application/json')
             .set('x-access-token', this.props.token)
             .end(function (err, res) {
@@ -158,7 +161,7 @@ module.exports = React.createClass({
             .delete('http://localhost:3000/users/student/'+ row +'/subjects')
             .set('x-access-token', this.props.token)
             .set('Accept', 'application/json')
-            .send({subjects:this.props.moduleCode})
+            .send({subjects:this.props.moduleCode.moduleCode})
             .end(function (err, res) {
                 if (err || !res.ok) {
                     // alert('Oh no! error');
@@ -177,10 +180,16 @@ module.exports = React.createClass({
                     var removecomp = removeArray(test2, function(o) {
                         return o == row;
                     })
-                    this.setState({
+                    var cnt=this.state.count;
+                    cnt--;
+                    console.log("count"+ cnt);
+                   this.setState({
                         data: test,
-                        compArry: test2
+                        compArry: test2,
+                        count:cnt
                     });
+                    this.props.updateCount(this.state.count, this.props.i);
+                    console.log("count"+ this.state.count);
                 }
             }.bind(this));
 
@@ -203,7 +212,7 @@ module.exports = React.createClass({
         if (isSelected) {
             addstd.push(row.userName);
             addstd2.push(row);
-            // console.log("Added" + JSON.stringify(row));
+
         } else {
             var remove = removeArray(addstd2, function(o) {
                 return o.userName == row.userName;
@@ -211,7 +220,7 @@ module.exports = React.createClass({
             var removeuserName = removeArray(addstd, function(o) {
                 return o == row.userName;
             });
-            // console.log("Removed" + JSON.stringify(remove));
+
         }
 
 
@@ -242,7 +251,7 @@ module.exports = React.createClass({
 
             request
                 .put('http://localhost:3000/users/student/' + addstd[i] + '/subjectsSS')
-                .send({subjects: {moduleCode: this.props.moduleCode, state: 1}})
+                .send({subjects: {moduleCode: this.props.moduleCode.moduleCode, state: 1}})
                 .set('x-access-token', this.props.token)
                 .set('Accept', 'application/json')
                 .end(function (err, res) {
@@ -309,7 +318,7 @@ module.exports = React.createClass({
             <div>
                 <div><Col mdOffset={10} md={2}> <Button bsStyle="success" bsSize="xsmall" onClick={this.open}>Add
                     Students</Button></Col></div>
-                <h1>Subject List</h1>
+                <h1>Student List </h1>
 
 
                 <BootstrapTable

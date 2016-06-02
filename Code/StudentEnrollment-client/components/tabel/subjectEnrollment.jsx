@@ -34,7 +34,7 @@ module.exports = React.createClass({
 
         // var me = this;
 
-        request.get('http://localhost:3000/subjects' ).
+        request.get('http://localhost:3000/subjects/all' ).
 
             set('Accept', 'application/json').
             accept('application/json').
@@ -106,6 +106,7 @@ module.exports = React.createClass({
                                     return subject;
                                 });
 
+                                //
                                 // console.log("data: " + subjectCodeArray);
                                 // console.log(res.body);
 

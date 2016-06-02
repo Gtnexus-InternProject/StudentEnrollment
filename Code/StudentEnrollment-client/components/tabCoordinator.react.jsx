@@ -18,50 +18,17 @@ import SubjectApprove from './tabel/CoordinatorSubjectApprove';
 
 
 import CoordinatorSubjectList from './coordinatorSubjectList.react'
-
+var count =[];
 module.exports = React.createClass({
 
         getInitialState: function () {
             return {
                 moduleCode: '',
                 moduleName: '',
-                data: []
+                data: [],
+                count: []
             };
         },
-
-        //fetchData(callback){
-        //    request
-        //        .get('http://localhost:3000/users/coordinator/'+this.props.userName+'/subjects')
-        //        .set('Accept', 'application/json')
-        //        .set('x-access-token',this.props.token)
-        //        .end(function (err, res) {
-        //            if (err) {
-        //                console.log(err);
-        //            }
-        //            else {
-        //                if (res == null) {
-        //                    console.log("Empty");
-        //                    return;
-        //                }
-        //                // console.log(res.body);
-        //
-        //               var jsonObjSub = res.body.subjects;
-        //                console.log(jsonObjSub);
-        //                callback(jsonObjSub);
-        //            } ;
-        //        });
-        //
-        //},
-        //
-        //onEnter(){
-        //
-        //    this.fetchData(function (dataSe) {
-        //        this.setState({data: dataSe});
-        //        console.log(this.state.data);
-        //    }.bind(this));
-        //
-        //},
-        //
 
         fetchData(callback){
 
@@ -108,6 +75,7 @@ module.exports = React.createClass({
 
 
                                     var data = [];
+
                                     for (var i = 0; i < jsonObj1.modules.length; i++) {
                                         if (jsonObj1.modules[i].status == 1) {
                                             var row = {
@@ -121,6 +89,7 @@ module.exports = React.createClass({
 
                                             };
                                             data.push(row);
+                                            count.push(jsonObj1.modules[i].count)
                                         }
 
                                     }
@@ -146,24 +115,12 @@ module.exports = React.createClass({
         componentWillMount() {
 
             this.fetchData(function (dataSe) {
-                this.setState({data: dataSe});
+                this.setState({data: dataSe,
+                count:count});
                 console.log(this.state.data);
             }.bind(this));
 
         },
-
-
-        //componentDidMount: function () {
-        //
-        //    this.fetchData(function (dataSe) {
-        //        this.setState({data: dataSe});
-        //        // console.log(dataSe);
-        //    }.bind(this));
-        //
-        //}
-        //,
-        //
-
 
 
 
@@ -178,13 +135,13 @@ module.exports = React.createClass({
                                     <h4>Overview</h4>
 
                                     <CoordinatorOverview userName={this.props.userName}
-                                                            token={this.props.token} data={this.state.data}/>
+                                                            token={this.props.token} data={this.state.data} count={this.state.count} />
 
                                 </Tab>
                                 <Tab eventKey={2} title="Students" onEnter={this.onEnter}>
                                     <h4>Students list </h4>
                                     <CoordinatorSubjectList userName={this.props.userName}
-                                                            token={this.props.token} data={this.state.data}/>
+                                                            token={this.props.token} data={this.state.data} count={this.state.count} />
                                 </Tab>
 
                                 <Tab eventKey={3} title="Student Request">

@@ -573,8 +573,10 @@ router.get('/student/:moduleCode/per', (function (req, res) {
     mongoose.model('student').find({
         subjects: {
             $elemMatch: {
-                moduleCode: req.params.moduleCode
+                moduleCode: req.params.moduleCode, 
+                 state: 1,               
             }
+         
         }
     }, {
             userName: 1,

@@ -13,26 +13,37 @@ import ErrorHandling from './Utils/ErrorHandling';
 module.exports = React.createClass({
     getInitialState: function () {
         return {
-            data: []
+            data: [],
+            count:[]
         };
     },
 
     componentWillReceiveProps(newProps){
-        this.setState({data: newProps.data})
+        this.setState({
+            data: newProps.data,
+            count:newProps.count})
 
     },
+    updateCount(count, i){
+        this.state.count[i] = count;
+        this.setState({
 
-
+            count:this.state.count});
+    },
 
     render(){
         var panes = [];
 
         if(this.state.data) {
             for (var i = 0; i < this.state.data.length; i++) {
-                var header=<Row> <Col md={9}>{this.state.data[i].moduleName}</Col>  <Col md={3}>Student Count : {this.state.data[i].count}</Col></Row>
-                    panes.push(
+
+                var header=<Row> <Col md={9}>{this.state.data[i].moduleName}</Col>  <Col md={3}>Student Count : {this.state.count[i]}</Col></Row>
+                    panes[i] = (
                     <Panel eventKey={i + 1} header={header}>
-                        <StdTable moduleCode={this.state.data[i].moduleCode} token={this.props.token} userName={this.props.userName}/>
+                        <StdTable updateCount={this.updateCount} moduleCode={this.state.data[i]}
+                                  count={this.state.count[i]}
+                                  token={this.props.token}
+                                  userName={this.props.userName} i={i} />
                     </Panel>
                 );
             }
