@@ -31,11 +31,18 @@ module.exports = React.createClass({
             data1: [],
             data: [],
             addStd: [],
-            compArry: []
+            compArry: [],
+            moduleCode:''
 
 
         };
     },
+
+    componentWillReceiveProps(newProps){
+        this.setState({moduleCode: newProps.data})
+
+    },
+
 
     getAllStudents(callback){
         //alert('eee');
