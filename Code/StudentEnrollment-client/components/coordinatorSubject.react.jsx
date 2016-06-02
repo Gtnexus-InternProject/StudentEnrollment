@@ -7,10 +7,17 @@
 var React = require('react');
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
+var removeArray = require('lodash/remove');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
 
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
 import './../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css'
+
+var addstd = [];
+var addstd2 = [];
+
+import ErrorHandling from './Utils/ErrorHandling';
+
 
 module.exports = React.createClass({
 
@@ -19,19 +26,26 @@ module.exports = React.createClass({
         // var data = [];
 
         return {
-            userName: '',
-            firstName: '',
-            lastName: '',
-            userName1: '',
-            firstName1: '',
-            lastName1: '',
-            email: '',
-            contactNumber: '',
+
             showModal: false,
-            data1:[],
-            data: []
+            data1: [],
+            data: [],
+            compArry: [],
+            count:'',
+            moduleCode:''
+
+
         };
     },
+
+    componentWillReceiveProps(newProps){
+        this.setState({moduleCode: newProps.moduleCode,
+        count:newProps.count});
+        console.log('+++++++' +JSON.stringify(this.state.moduleCode));
+        console.log('+++++++' + newProps.count );
+
+    },
+
 
     getAllStudents(callback){
         //alert('eee');
@@ -43,32 +57,33 @@ module.exports = React.createClass({
                 if (err || !res.ok) {
                     // alert('Oh no! error');
                     console.log('Oh no! error' + err);
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
-                    // alert('yay got ' + JSON.stringify(res.body));
-                    console.log('yay got ' + JSON.stringify(res.body));
 
                     var jsonObj = res.body;
                     var data = [];
+                    console.log("fggfccg " + this.state.compArry);
+
                     for (var i = 0; i < jsonObj.length; i++) {
-                        var row = {
-                            userName1: jsonObj[i].userName,
-                            firstName1: jsonObj[i].firstName,
-                            lastName1: jsonObj[i].lastName,
+                        if (this.state.compArry.indexOf(jsonObj[i].userName) != -1) {
+                            console.log('notselecterd')
+
                         }
-                        data.push(row);
-                    }
-                    ;
-
-
-                    // console.log("data: " + data);
-                    console.log(data);
-
+                        else {
+                            console.log('Selected');
+                            var row = {
+                                userName: jsonObj[i].userName,
+                                firstName: jsonObj[i].firstName,
+                                lastName: jsonObj[i].lastName,
+                                email: jsonObj[i].email,
+                                contactNumber: jsonObj[i].contactNumber,
+                            }
+                            data.push(row);
+                        }
+                    };
                     callback(data);
-
-
-
                 }
-            });
+            }.bind(this));
     },
 
     close() {
@@ -83,7 +98,6 @@ module.exports = React.createClass({
         this.setState({showModal: true});
     },
 
-
     handleSubmit(data) {
 
         data.preventDefault();
@@ -94,16 +108,18 @@ module.exports = React.createClass({
 
 
         request
-            .get('http://localhost:3000/subjects/student/' + this.props.moduleCode)
+            .get('http://localhost:3000/subjects/student/' + this.props.moduleCode.moduleCode + '/per')
             .set('Accept', 'application/json')
             .set('x-access-token', this.props.token)
             .end(function (err, res) {
                 if (err) {
                     console.log(err)
+                    ErrorHandling.tokenErrorHandling(err.response);
                 }
                 else {
                     var jsonObj = res.body;
                     var data = [];
+                    var compArry = [];
                     for (var i = 0; i < jsonObj.length; i++) {
                         var row = {
                             userName: jsonObj[i].userName,
@@ -114,14 +130,11 @@ module.exports = React.createClass({
 
                         }
                         data.push(row);
+                        compArry.push(row.userName);
                     }
                     ;
-
-
-                    // console.log("data: " + data);
-                    console.log(data);
-
-                    callback(data);
+                    console.log(compArry);
+                    callback(data, compArry);
 
                 }
             });
@@ -129,62 +142,156 @@ module.exports = React.createClass({
 
     componentDidMount: function () {
 
-        this.fetchData(function (dataSe) {
-            this.setState({data: dataSe});
+        this.fetchData(function (dataSe, datacompArry) {
+            this.setState({
+                    data: dataSe,
+                    compArry: datacompArry
+                }
+            );
+
+
             // console.log(dataSe);
-        }.bind(this));
-        // console.log("Check 2");
-        //var data = this.getData();
-
-    },
+        }.bind(this)); },
 
 
-
-
-    afterDeleteRow (data) {
+    afterDeleteRow  (row) {
+        //console.log(JSON.stringify(row));
 
         request
-            .put('http://localhost:3000/subjects/delete/' + data)
+            .delete('http://localhost:3000/users/student/'+ row +'/subjects')
             .set('x-access-token', this.props.token)
             .set('Accept', 'application/json')
+            .send({subjects:this.props.moduleCode.moduleCode})
             .end(function (err, res) {
                 if (err || !res.ok) {
                     // alert('Oh no! error');
                     console.log('Oh no! error' + err);
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
                     // alert('yay got ' + JSON.stringify(res.body));
                     console.log('yay got ' + JSON.stringify(res.body));
+
+                    var test= this.state.data;
+                    var test2=this.state.compArry;
+
+                    var remove = removeArray(test, function(o) {
+                        return o.userName == row;
+                    });
+                    var removecomp = removeArray(test2, function(o) {
+                        return o == row;
+                    })
+                    var cnt=this.state.count;
+                    cnt--;
+                    console.log("count"+ cnt);
+                   this.setState({
+                        data: test,
+                        compArry: test2,
+                        count:cnt
+                    });
+                    this.props.updateCount(this.state.count, this.props.i);
+                    console.log("count"+ this.state.count);
                 }
-            });
+            }.bind(this));
+
+
     },
-
-    afterSaveCell(row){
-        console.log(row.moduleCode)
-        request
-            .put('http://localhost:3000/subjects/update/' + row.moduleCode)
-            .send(row)
-            .set('x-access-token', this.props.token)
-            .set('Accept', 'application/json')
-            .end(function (err, res) {
-                if (err || !res.ok) {
-
-                    console.log('Oh no! error' + err);
-                } else {
-
-                    console.log('yay got ' + JSON.stringify(res.body));
-                }
-            });
-    },
-
 
     format(cell, row){
         return '<i class="glyphicon glyphicon-usd"></i> ' + cell;
     },
 
     onRowSelect(row, isSelected){
+
+
         console.log(row);
-        console.log("selected: " + isSelected)
     },
+
+
+    onRowSelectAddStd(row, isSelected){
+
+        if (isSelected) {
+            addstd.push(row.userName);
+            addstd2.push(row);
+
+        } else {
+            var remove = removeArray(addstd2, function(o) {
+                return o.userName == row.userName;
+            });
+            var removeuserName = removeArray(addstd, function(o) {
+                return o == row.userName;
+            });
+
+        }
+
+
+
+        console.log('Size' + addstd);
+
+    },
+
+
+    onSelectAll(isSelected, data) {
+
+        if (isSelected) {
+            addstd.push(data.userName);
+            addstd2.push(data);
+
+        } else {
+            addstd=[];
+            addstd2=[];
+        }
+
+
+    },
+
+    addStudent(event){
+        event.preventDefault();
+        // var cnt=this.state.count;
+        for (var i = 0; i < addstd.length; i++) {
+
+            request
+                .put('http://localhost:3000/users/student/' + addstd[i] + '/subjectsSS')
+                .send({subjects: {moduleCode: this.props.moduleCode.moduleCode, state: 1}})
+                .set('x-access-token', this.props.token)
+                .set('Accept', 'application/json')
+                .end(function (err, res) {
+                    if (err || !res.ok) {
+                        // alert('Oh no! error');
+                        console.log('Oh no! error' + err);
+                        ErrorHandling.tokenErrorHandling(err.response);
+                    } else {
+                        console.log('ok');
+                        var cnt=this.state.count;
+                        cnt++;
+
+                        // if(i === addstd.length -1 ){
+
+
+                          this.setState({
+                              count:cnt
+                          });
+                          this.props.updateCount(this.state.count, this.props.i);
+
+                        // }
+
+                    }
+                }.bind(this));
+        }
+
+        var tablelData = this.state.data.concat(addstd2);
+        var comparry = this.state.compArry.concat(addstd);
+        this.setState({
+            
+            data: tablelData,
+            compArry: comparry
+        });
+        this.props.updateCount(this.state.count, this.props.i);
+        console.log('rfvrvrvvrvr  ' + this.state.compArry);
+        addstd = [];
+        addstd2 = [];
+
+    },
+
 
     render()
     {
@@ -199,12 +306,8 @@ module.exports = React.createClass({
 
         var options = {
             afterDeleteRow: this.afterDeleteRow,
+            onDeleteRow :this.onDeleteRow,
 
-        };
-        var cellEdit = {
-            mode: "click",
-            blurToSave: true,
-            afterSaveCell: this.afterSaveCell
         };
 
         //fro the student add table
@@ -212,15 +315,12 @@ module.exports = React.createClass({
             mode: "checkbox",
             clickToSelect: true,
             bgColor: "rgb(238, 193, 213)",
-            onSelect: onRowSelect,
-            onSelectAll: onSelectAll
+            onSelect: this.onRowSelectAddStd,
+            onSelectAll: this.onSelectAll
         };
-        function onRowSelect(row, isSelected){
-            console.log(row);
-            console.log("selected: " + isSelected)
-        }
 
-        function onSelectAll(isSelected){
+
+        function onSelectAll(isSelected) {
             console.log("is select all: " + isSelected);
         }
 
@@ -230,7 +330,7 @@ module.exports = React.createClass({
             <div>
                 <div><Col mdOffset={10} md={2}> <Button bsStyle="success" bsSize="xsmall" onClick={this.open}>Add
                     Students</Button></Col></div>
-                <h1>Subject List</h1>
+                <h1>Student List </h1>
 
 
                 <BootstrapTable
@@ -256,9 +356,6 @@ module.exports = React.createClass({
                     <Modal
                         show={this.state.showModal}
                         onHide={this.close}
-                        //show={this.state.show}
-                        //onHide={close}
-                        //container={this}
                         aria-labelledby="contained-modal-title"
                         >
                         <Modal.Header closeButton>
@@ -266,17 +363,24 @@ module.exports = React.createClass({
                         </Modal.Header>
                         <Modal.Body>
                             <div>
+                                <Form onSubmit={this.addStudent}>
+                                    <BootstrapTable data={this.state.data1}
+                                                    selectRow={selectRowProp1}
+                                                    onSelectAll= {this.onSelectAll}
+                                                    search={true}
+                                                    pagination={true}
 
-                                <BootstrapTable data={this.state.data1}
-                                                selectRow={selectRowProp1}
-                                                search={true}
-                                                pagination={true}
-                                    >
-                                    <TableHeaderColumn dataField="userName1" isKey={true}>Username</TableHeaderColumn>
-                                    <TableHeaderColumn dataField="firstName1">First Name</TableHeaderColumn>
-                                    <TableHeaderColumn dataField="lastName1">Last Name</TableHeaderColumn>
-                                </BootstrapTable>
+                                        >
+                                        <TableHeaderColumn dataField="userName"
+                                                           isKey={true}>Username</TableHeaderColumn>
+                                        <TableHeaderColumn dataField="firstName">First Name</TableHeaderColumn>
+                                        <TableHeaderColumn dataField="lastName">Last Name</TableHeaderColumn>
+                                    </BootstrapTable>
 
+
+                                    <Button bsStyle="warning" type="submit" onClick={this.close}>
+                                        Submit</Button>
+                                </Form>
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
@@ -292,6 +396,3 @@ module.exports = React.createClass({
         );
     }
 });
-
-// module.exports = SubjectTabelAdmin;
-// module.exports = hello;

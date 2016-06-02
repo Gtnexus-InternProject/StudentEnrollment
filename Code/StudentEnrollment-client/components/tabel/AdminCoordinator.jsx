@@ -22,7 +22,8 @@ var request = require('superagent');
 var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
 
-import token from  '../../config';
+// import token from  '../../config';
+import ErrorHandling from '../Utils/ErrorHandling';
 
 // var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMTE0MjcwLCJleHAiOjE0NjMyMDA2NzB9.X6DXvZ2sIMAogrhow7aaUXJEtFYFsLES5Cl7A0yNg3k';
 
@@ -112,18 +113,32 @@ module.exports = React.createClass({
             contactNumber: this.state.telephone.trim(),
             adddress: this.state.address.trim(),
 
-        }
+        };
 
+        var tableData={
+            userName:  this.state.userName.trim(),
+            firstName:  this.state.firstName.trim(),
+            lastName: this.state.lastName.trim(),
+            email: this.state.email.trim(),
+            adddress: this.state.address.trim(),
+            contactNumber:this.state.telephone.trim(),
+            subjects:"" ,
+            id: this.state.data.length
+        };
+        var data = this.state.data;
+        data.push(tableData);
+        this.setState({data: data});
+        console.log(this.state.data)
 
         request.post('http://localhost:3000/users/coordinator')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set('x-access-token',this.state.token)
             .send(formAddSub)
-            .withCredentials()
             .end(function (err, res) {
                 if (err || !res.ok) {
                     console.log('Oh no! error');
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
                     console.log('yay got ' + JSON.stringify(formAddSub));
 
@@ -181,6 +196,7 @@ module.exports = React.createClass({
 
             } else {
                 console.log(err);
+                ErrorHandling.tokenErrorHandling(err.response);
             }
 
             // console.log(JSON.parse(res.text));
@@ -213,6 +229,7 @@ module.exports = React.createClass({
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));
@@ -229,6 +246,7 @@ module.exports = React.createClass({
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));

@@ -4,77 +4,51 @@
 var React = require('react');
 var request = require('superagent');
 
-import {Panel,Accordion, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
+import {Row,Panel,Accordion, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
 import StdTable from './coordinatorSubject.react'
-var jsonObjSub;
+
+import ErrorHandling from './Utils/ErrorHandling';
+
 
 module.exports = React.createClass({
     getInitialState: function () {
-        // var data = [];
-
         return {
-            moduleCode: '',
-            moduleName: '',
-
-            showModal: false,
-
-            data: []
+            data: [],
+            count:[]
         };
     },
 
-
-
-    fetchData(callback){
-
-
-        request
-            .get('http://localhost:3000/users/coordinator/coor/subjects')
-            .set('Accept', 'application/json')
-            .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjM2NTE5MjgsImV4cCI6MTQ2MzczODMyOH0.fhVMx0MfAm0z3k_0ENmvolZ56yRrqhffCD2sI1DnCOo')
-            .end(function (err, res) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    if (res == null) {
-                        console.log("Empty");
-                        return;
-                    }
-                    // console.log(res.body);
-                    jsonObjSub = res.body.subjects;
-                    console.log(jsonObjSub);
-                    callback(jsonObjSub);
-                } ;
-
-
-            });
+    componentWillReceiveProps(newProps){
+        this.setState({
+            data: newProps.data,
+            count:newProps.count})
 
     },
-    componentDidMount() {
+    updateCount(count, i){
+        this.state.count[i] = count;
+        this.setState({
 
-        this.fetchData(function (dataSe) {
-            this.setState({data: dataSe});
-             console.log(this.state.data);
-        }.bind(this));
-        // console.log("Check 2");
-        //var data = this.getData();
-
+            count:this.state.count});
     },
-
 
     render(){
         var panes = [];
 
+        if(this.state.data) {
+            for (var i = 0; i < this.state.data.length; i++) {
 
-       for(var i=0;i<this.state.data.length;i++){
-           panes.push(
-               <Panel eventKey={i + 1} header={this.state.data[i]}>
-                   <StdTable moduleCode={this.state.data[i]} token={this.props.token} userName={this.props.userName}/>
-               </Panel>
-
-           );
-       }
-          return (
+                var header=<Row> <Col md={9}>{this.state.data[i].moduleName}</Col>  <Col md={3}>Student Count : {this.state.count[i]}</Col></Row>
+                panes[i] = (
+                    <Panel eventKey={i + 1} header={header}>
+                        <StdTable updateCount={this.updateCount} moduleCode={this.state.data[i]}
+                                  count={this.state.count[i]}
+                                  token={this.props.token}
+                                  userName={this.props.userName} i={i} />
+                    </Panel>
+                );
+            }
+        }
+        return (
             <Accordion>
                 {panes}
             </Accordion>

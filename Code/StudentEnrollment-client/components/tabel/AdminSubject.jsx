@@ -21,7 +21,7 @@ import './skylight.css';
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
-
+import ErrorHandling from '../Utils/ErrorHandling';
 // import token from  '../../config';
 
 module.exports = React.createClass({
@@ -66,7 +66,7 @@ module.exports = React.createClass({
 
         // var me = this;
 
-        request.get('http://localhost:3000/subjects/asa')//
+        request.get('http://localhost:3000/subjects/all/asa')//
         .set('Accept', 'application/json').accept('application/json') //
         .set('x-access-token', this.state.token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
@@ -102,6 +102,7 @@ module.exports = React.createClass({
 
             } else {
                 console.log(err);
+                ErrorHandling.tokenErrorHandling(err.response);
             }
 
             // console.log(JSON.parse(res.text));
@@ -140,6 +141,7 @@ module.exports = React.createClass({
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));
@@ -156,6 +158,7 @@ module.exports = React.createClass({
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));

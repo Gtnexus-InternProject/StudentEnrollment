@@ -19,8 +19,8 @@ import {
     Col,
     ButtonGroup,
     Modal
-}
-from 'react-bootstrap';
+}from 'react-bootstrap';
+import ErrorHandling from './Utils/ErrorHandling';
 
 module.exports = React.createClass({
 
@@ -37,7 +37,7 @@ module.exports = React.createClass({
                         alStream: '',
                         contactNumber: '',
                         zScore: '',
-                         imgURL: 'http://localhost:5000/img/pro.PNG',
+                         profileImage: 'http://localhost:5000/img/pro.PNG',
                 hiddenURL: ''
 
                     }
@@ -56,8 +56,9 @@ module.exports = React.createClass({
                         var imgHeight = this.refs.hiddenImg.height;
                         if (imgHeight <= 256 && imgWidth <= 256) {
                             this.setState({
-                                imgURL: reader.result
+                                profileImage: reader.result
                             });
+                            // this.props.updateData(this.state.data)
                         } else {
                             alert('Image is too big, please resize!!');
                         }
@@ -91,7 +92,7 @@ module.exports = React.createClass({
                             contactNumber: newProps.data.contactNumber,
                             gender: newProps.data.gender,
                             dateOfBirth: newProps.data.dateOfBirth,
-                            imgURL:newProps.data.imgURL
+                            profileImage:newProps.data.profileImage
                         });
 
                     }
@@ -211,7 +212,7 @@ module.exports = React.createClass({
                         adddress: this.state.adddress.trim() || "",
                         //zScore: this.state.zScore.trim(),
                         contactNumber: this.state.contactNumber.trim() || "",
-                        imgURL: this.state.imgURL
+                        profileImage: this.state.profileImage
 
                     };
                     //alert(JSON.stringify(formR));
@@ -221,6 +222,7 @@ module.exports = React.createClass({
                         .end(function (err, res) {
                             if (err || !res.ok) {
                                 console.log('Oh no! error');
+                                ErrorHandling.tokenErrorHandling(err.response);
                             } else {
                                 console.log('yay got ' + JSON.stringify(formR));
                                 this.props.updateData(formR);
@@ -247,7 +249,7 @@ module.exports = React.createClass({
                                 12
                             } >
                             < Image src ={
-                    this.state.imgURL
+                    this.state.profileImage
                 }
                             responsive / >
                             < /Col> < Col md = {
@@ -258,7 +260,7 @@ module.exports = React.createClass({
                             this.state.firstName
                         } {
                             this.state.lastName
-                        } < /strong> < /h3 > 
+                        } < /strong> < /h3 >
                             < /Col> < Col md = {
                     12
                 } >
@@ -273,6 +275,7 @@ module.exports = React.createClass({
                 < Modal show = {
                     this.state.showModal
                 }
+
             onHide = {
                 this.close
             }
@@ -334,6 +337,7 @@ onChange = {
     } >
     < option value = {
         this.state.gender || "Male"
+
     }
 /> < option value = "Male" > Male < /option > < option value = "Female" > Female < /option>
 
@@ -425,15 +429,13 @@ type = "submit" > Submit < /Button> < /Col > < /Form> < /div > < /Modal.Body> < 
 onHide = {
         this.closeEditPic
     }
-    //show={this.state.show}
-    //onHide={close}
-    //container={this}
+
 aria-labelledby = "contained-modal-title" >
     < Modal.Header closeButton >
     < Modal.Title id = "contained-modal-title" > Edit User < /Modal.Title> < /Modal.Header > < Modal.Body >
 
     < Image src = {
-        this.state.imgURL
+        this.state.profileImage
     }
 responsive / >
     < div class = "upload-button" > Upload Image < /div> < input class = "file-upload"

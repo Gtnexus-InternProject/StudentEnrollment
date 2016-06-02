@@ -1,6 +1,6 @@
 import React from 'react';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import {Button} from 'react-bootstrap';
+import {Button, Form} from 'react-bootstrap';
 import './react-bootstrap-table.min.css';
 
 var findIndex = require('lodash/findIndex');
@@ -9,8 +9,8 @@ var sortByArray = require('lodash/sortBy');
 
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
-
-import token from '../../config';
+import ErrorHandling from '../Utils/ErrorHandling';
+// import token from '../../config';
 
 module.exports = React.createClass({
 
@@ -90,21 +90,60 @@ module.exports = React.createClass({
 
                         // console.log("data: " + JSON.stringify(data) );
 
-                        callback(data);
+                        request.get('http://localhost:3000/users/coordinator/' + localStorage.getItem('user') + '/subjects'). //
+                        set('Accept', 'application/json'). //
+                        accept('application/json'). //
+                        set('x-access-token', this.state.token). //
+                        use(nocache). // Prevents caching of *only* this request
+                        end(function(err, res) {
+                            if (!err) {
+
+                                if (res == null) {
+                                    console.log("Empty");
+                                    return;
+                                }
+                                // console.log("Modules check: " + JSON.parse(res) );
+                                // console.log("Modules check: " + JSON.parse(res.body) );
+                                var subjectsCoordinator = res.body.subjects;
+                                // console.log("Modules check: " + subjectsCoordinator );
+                                var subjectAssociative = [];
+
+                                for (var i = 0; i < subjectsCoordinator.length; i++) {
+                                    // if (associateArray[jsonObj[i].moduleCode]) {
+                                    subjectAssociative[subjectsCoordinator[i]] = subjectsCoordinator[i];
+                                    // }
+                                }
+
+
+                                var remove = removeArray(data, function(o) {
+                                    return subjectAssociative[o.moduleCode] ? false : true;
+                                });
+
+                                callback(data);
+
+                            } else {
+                                console.log(err);
+                                ErrorHandling.tokenErrorHandling(err.response);
+                            }
+
+                            // console.log(JSON.parse(res.text));
+                        });
 
                     } else {
                         console.log(err);
+                        ErrorHandling.tokenErrorHandling(err.response);
                     }
 
                     // console.log(JSON.parse(res.text));
-                });
+                }.bind(this));
 
             } else {
                 console.log(err);
+                ErrorHandling.tokenErrorHandling(err.response);
             }
 
             // console.log(JSON.parse(res.text));
-        });
+        }.bind(this));
     },
     componentWillMount: function() {
 
@@ -146,6 +185,12 @@ module.exports = React.createClass({
     },
 
     accept(event) {
+      // alert("event" + event);
+      //       event.preventDefault();
+      // alert("event" + JSON.stringify(event));
+
+      // console.log("event" + event);
+      // console.log("event" + JSON.stringify(event));
         // console.log("Selected data" + JSON.stringify(this.selectedRows));
 
         var userNameArray = [],
@@ -180,12 +225,23 @@ module.exports = React.createClass({
         set('x-access-token', this.state.token). //
         use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
-            if (!err) {} else {
+            if (!err) {
+              ErrorHandling.tokenErrorHandling(err.response);
+            } else {
                 console.log(err);
+                for (var i = 0; i < userNameArray.length; i++) {
+                  var remove = removeArray(this.state.data, function(o) {
+                      return o.userName == userNameArray[i];
+                  });
+                }
+
+                this.setState({data:this.state.data});
+
+
             }
 
             // console.log(JSON.parse(res.text));
-        });
+        }.bind(this));
         // send.moduleCode = moduleCodeArray;
         // console.log("Selected data 4" + JSON.stringify(send));
 
@@ -228,12 +284,21 @@ module.exports = React.createClass({
         set('x-access-token', this.state.token). //
         use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
-            if (!err) {} else {
+            if (!err) {
+              ErrorHandling.tokenErrorHandling(err.response);
+            } else {
                 console.log(err);
+                for (var i = 0; i < userNameArray.length; i++) {
+                  var remove = removeArray(this.state.data, function(o) {
+                      return o.userName == userNameArray[i];
+                  });
+                }
+
+                this.setState({data:this.state.data});
             }
 
             // console.log(JSON.parse(res.text));
-        });
+        }.bind(this));
 
     },
 
@@ -262,8 +327,9 @@ module.exports = React.createClass({
                     <TableHeaderColumn dataField="moduleCode">Module Code</TableHeaderColumn>
                     <TableHeaderColumn dataField="moduleName">Module Name</TableHeaderColumn>
                 </BootstrapTable>
-                <Button bsStyle="success" onClick={this.accept}>Accept</Button>
-                <Button bsStyle="danger" onClick={this.decline}>Decline</Button>
+                <Button bsStyle="success" onClick={this.accept}  >Accept</Button>
+                <Button bsStyle="danger" onClick={this.decline}   >Decline</Button>
+
             </div>
         );
 

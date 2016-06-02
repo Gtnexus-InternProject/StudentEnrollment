@@ -1,18 +1,21 @@
 var React = require('react'),
     ReactDOMServer = require('react-dom/server');
-import request from 'superagent'
+import request from 'superagent';
+
 import {
     Modal, Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Col, Image
-}
-from 'react-bootstrap';
+}from 'react-bootstrap';
 
 import {
     Router, Route, Link, browserHistory
-}
-from 'react-router';
+}from 'react-router';
 //import Img from './profilePicture.react';
+import ErrorHandling from './Utils/ErrorHandling';
 
-const title = ( < span > Panel title < /span>
+
+
+const title = (
+    <span>Panel title</span>
 
 );
 
@@ -25,8 +28,10 @@ var changeCounter=0;
 module.exports = React.createClass({
 
 
+
     getInitialState() {
         changeCounter=0;
+
             return {
                 userName: '',
                 password: '',
@@ -70,17 +75,24 @@ module.exports = React.createClass({
 
         },
 
+
         startTimer() {
             var myVar = setInterval(function () {
                 tick++;
                 //console.log("x" + tick);
+
                 if (tick - previousTime >= 2) {
+
                     clearTimeout(myVar);
                     boolGaurd = true;
                     request.get('http://localhost:3000/users/student/' + this.state.userName.trim() + '/validate')
                         .set('Accept', 'application/json')
                         .end(function (err, res) {
-                            if (err) {} else {
+                            if (err) {
+
+                              ErrorHandling.tokenErrorHandling(err.response);
+
+                            } else {
                                 if (res.body.message == "invalid") {
                                     alert("User Name already taken");
                                 }
@@ -103,15 +115,18 @@ module.exports = React.createClass({
         },
         handleChangePassword: function (event) {
             //if(this.state.password.trim().length>1){
+
             this.setState({
                 password: event.target.value
             });
+
             //}else {
 
             //
             //}
         },
         handleChangeEmail: function (event) {
+
             this.setState({
                 email: event.target.value
             });
@@ -169,6 +184,7 @@ module.exports = React.createClass({
             this.setState({
                 alStream: event.target.value
             });
+
         },
 
         handleSubmit(data) {
@@ -187,16 +203,20 @@ module.exports = React.createClass({
                 contactNumber: this.state.telephone.trim(),
                 zScore: this.state.zScore.trim(),
                 imgURL: this.state.imgURL
+
             };
             //alert(JSON.stringify(formR));/
             request.post('http://localhost:3000/users/student')
                 .set('Accept', 'application/json')
                 .set('Content-Type', 'application/json')
                 .send(formR)
+
                 //.withCredentials()
                 .end(function (err, res) {
                     if (err || !res.ok) {
                         console.log('Oh no! error');
+                        ErrorHandling.tokenErrorHandling(err.response);
+
                     } else {
                         browserHistory.push('/login');
                     }
@@ -206,6 +226,7 @@ module.exports = React.createClass({
         },
 
         render() {
+
 
             return ( < div >
                     < Col mdOffset = {
@@ -336,7 +357,7 @@ module.exports = React.createClass({
             onChange = {
                 this.handleChangeTelephone
             }
-            /> < /FormGroup > < /Col> 
+            /> < /FormGroup > < /Col>
 
             < Image src = {
                 this.state.imgURL
@@ -357,7 +378,7 @@ module.exports = React.createClass({
             ref = "hiddenImg" / >
 
 
-                < /div> 
+                < /div>
 
             < Button bsStyle = "danger"
             type = "button" >
@@ -370,7 +391,7 @@ module.exports = React.createClass({
             < /Form> < /Panel > < /Col>
 
 
-            < /div>                   
+            < /div>
         )
 }
-})
+});

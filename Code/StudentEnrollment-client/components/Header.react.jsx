@@ -9,6 +9,8 @@ module.exports = React.createClass({
 
     logout(event) {
       localStorage.removeItem('token' );
+      localStorage.removeItem('type' );
+      localStorage.removeItem('user' );
     },
     render() {
         return (

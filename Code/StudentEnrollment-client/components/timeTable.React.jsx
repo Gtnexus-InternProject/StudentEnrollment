@@ -9,9 +9,11 @@ var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Col,Table} from 'react-bootstrap';
 import {Router, Route, Link, browserHistory} from 'react-router';
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table';
+import ErrorHandling from './Utils/ErrorHandling';
+
 module.exports = React.createClass({
 
-        getInitialState: function() {
+        getInitialState: function () {
             // var data = [];
 
             return {
@@ -29,15 +31,16 @@ module.exports = React.createClass({
 
 
             request
-                .get('http://localhost:3000/users/student/'+this.props.userName + '/subjects/timeTable')
+                .get('http://localhost:3000/users/student/' + this.props.userName + '/subjects/timeTable1')
                 .set('Accept', 'application/json')
                 .set('x-access-token', this.props.token)
                 .end(function (err, res) {
-                    if(err){
+                    if (err) {
                         console.log(err);
+                        ErrorHandling.tokenErrorHandling(err.response);
                     }
-                    else{
-                        if(res == null ){
+                    else {
+                        if (res == null) {
                             console.log("Empty");
                             return;
                         }
@@ -45,22 +48,20 @@ module.exports = React.createClass({
                         var jsonObj = res.body;
 
                         var data = [];
-                        for (var i = 0; i < jsonObj.length; i++) {
-                            // console.log("data: " + jsonObj[i] );
-                            // jsonObj[i].subjects.forEach(function(entry) {
-                            //     console.log(entry);
-                            // });
 
+                        var semesters = ["Semester 1", "Semester 2","Semester 3","Semester 4","Semester 5","Semester 6",  "Semester 7", "Semester 8",]
+                        var days =[ "Sunday", "Monday", "Tuesday", "Wednesday","Thursday","Friday", "Saturday",]
+                        var timeSlots = [  "08.15-10.15", "10.30-12.30","13.15-15.15","15.30-17.30"]
+
+                        for (var i = 0; i < jsonObj.length; i++) {
                             var row = {
                                 moduleCode: jsonObj[i].moduleCode,
                                 moduleName: jsonObj[i].moduleName,
-                                semester: jsonObj[i].semester,
-                                day: jsonObj[i].day,
-                                timeSlot: jsonObj[i].timeSlot,
-
+                                semester: semesters[jsonObj[i].semester] ,
+                                day:days[jsonObj[i].day] ,
+                                timeSlot: timeSlots[jsonObj[i].timeSlot],
                             };
-
-                            data.push(row);
+                                data.push(row);
                         }
 
                         // console.log("data: " + data);
@@ -69,24 +70,18 @@ module.exports = React.createClass({
                         callback(data);
 
                     };
-
-
                 });
-
-
 
 
         },
         componentWillMount(){
 
-            this.fetchData(function(data) {
+            this.fetchData(function (data) {
                 this.setState({data: data});
                 // console.log(dataSe);
             }.bind(this));
 
         },
-
-
 
 
         render()        {
@@ -105,4 +100,3 @@ module.exports = React.createClass({
         }
     }
 );
-

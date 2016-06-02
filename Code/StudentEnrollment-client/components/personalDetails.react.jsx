@@ -27,18 +27,18 @@ module.exports = React.createClass({
 
     },
 
-    componentWillReceiveProps: function(newProps) {
-      console.log("Check Data (componentDidMount) " + JSON.stringify(this.props.data));
-      // this.state.firstName = this.props.data.firstName,
-      // this.state.lastName = this.props.data.lastName,
-      // this.state.email = this.props.data.email,
-      // this.state.userName = this.props.data.userName,
-      // //password: ,
-      // this.state.adddress = this.props.data.adddress,
-      // this.state.gender = this.props.data.gender,
-      // this.state.alStream = this.props.data.alStream,
-      // this.state.contactNumber = this.props.data.contactNumber,
-      // this.state.zScore = this.props.data.zScore
+    componentWillReceiveProps: function (newProps) {
+        console.log("Check Data (componentDidMount) " + JSON.stringify(this.props.data));
+        // this.state.firstName = this.props.data.firstName,
+        // this.state.lastName = this.props.data.lastName,
+        // this.state.email = this.props.data.email,
+        // this.state.userName = this.props.data.userName,
+        // //password: ,
+        // this.state.adddress = this.props.data.adddress,
+        // this.state.gender = this.props.data.gender,
+        // this.state.alStream = this.props.data.alStream,
+        // this.state.contactNumber = this.props.data.contactNumber,
+        // this.state.zScore = this.props.data.zScore
         if (newProps.data != this.state.data) {
             this.setState({
 
@@ -50,7 +50,8 @@ module.exports = React.createClass({
                 alStream: newProps.data.alStream,
                 contactNumber: newProps.data.contactNumber,
                 gender: newProps.data.gender,
-                dateOfBirth: newProps.data.dateOfBirth
+                userName: newProps.data.userName,
+                //dateOfBirth: newProps.data.dateOfBirth
             });
 
         }
@@ -92,6 +93,7 @@ module.exports = React.createClass({
     render()
     {
 
+
         // console.log("Check Data (render) " + JSON.stringify(this.props.data));
         return (<div>
 
@@ -113,12 +115,6 @@ module.exports = React.createClass({
                             <h5><strong>UserName </strong>: {this.state.userName}</h5>
                         </FormGroup>
                     </Col>
-                    <Col md={6}>
-                        <FormGroup>
-                            <h5><strong>Date of Birth
-                            </strong>: {this.state.dateOfBirth}</h5>
-
-                        </FormGroup></Col>
                     <Col md={6}>
                         <FormGroup>
                             <h5><strong>Gender </strong>: {this.state.gender}</h5>
