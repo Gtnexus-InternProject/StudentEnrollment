@@ -90,7 +90,44 @@ module.exports = React.createClass({
 
                         // console.log("data: " + JSON.stringify(data) );
 
-                        callback(data);
+                        request.get('http://localhost:3000/users/coordinator/' + localStorage.getItem('user') + '/subjects'). //
+                        set('Accept', 'application/json'). //
+                        accept('application/json'). //
+                        set('x-access-token', this.state.token). //
+                        use(nocache). // Prevents caching of *only* this request
+                        end(function(err, res) {
+                            if (!err) {
+
+                                if (res == null) {
+                                    console.log("Empty");
+                                    return;
+                                }
+                                // console.log("Modules check: " + JSON.parse(res) );
+                                // console.log("Modules check: " + JSON.parse(res.body) );
+                                var subjectsCoordinator = res.body.subjects;
+                                // console.log("Modules check: " + subjectsCoordinator );
+                                var subjectAssociative = [];
+
+                                for (var i = 0; i < subjectsCoordinator.length; i++) {
+                                    // if (associateArray[jsonObj[i].moduleCode]) {
+                                    subjectAssociative[subjectsCoordinator[i]] = subjectsCoordinator[i];
+                                    // }
+                                }
+
+
+                                var remove = removeArray(data, function(o) {
+                                    return subjectAssociative[o.moduleCode] ? false : true;
+                                });
+
+                                callback(data);
+
+                            } else {
+                                console.log(err);
+                                ErrorHandling.tokenErrorHandling(err.response);
+                            }
+
+                            // console.log(JSON.parse(res.text));
+                        });
 
                     } else {
                         console.log(err);
@@ -98,7 +135,7 @@ module.exports = React.createClass({
                     }
 
                     // console.log(JSON.parse(res.text));
-                });
+                }.bind(this));
 
             } else {
                 console.log(err);
