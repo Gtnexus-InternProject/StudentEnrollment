@@ -66,7 +66,7 @@ module.exports = React.createClass({
 
         // var me = this;
 
-        request.get('http://localhost:3000/subjects/asa')//
+        request.get('http://localhost:3000/subjects/all/asa')//
         .set('Accept', 'application/json').accept('application/json') //
         .set('x-access-token', this.state.token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {

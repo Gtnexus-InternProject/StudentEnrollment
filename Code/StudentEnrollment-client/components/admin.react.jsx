@@ -6,8 +6,7 @@ import CoordinatorTabel from './tabel/AdminCoordinator';
 
 import {Panel, Col} from 'react-bootstrap';
 
-import SubjectEnrollment from './tabel/subjectEnrollment';
-import SubjectApprove from './tabel/CoordinatorSubjectApprove';
+
 
 import 'purecss/build/pure.css';
 // var React = require('react'),
@@ -29,8 +28,6 @@ module.exports = React.createClass({
 
                 <Panel header={title} bsStyle="primary">
 
-                    <SubjectApprove/>
-                    <SubjectEnrollment/>
 
                     <CoordinatorTabel/>
                     <SubjectTabel/>

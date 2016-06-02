@@ -18,58 +18,110 @@ import SubjectApprove from './tabel/CoordinatorSubjectApprove';
 
 
 import CoordinatorSubjectList from './coordinatorSubjectList.react'
-
+var count =[];
 module.exports = React.createClass({
 
         getInitialState: function () {
             return {
                 moduleCode: '',
                 moduleName: '',
-                data: []
+                data: [],
+                count: []
             };
         },
 
         fetchData(callback){
+
+
             request
-                .get('http://localhost:3000/users/coordinator/'+this.props.userName+'/subjects')
+                .get('http://localhost:3000/users/coordinator/' + this.props.userName + '/subjects/timeTable1')
+                //get('http://localhost:3000/subjects/moduleDetails/')
                 .set('Accept', 'application/json')
-                .set('x-access-token',this.props.token)
+                .set('x-access-token', this.props.token)
                 .end(function (err, res) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    else {
+                    if (!err) {
                         if (res == null) {
                             console.log("Empty");
                             return;
                         }
                         // console.log(res.body);
+                        var jsonObj = res.body;
+                        console.log(jsonObj);
+                        var csv1 = [];
+                        for (var i = 0; i < jsonObj.length; i++) {
+                            csv1.push(jsonObj[i].moduleCode);
+                        }
+                        console.log(csv1);
 
-                       var jsonObjSub = res.body.subjects;
-                        console.log(jsonObjSub);
-                        callback(jsonObjSub);
-                    } ;
-                });
 
-        },
+                        request
+                            .get('http://localhost:3000/subjects/moduleDetails/' + csv1)
+                            .set('Accept', 'application/json')
+                            .set('x-access-token', this.props.token)
 
-        onEnter(){
+                            .end(function (err, res) {
+                                if (err) {
+                                    console.log(err);
+                                    ErrorHandling.tokenErrorHandling(err.response);
+                                }
+                                else {
+                                    if (res == null) {
+                                        console.log("Empty");
+                                        return;
+                                    }
+                                    // console.log(res.body);
+                                    var jsonObj1 = res.body;
+                                    console.log(jsonObj1);
 
-            this.fetchData(function (dataSe) {
-                this.setState({data: dataSe});
-                console.log(this.state.data);
-            }.bind(this));
 
+                                    var data = [];
+
+                                    for (var i = 0; i < jsonObj1.modules.length; i++) {
+                                        if (jsonObj1.modules[i].status == 1) {
+                                            var row = {
+                                                count: jsonObj1.modules[i].count,
+                                                moduleCode: jsonObj1.modules[i].moduleCode,
+                                                moduleName: jsonObj1.modules[i].moduleName,
+                                                semester: jsonObj1.modules[i].semester,
+                                                day: jsonObj1.modules[i].day,
+                                                timeSlot: jsonObj1.modules[i].timeSlot,
+                                                description: jsonObj1.modules[i].description,
+
+                                            };
+                                            data.push(row);
+                                            count.push(jsonObj1.modules[i].count)
+                                        }
+
+                                    }
+
+                                    console.log(data);
+
+                                    callback(data);
+
+
+                                }
+                            }
+                        )
+
+
+                    } else {
+                        console.log(err);
+                        ErrorHandling.tokenErrorHandling(err.response);
+                    }
+                    ;
+                }.bind(this));
         },
 
         componentWillMount() {
 
             this.fetchData(function (dataSe) {
-                this.setState({data: dataSe});
+                this.setState({data: dataSe,
+                count:count});
                 console.log(this.state.data);
             }.bind(this));
 
         },
+
 
 
         render(){
@@ -83,13 +135,13 @@ module.exports = React.createClass({
                                     <h4>Overview</h4>
 
                                     <CoordinatorOverview userName={this.props.userName}
-                                                            token={this.props.token}/>
+                                                            token={this.props.token} data={this.state.data} count={this.state.count} />
 
                                 </Tab>
                                 <Tab eventKey={2} title="Students" onEnter={this.onEnter}>
                                     <h4>Students list </h4>
                                     <CoordinatorSubjectList userName={this.props.userName}
-                                                            token={this.props.token} data={this.state.data}/>
+                                                            token={this.props.token} data={this.state.data} count={this.state.count} />
                                 </Tab>
 
                                 <Tab eventKey={3} title="Student Request">
