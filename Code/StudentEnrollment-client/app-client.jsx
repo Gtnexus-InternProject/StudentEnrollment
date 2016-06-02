@@ -84,7 +84,7 @@ var SessionExpired = React.createClass({
 
 var validateLogin = function(nextState, replace) {
 
-    console.log(JSON.stringify(nextState));
+    // console.log(JSON.stringify(nextState));
     if (!localStorage.getItem('token') || localStorage.getItem('token') == "") {
         // browserHistory.push('/login');
         if (nextState.routes[0].path === "/login") {
