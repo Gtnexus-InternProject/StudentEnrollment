@@ -1,6 +1,6 @@
 import React from 'react';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import {Button} from 'react-bootstrap';
+import {Button, Form} from 'react-bootstrap';
 import './react-bootstrap-table.min.css';
 
 var findIndex = require('lodash/findIndex');
@@ -185,6 +185,12 @@ module.exports = React.createClass({
     },
 
     accept(event) {
+      // alert("event" + event);
+      //       event.preventDefault();
+      // alert("event" + JSON.stringify(event));
+
+      // console.log("event" + event);
+      // console.log("event" + JSON.stringify(event));
         // console.log("Selected data" + JSON.stringify(this.selectedRows));
 
         var userNameArray = [],
@@ -223,10 +229,19 @@ module.exports = React.createClass({
               ErrorHandling.tokenErrorHandling(err.response);
             } else {
                 console.log(err);
+                for (var i = 0; i < userNameArray.length; i++) {
+                  var remove = removeArray(this.state.data, function(o) {
+                      return o.userName == userNameArray[i];
+                  });
+                }
+
+                this.setState({data:this.state.data});
+
+
             }
 
             // console.log(JSON.parse(res.text));
-        });
+        }.bind(this));
         // send.moduleCode = moduleCodeArray;
         // console.log("Selected data 4" + JSON.stringify(send));
 
@@ -273,10 +288,17 @@ module.exports = React.createClass({
               ErrorHandling.tokenErrorHandling(err.response);
             } else {
                 console.log(err);
+                for (var i = 0; i < userNameArray.length; i++) {
+                  var remove = removeArray(this.state.data, function(o) {
+                      return o.userName == userNameArray[i];
+                  });
+                }
+
+                this.setState({data:this.state.data});
             }
 
             // console.log(JSON.parse(res.text));
-        });
+        }.bind(this));
 
     },
 
@@ -305,8 +327,9 @@ module.exports = React.createClass({
                     <TableHeaderColumn dataField="moduleCode">Module Code</TableHeaderColumn>
                     <TableHeaderColumn dataField="moduleName">Module Name</TableHeaderColumn>
                 </BootstrapTable>
-                <Button bsStyle="success" onClick={this.accept}>Accept</Button>
-                <Button bsStyle="danger" onClick={this.decline}>Decline</Button>
+                <Button bsStyle="success" onClick={this.accept}  >Accept</Button>
+                <Button bsStyle="danger" onClick={this.decline}   >Decline</Button>
+
             </div>
         );
 

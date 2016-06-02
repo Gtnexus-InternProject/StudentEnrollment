@@ -154,7 +154,7 @@ module.exports = React.createClass({
                     ErrorHandling.tokenErrorHandling(err.response);
                 } else {
                     console.log('yay got ' + JSON.stringify(formAddSub));
-                    this.close;
+                    this.close();
 
 
                 }

@@ -246,7 +246,7 @@ module.exports = React.createClass({
 
     addStudent(event){
         event.preventDefault();
-
+        // var cnt=this.state.count;
         for (var i = 0; i < addstd.length; i++) {
 
             request
@@ -261,7 +261,18 @@ module.exports = React.createClass({
                         ErrorHandling.tokenErrorHandling(err.response);
                     } else {
                         console.log('ok');
+                        var cnt=this.state.count;
+                        cnt++;
 
+                        // if(i === addstd.length -1 ){
+
+
+                          this.setState({
+                              count:cnt
+                          });
+                          this.props.updateCount(this.state.count, this.props.i);
+
+                        // }
 
                     }
                 }.bind(this));
@@ -270,10 +281,11 @@ module.exports = React.createClass({
         var tablelData = this.state.data.concat(addstd2);
         var comparry = this.state.compArry.concat(addstd);
         this.setState({
-
+            
             data: tablelData,
             compArry: comparry
         });
+        this.props.updateCount(this.state.count, this.props.i);
         console.log('rfvrvrvvrvr  ' + this.state.compArry);
         addstd = [];
         addstd2 = [];
