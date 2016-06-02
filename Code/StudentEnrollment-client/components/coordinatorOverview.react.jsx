@@ -21,21 +21,6 @@ var previousTime = 0;
 module.exports = React.createClass({
     displayName: 'App',
 
-    style: {
-        width: '30%',
-        height: 'auto',
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        marginTop: '-130px',
-        marginLeft: '-15%',
-        backgroundColor: '#fff',
-        borderRadius: ' 2px',
-        zIndex: '100',
-        padding: '10px',
-        boxShadow: '0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28)'
-    },
-
 
     getInitialState: function () {
         // var data = [];
