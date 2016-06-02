@@ -1,7 +1,3 @@
-/**
- * Created by hrajapaksha on 5/3/2016.
- */
-
 var React = require('react'),
     ReactDOMServer = require('react-dom/server');
 
