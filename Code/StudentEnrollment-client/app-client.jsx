@@ -13,7 +13,7 @@ import ImageUpload from './components/profilePicture.react'
 
 import Tab from './components/tabs';
 
-import Admin from './components/admin.react';
+import Admin from './components/admin_main';
 import Coordinator from './components/homeCoordinator.react';
 import {Router, Route, Link, browserHistory} from 'react-router';
 
