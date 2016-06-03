@@ -99,9 +99,12 @@ module.exports = React.createClass({
 
         return (
             <div>
+                 <div>
                 <Col md={12}>
                     {  <Header userName={this.state.userName} /> || this.props.children}
                 </Col>
+                </div>
+            <div style={{paddingTop: 70}}>
                 <Col md={3}>
                     {  <Profile data={this.state.data} updateData={this.updateData} userName={this.state.userName} token={this.state.token }/> || this.props.children}
                 </Col>
@@ -109,6 +112,7 @@ module.exports = React.createClass({
                     { <Tab data={this.state.data} updateData={this.updateData} userName={this.state.userName} token={this.state.token }/> || this.props.children}
                 </Col>
             </div>
+                 </div>
 
         );
     }

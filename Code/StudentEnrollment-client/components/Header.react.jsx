@@ -34,7 +34,7 @@ module.exports = React.createClass({
             </Navbar.Link>
         < /Navbar.Text>
         **/
-        <Navbar inverse>
+        <Navbar className="inverse inverse-navbar-form navbar-fixed-top">
            <Navbar.Header>
               <Navbar.Brand>
                 <Navbar.Link href="#">Student Enrollment System</Navbar.Link>
