@@ -44,9 +44,9 @@ module.exports = React.createClass({
                             console.log("Empty");
                             return;
                         }
-                        // console.log(res.body);
+                         console.log("timetable"+ res.body);
                         var jsonObj = res.body;
-                        console.log(jsonObj);
+                        //console.log(jsonObj);
                         var csv1 = [];
                         for (var i = 0; i < jsonObj.length; i++) {
                             csv1.push(jsonObj[i].moduleCode);
@@ -69,7 +69,7 @@ module.exports = React.createClass({
                                         console.log("Empty");
                                         return;
                                     }
-                                    // console.log(res.body);
+                                     console.log( "jopbject "+ res.body);
                                     var jsonObj1 = res.body;
                                     console.log(jsonObj1);
 
