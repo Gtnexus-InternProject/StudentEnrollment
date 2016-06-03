@@ -385,7 +385,7 @@ router.param('userName', function(req, res, next, userName) {
             //if it is found we continue on
         } else {
 
-            console.log(user + 'abc');
+            // console.log(user + 'abc');
             //uncomment this next line if you want to see every JSON document response for every GET/PUT/DELETE call
             //console.log(blob);
             // once validation is done save the new item in the req
@@ -658,7 +658,7 @@ router.route('/:type/:userName/per')
                 });
             }
         });
-        
+
 });
 
 
