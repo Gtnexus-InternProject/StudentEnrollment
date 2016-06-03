@@ -44,8 +44,12 @@ module.exports = React.createClass({
                             console.log("Empty");
                             return;
                         }
+                        console.log("kskhdbcfjshfb "+JSON.stringify(res.body) );
+                        console.log(' res.body.subject '+ JSON.stringify(res.body.subject))
+                        console.log(' res.body.flname '+  JSON.stringify(res.body.flname))
                         // console.log(res.body);
-                        var jsonObj = res.body;
+                        var jsonObj = res.body.subject;
+                        var coordi=res.body.flname;
 
                         var data = [];
 
@@ -54,9 +58,11 @@ module.exports = React.createClass({
                         var timeSlots = [  "08.15-10.15", "10.30-12.30","13.15-15.15","15.30-17.30"]
 
                         for (var i = 0; i < jsonObj.length; i++) {
+                             var coor=coordi[i].firstName + " " + coordi[i].lastName;
                             var row = {
                                 moduleCode: jsonObj[i].moduleCode,
                                 moduleName: jsonObj[i].moduleName,
+                                coordinator:coor,
                                 semester: semesters[jsonObj[i].semester] ,
                                 day:days[jsonObj[i].day] ,
                                 timeSlot: timeSlots[jsonObj[i].timeSlot],
@@ -70,7 +76,7 @@ module.exports = React.createClass({
                         callback(data);
 
                     };
-                });
+                }.bind(this));
 
 
         },
@@ -91,6 +97,7 @@ module.exports = React.createClass({
                     <BootstrapTable data={this.state.data} striped={true} hover={true} condensed={true}>
                         <TableHeaderColumn dataField="moduleCode" isKey={true}>Module Code</TableHeaderColumn>
                         <TableHeaderColumn dataField="moduleName">Module Name</TableHeaderColumn>
+                        <TableHeaderColumn dataField="coordinator">Coordinator</TableHeaderColumn>
                         <TableHeaderColumn dataField="semester">Semester</TableHeaderColumn>
                         <TableHeaderColumn dataField="day">Day</TableHeaderColumn>
                         <TableHeaderColumn dataField="timeSlot">Time Slot</TableHeaderColumn>

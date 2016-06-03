@@ -199,7 +199,11 @@ module.exports = React.createClass({
 
                 handleSubmit(data) {
                     //alert('ggg');
+                    this.closeEditPic();
+
+
                     data.preventDefault();
+
 
                     var formR = {
                         userName: this.state.userName.trim() || "",
@@ -211,7 +215,7 @@ module.exports = React.createClass({
                         alStream: this.state.alStream.trim() || "",
                         adddress: this.state.adddress.trim() || "",
                         //zScore: this.state.zScore.trim(),
-                        contactNumber: this.state.contactNumber.trim() || "",
+                        contactNumber: this.state.contactNumber || 0,
                         profileImage: this.state.profileImage
 
                     };
@@ -226,6 +230,7 @@ module.exports = React.createClass({
                             } else {
                                 console.log('yay got ' + JSON.stringify(formR));
                                 this.props.updateData(formR);
+
                             }
                         }.bind(this));
 
