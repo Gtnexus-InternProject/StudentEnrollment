@@ -760,7 +760,7 @@ router.route('/:type/:userName/subjects')
 
 router.route('/:type/:userName/subjects/timeTable1')
     .get(function (req, res) {
-        var flname=[] ;
+        var flname = [];
         console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         if (req.type == "admin") {
             return res.status(404).send({
@@ -782,8 +782,8 @@ router.route('/:type/:userName/subjects/timeTable1')
                     ary.push(element.moduleCode)
 
                     mongoose.model("coordinator").find({
-                        subjects: 
-                         element.moduleCode                
+                        subjects:
+                        element.moduleCode
                     }, {
                             'firstName': 1,
                             'lastName': 1
@@ -793,7 +793,7 @@ router.route('/:type/:userName/subjects/timeTable1')
                                 console.log('GET Error: There was a problem retrieving: ' + err);
                             }
                             else {
-                             flname.push(FLName[0]);                           
+                                flname.push(FLName[0]);
                             }
 
                         });
@@ -835,8 +835,10 @@ router.route('/:type/:userName/subjects/timeTable1')
                     if (err || subject == null) {
                         console.log('GET Error: There was a problem retrieving: ' + err);
                     } else {
-                        var FLN={subject:subject,
-                            flname:flname};
+                        var FLN = {
+                            subject: subject,
+                            flname: flname
+                        };
                         console.log('GET Retrieving Subjects: ' + subject);
                         res.format({
                             json: function () {

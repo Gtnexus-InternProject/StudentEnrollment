@@ -58,7 +58,9 @@ module.exports = React.createClass({
                         var timeSlots = [  "08.15-10.15", "10.30-12.30","13.15-15.15","15.30-17.30"]
 
                         for (var i = 0; i < jsonObj.length; i++) {
+                            console.log(i)
                              var coor=coordi[i].firstName + " " + coordi[i].lastName;
+
                             var row = {
                                 moduleCode: jsonObj[i].moduleCode,
                                 moduleName: jsonObj[i].moduleName,
