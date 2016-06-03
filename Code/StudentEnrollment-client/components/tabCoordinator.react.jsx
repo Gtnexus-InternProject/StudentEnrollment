@@ -45,7 +45,7 @@ module.exports = React.createClass({
                             return;
                         }
                          console.log("timetable"+ res.body);
-                        var jsonObj = res.body;
+                        var jsonObj = res.body.subject;
                         //console.log(jsonObj);
                         var csv1 = [];
                         for (var i = 0; i < jsonObj.length; i++) {
