@@ -31,20 +31,43 @@ const title3 = (
 );
 
 module.exports = React.createClass({
+//    componentWillMount(){
+//
+//alert("mount");
+//
+//    },
             getInitialState() {
 
                     // console.log("Check Data " + JSON.stringify(this.props.data));
                     return {
-                        coordinatorNotification: 0,
-                        subjectTabelNotification: 0,
-                        studentTabelNotification: 0
+                        coordinatorNotification: 1,
+                        subjectTabelNotification: 3,
+                        studentTabelNotification: 20
                     }
 
                     },
+    
+    
+    
+    logout(event) {
+      localStorage.removeItem('token' );
+      localStorage.removeItem('type' );
+      localStorage.removeItem('user' );
+    },
     getCoordinatorValue(){
         
     },
        getSubjectValue(){
+            console.log("xxx");
+//                               request.get('http://localhost:3000/subjects/all/')
+//                        .set('Accept', 'application/json')
+//                        .end(function (err, res) {
+//                            if (err) {
+//                             // ErrorHandling.tokenErrorHandling(err.response);
+//                            } else {
+//                                console.log(res.body);
+//                            }
+//                        });
         
     },
        getStudentValue(){
@@ -66,6 +89,9 @@ module.exports = React.createClass({
                   <NavItem eventKey={1} href="#CoordinatorTabel" >{title1} <Badge>{this.state.coordinatorNotification}</Badge></NavItem>
                   <NavItem eventKey={2} href="#SubjectTabel">{title2} <Badge>{this.state.subjectTabelNotification}</Badge></NavItem>
                   <NavItem eventKey={2} href="#StudentTabel">{title3} <Badge>{this.state.studentTabelNotification}</Badge></NavItem>
+             <Nav pullRight>
+                  <NavItem onClick={this.logout} href="/login">Logout</NavItem>
+                </Nav>
                   
                 </Nav>
             </Navbar>
