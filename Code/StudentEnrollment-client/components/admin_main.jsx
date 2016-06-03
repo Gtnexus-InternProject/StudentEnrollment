@@ -121,7 +121,15 @@ module.exports = React.createClass({
                 }.bind(this));
         },
     
+        updateData(data){
+            this.getCoordinatorValue(function (len) {
+                this.state.coordinatorNotification = parseInt(this.state.coordinatorNotification) + parseInt(data);
+                this.setState({
+                    coordinatorNotification: this.state.coordinatorNotification
+                });
 
+            }.bind(this));
+        },
 
         render() {
 
@@ -173,7 +181,7 @@ module.exports = React.createClass({
                 }
             id = "CoordinatorTabel"
             bsStyle = "primary" >
-                < CoordinatorTabel / >
+                < CoordinatorTabel updateData={this.updateData} / >
                 < /Panel>
 
             < Panel header = {

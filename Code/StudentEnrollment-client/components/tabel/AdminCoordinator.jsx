@@ -141,9 +141,10 @@ module.exports = React.createClass({
                     ErrorHandling.tokenErrorHandling(err.response);
                 } else {
                     console.log('yay got ' + JSON.stringify(formAddSub));
+                    this.props.updateData(1);
 
                 }
-            })
+            }.bind(this));
     },
 
 
@@ -250,8 +251,9 @@ module.exports = React.createClass({
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));
+                 this.props.updateData(-1);
             }
-          });
+          }.bind(this));
     },
 
     render() {

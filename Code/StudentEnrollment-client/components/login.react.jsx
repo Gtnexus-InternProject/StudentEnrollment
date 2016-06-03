@@ -13,6 +13,11 @@ import ErrorHandling from './Utils/ErrorHandling';
 const title = (
     <h2>Login</h2>
 );
+
+var bgUrl="http://localhost:5000/img/BG.JPG";
+var divStyle = {
+  backgroundImage: 'url(' + bgUrl + ')'
+};
 module.exports = React.createClass({
 
     getInitialState() {
@@ -81,16 +86,16 @@ module.exports = React.createClass({
 
 
       return (
-          <div>
-
+          <div style={divStyle}>
+              <div >
               <Grid>
                   <Row className="show-grid">
                       <Col xs={6} md={3}></Col>
                       <Col xs={6} md={6}>
-                          <Panel header={title} bsStyle="info">
+                          <Panel header={title} bsStyle="info"  style={{opacity:0.5}}>
 
-                              <Form horizontal onSubmit={this.handleSubmit}>
-                                  <FormGroup >
+                              <Form horizontal onSubmit={this.handleSubmit}  >
+                                  <FormGroup style={{opacity:1}} >
                                       <Col componentClass={ControlLabel} sm={2}>
                                           Username
                                       </Col>
@@ -106,7 +111,7 @@ module.exports = React.createClass({
                                       </Col>
                                   </FormGroup>
 
-                                  <FormGroup >
+                                  <FormGroup style={{opacity:1}} >
                                       <Col componentClass={ControlLabel} sm={2}>
                                           Password
                                       </Col>
@@ -119,7 +124,7 @@ module.exports = React.createClass({
                                       </Col>
                                   </FormGroup>
 
-                                  <FormGroup>
+                                  <FormGroup style={{opacity:1}}>
                                       <Col sm={8}>
                                           <Checkbox>Remember me</Checkbox>
                                       </Col>
@@ -140,7 +145,7 @@ module.exports = React.createClass({
                       </Col>
                       <Col xs={6} md={3}></Col>
                   </Row></Grid>
-
+</div>
 
           </div>
       )
