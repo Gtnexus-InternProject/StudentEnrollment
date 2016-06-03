@@ -767,13 +767,14 @@ router.route('/:type/:userName/subjects/timeTable1')
                 message: 'Wrong URL'
             });
         }
-        // console.log(2);
+    
         mongoose.model(req.type).find({
             userName: req.userName
         }, function(err, userT) {
 
 
             console.log(userT[0].subjects.length);
+                console.log(2);
             var ary = [];
 
             userT[0].subjects.forEach(function(element) {
@@ -788,7 +789,7 @@ router.route('/:type/:userName/subjects/timeTable1')
             }, this);
 
 
-            // console.log("dddd"+ ary);
+            console.log("dddd"+ ary);
 
             console.log('GET Retrieving Subject ID: ' + ary);
             mongoose.model("subject_model").find({
