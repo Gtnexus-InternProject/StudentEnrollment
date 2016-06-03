@@ -791,6 +791,7 @@ router.route('/:type/:userName/subjects/timeTable1')
                         }, function (err, FLName) {
                             if (err || FLName === null) {
                                 console.log('GET Error: There was a problem retrieving: ' + err);
+                                
                             }
                             else {
                                 flname.push(FLName[0]);
