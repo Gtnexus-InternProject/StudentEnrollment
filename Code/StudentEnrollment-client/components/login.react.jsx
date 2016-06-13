@@ -92,10 +92,10 @@ module.exports = React.createClass({
                   <Row className="show-grid">
                       <Col xs={6} md={3}></Col>
                       <Col xs={6} md={6}>
-                          <Panel header={title} bsStyle="info"  style={{opacity:0.5}}>
+                          <Panel header={title} bsStyle="info" >
 
                               <Form horizontal onSubmit={this.handleSubmit}  >
-                                  <FormGroup style={{opacity:1}} >
+                                  <FormGroup >
                                       <Col componentClass={ControlLabel} sm={2}>
                                           Username
                                       </Col>
@@ -111,7 +111,7 @@ module.exports = React.createClass({
                                       </Col>
                                   </FormGroup>
 
-                                  <FormGroup style={{opacity:1}} >
+                                  <FormGroup >
                                       <Col componentClass={ControlLabel} sm={2}>
                                           Password
                                       </Col>
@@ -124,7 +124,7 @@ module.exports = React.createClass({
                                       </Col>
                                   </FormGroup>
 
-                                  <FormGroup style={{opacity:1}}>
+                                  <FormGroup>
                                       <Col sm={8}>
                                           <Checkbox>Remember me</Checkbox>
                                       </Col>
