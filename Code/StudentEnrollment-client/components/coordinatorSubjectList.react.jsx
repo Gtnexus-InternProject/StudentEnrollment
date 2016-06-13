@@ -15,11 +15,15 @@ module.exports = React.createClass(
         getInitialState: function () {
             return {
 
-                data: []
+                data: [],
+                count:[]
             };
         },
         componentWillReceiveProps(newProps){
-            this.setState({data: newProps.data})
+            this.setState({
+                data: newProps.data,
+                count:newProps.count
+            })
 
         },
 
@@ -30,7 +34,7 @@ module.exports = React.createClass(
                     <Col md={3}>
                     </Col>
                     <Col md={9}>
-                        <Accordiona userName={this.props.userName} token={this.props.token} data={this.state.data}/>
+                        <Accordiona userName={this.props.userName} token={this.props.token} count={this.state.count} data={this.state.data}/>
                     </Col>
                 </div>
             )

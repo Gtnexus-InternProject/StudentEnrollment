@@ -14,12 +14,10 @@ import {Router, Route, Link, browserHistory} from 'react-router';
 
 module.exports = React.createClass({
     getInitialState() {
-        if(!this.props.params.token || this.props.params.token == null){
-            browserHistory.push('/login');
-        }
         return ({
-            userName: this.props.params.userName,
-            token: this.props.params.token
+            userName: localStorage.getItem('user' ),
+            token: localStorage.getItem('token' )
+
         });
     },
 
@@ -28,13 +26,16 @@ module.exports = React.createClass({
 
         return (
             <div>
+                <div>
                 <Col md={12}>
                     {  <Header userName={this.state.userName} /> || this.props.children}
                 </Col>
+                    </div>
+                <div style={{paddingTop: 70}}>
                 <Col md={12}>
                     { <TabCoord userName={this.state.userName} token={this.state.token}/> || this.props.children}
                 </Col>
-
+</div>
             </div>
 
         );

@@ -9,29 +9,18 @@ import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, 
 
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
 import './../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css'
+import ErrorHandling from './Utils/ErrorHandling';
 
 
 function enumFormatter(cell, row, enumObject) {
     return enumObject[cell];
 }
+var boolGaurd = true;
+var tick = 0;
+var previousTime = 0;
 
 module.exports = React.createClass({
     displayName: 'App',
-
-    style: {
-        width: '30%',
-        height: 'auto',
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        marginTop: '-130px',
-        marginLeft: '-15%',
-        backgroundColor: '#fff',
-        borderRadius: ' 2px',
-        zIndex: '100',
-        padding: '10px',
-        boxShadow: '0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28)'
-    },
 
 
     getInitialState: function () {
@@ -53,6 +42,12 @@ module.exports = React.createClass({
         };
     },
 
+    componentWillReceiveProps(newProps){
+        this.setState({data: newProps.data})
+
+    },
+
+
 
     close() {
         this.setState({showModal: false});
@@ -61,15 +56,45 @@ module.exports = React.createClass({
     open() {
         this.setState({showModal: true});
     },
+
+
+    startTimer() {
+        var myVar = setInterval(function () {
+            tick++;
+            //console.log("x" + tick);
+            if (tick - previousTime >= 3) {
+                clearTimeout(myVar);
+                boolGaurd = true;
+                request.get('http://localhost:3000/subjects/' + this.state.moduleCode.trim())
+                    .set('Accept', 'application/json')
+                    .set('x-access-token', this.props.token)
+                    .end(function (err, res) {
+                        if (err) {
+                        } else {
+                            if (res.body || res.body.moduleCode || res.body === null || res.body === 'null') {
+                                alert("Module Code is already taken");
+                            }
+                        }
+                    });
+            }
+        }.bind(this), 1000);
+    },
+
+
     handleChangeModuleCode: function (event) {
-        this.setState({moduleCode: event.target.value});
+        //console.log("er");
+        previousTime = tick;
+        this.setState({
+            moduleCode: event.target.value
+        });
+        if (boolGaurd) {
+            boolGaurd = false;
+            this.startTimer();
+        }
     },
     handleChangeModuleName: function (event) {
-        //if(this.state.password.trim().length>1){
         this.setState({moduleName: event.target.value});
     },
-
-
     handleChangeCredits: function (event) {
         this.setState({credits: event.target.value});
     },
@@ -126,120 +151,31 @@ module.exports = React.createClass({
             .end(function (err, res) {
                 if (err || !res.ok) {
                     console.log('Oh no! error');
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
                     console.log('yay got ' + JSON.stringify(formAddSub));
-                    //console.log('yay got ' + JSON.stringify(formAddSub));
+                    this.close();
+
+
                 }
 
-            });
+            }.bind(this));
 
-        alert('ggg coordinator');
-        //dataX.preventDefault();
 
-        console.log(formAddSub.moduleCode);
         request.put('http://localhost:3000/users/coordinator/' + this.props.userName + '/subjectAdd')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set('x-access-token', this.props.token)
-            .send( formAddSub)
+            .send(formAddSub)
             .end(function (err, res) {
                 if (err || !res.ok) {
                     console.log('Oh no! error to add it coordinator');
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
                     console.log('yay got ');
                 }
             })
     },
-    fetchData(callback){
-
-
-        request
-            .get('http://localhost:3000/users/coordinator/' + this.props.userName + '/subjects/timeTable1')
-            //get('http://localhost:3000/subjects/moduleDetails/')
-            .set('Accept', 'application/json')
-            .set('x-access-token', this.props.token)
-            .end(function (err, res) {
-                if (!err) {
-                    if (res == null) {
-                        console.log("Empty");
-                        return;
-                    }
-                    // console.log(res.body);
-                    var jsonObj = res.body;
-                    console.log(jsonObj);
-                    var csv1 = [];
-                    for (var i = 0; i < jsonObj.length; i++) {
-                        csv1.push(jsonObj[i].moduleCode);
-                    }
-                    console.log(csv1);
-
-
-                    request
-                        .get('http://localhost:3000/subjects/moduleDetails/' + csv1)
-                        .set('Accept', 'application/json')
-                        //.set('x-access-token', this.props.token)
-                        .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNvb3IiLCJ0eXBlIjoiY29vcmRpbmF0b3IiLCJpYXQiOjE0NjQ2NzMxMTYsImV4cCI6MTQ2NDc1OTUxNn0.dpReFCMjuu8a44N7EfNAnu3ZHCBxEGSwoYgj7_Me3CU' )
-                        .end(function (err, res) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            else {
-                                if (res == null) {
-                                    console.log("Empty");
-                                    return;
-                                }
-                                // console.log(res.body);
-                                var jsonObj1 = res.body;
-                                console.log(jsonObj1);
-
-
-                                var data = [];
-                                for (var i = 0; i < jsonObj1.modules.length; i++) {
-
-                                    var row = {
-                                        count: jsonObj1.modules[i].count,
-                                        moduleCode: jsonObj1.modules[i].moduleCode,
-                                        moduleName: jsonObj1.modules[i].moduleName,
-                                        semester: jsonObj1.modules[i].semester,
-                                        day: jsonObj1.modules[i].day,
-                                        timeSlot: jsonObj1.modules[i].timeSlot,
-                                        description: jsonObj1.modules[i].description,
-                                        status: jsonObj1.modules[i].status
-
-                                    };
-
-                                    data.push(row);
-                                }
-
-                                // console.log("data: " + data);
-                                console.log(data);
-
-                                callback(data);
-
-
-                            }
-                        }
-                    )
-
-
-                } else {
-                    console.log(err);
-                }
-                ;
-            });
-    },
-
-    componentDidMount: function () {
-
-        this.fetchData(function (dataSe) {
-            this.setState({data: dataSe});
-            // console.log(dataSe);
-        }.bind(this));
-        // console.log("Check 2");
-        //var data = this.getData();
-
-    }
-    ,
 
 
     afterDeleteRow(data)
@@ -253,6 +189,7 @@ module.exports = React.createClass({
                 if (err || !res.ok) {
                     // alert('Oh no! error');
                     console.log('Oh no! error' + err);
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
                     // alert('yay got ' + JSON.stringify(res.body));
                     console.log('yay got ' + JSON.stringify(res.body));
@@ -273,6 +210,7 @@ module.exports = React.createClass({
                 if (err || !res.ok) {
 
                     console.log('Oh no! error' + err);
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
 
                     console.log('yay got ' + JSON.stringify(res.body));
@@ -371,7 +309,7 @@ module.exports = React.createClass({
                                        editable={{type: "select",defaultValue:{day:this.state.day}, options: {values: [0,1,2,3,4,5,6]}}}>Day</TableHeaderColumn>
                     <TableHeaderColumn dataField="timeSlot" dataFormat={enumFormatter} formatExtraData={timeSlots}
                                        editable={{type: "select",defaultValue:{timeSlot:this.state.timeSlot}, options: {values: [0,1,2,3]}}}>timeSlot</TableHeaderColumn>
-                    <TableHeaderColumn dataField="status" editable={false}>Status</TableHeaderColumn>
+
                     <TableHeaderColumn dataField="count" editable={false}>Student Count</TableHeaderColumn>
                     <TableHeaderColumn dataField="description">Description </TableHeaderColumn>
                 </BootstrapTable>
@@ -397,24 +335,32 @@ module.exports = React.createClass({
                                             <FormControl type="text"
                                                          ref="moduleCode"
                                                          value={this.state.moduleCode}
-                                                         onChange={this.handleChangeModuleCode}/>
+                                                         onChange={this.handleChangeModuleCode}
+                                                         required="true"
+                                                />
                                         </FormGroup>
                                     </Col><Col md={12}>
+
+
                                     <FormGroup>
                                         <ControlLabel>Module Name</ControlLabel>
                                         <FormControl type="text"
                                                      ref="moduleName"
                                                      value={this.state.moduleName}
-                                                     onChange={this.handleChangeModuleName}/>
+                                                     onChange={this.handleChangeModuleName}
+                                                     required="true"/>
                                     </FormGroup>
 
                                 </Col> <Col md={6}>
                                     <FormGroup>
                                         <ControlLabel>Credits</ControlLabel>
-                                        <FormControl type="text"
-                                                     ref="credits"
-                                                     value={this.state.credits}
-                                                     onChange={this.handleChangeCredits}/>
+                                        <FormControl
+                                            ref="credits"
+                                            value={this.state.credits}
+                                            onChange={this.handleChangeCredits}
+                                            required="true"
+                                            type="number" min="0" max="4" step="0.1"
+                                            />
                                     </FormGroup>
 
                                 </Col>
@@ -422,7 +368,9 @@ module.exports = React.createClass({
                                         <FormGroup >
                                             <ControlLabel>Semester</ControlLabel>
                                             <FormControl componentClass="select" placeholder="select" ref="semester"
-                                                         onChange={this.handleSelectSem}>
+                                                         onChange={this.handleSelectSem}
+                                                         required="true"
+                                                >
 
                                                 <option value="">~Select ~</option>
                                                 <option value="0">Semester 1</option>
@@ -437,7 +385,8 @@ module.exports = React.createClass({
                                         <FormGroup >
                                             <ControlLabel>Day</ControlLabel>
                                             <FormControl componentClass="select" placeholder="select" ref="day"
-                                                         onChange={this.handleSelectDay}>
+                                                         onChange={this.handleSelectDay}
+                                                         required="true">
                                                 <option value="">~Select ~</option>
                                                 <option value="0">Sunday</option>
                                                 <option value="1">Monday</option>
@@ -453,7 +402,8 @@ module.exports = React.createClass({
                                     <FormGroup >
                                         <ControlLabel>Time Slot</ControlLabel>
                                         <FormControl componentClass="select" placeholder="select" ref="timeSlot"
-                                                     onChange={this.handleSelectTimeSlt}>
+                                                     onChange={this.handleSelectTimeSlt}
+                                                     required="true">
                                             <option value="">~Select ~</option>
                                             <option value="0">08.15-10.15</option>
                                             <option value="1">10.30-12.30</option>
@@ -477,7 +427,7 @@ module.exports = React.createClass({
 
                                     <Col sm={6}>
                                         <Button bsStyle="danger" onClick={this.close}>Close</Button>
-                                        <Button bsStyle="success" onClick={this.close} type="submit">Submit</Button>
+                                        <Button bsStyle="success" type="submit">Submit</Button>
                                     </Col>
                                 </Form>
                             </div>

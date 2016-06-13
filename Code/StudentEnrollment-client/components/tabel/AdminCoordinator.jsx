@@ -22,7 +22,8 @@ var request = require('superagent');
 var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
 
-import token from  '../../config';
+// import token from  '../../config';
+import ErrorHandling from '../Utils/ErrorHandling';
 
 // var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzMTE0MjcwLCJleHAiOjE0NjMyMDA2NzB9.X6DXvZ2sIMAogrhow7aaUXJEtFYFsLES5Cl7A0yNg3k';
 
@@ -56,6 +57,7 @@ module.exports = React.createClass({
             email:'',
             address: '',
             telephone:'',
+            token: localStorage.getItem('token' ),
             showModal: false
 
         };
@@ -111,23 +113,38 @@ module.exports = React.createClass({
             contactNumber: this.state.telephone.trim(),
             adddress: this.state.address.trim(),
 
-        }
+        };
 
+        var tableData={
+            userName:  this.state.userName.trim(),
+            firstName:  this.state.firstName.trim(),
+            lastName: this.state.lastName.trim(),
+            email: this.state.email.trim(),
+            adddress: this.state.address.trim(),
+            contactNumber:this.state.telephone.trim(),
+            subjects:"" ,
+            id: this.state.data.length
+        };
+        var data = this.state.data;
+        data.push(tableData);
+        this.setState({data: data});
+        console.log(this.state.data)
 
         request.post('http://localhost:3000/users/coordinator')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
-            .set('x-access-token',token)
+            .set('x-access-token',this.state.token)
             .send(formAddSub)
-            .withCredentials()
             .end(function (err, res) {
                 if (err || !res.ok) {
                     console.log('Oh no! error');
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
                     console.log('yay got ' + JSON.stringify(formAddSub));
+                    this.props.updateData(1);
 
                 }
-            })
+            }.bind(this));
     },
 
 
@@ -141,7 +158,7 @@ module.exports = React.createClass({
 
         request.get('http://localhost:3000/users/coordinator') //
         .set('Accept', 'application/json').accept('application/json') //
-        .set('x-access-token',token).use(nocache). // Prevents caching of *only* this request
+        .set('x-access-token',this.state.token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
 
@@ -180,6 +197,7 @@ module.exports = React.createClass({
 
             } else {
                 console.log(err);
+                ErrorHandling.tokenErrorHandling(err.response);
             }
 
             // console.log(JSON.parse(res.text));
@@ -206,12 +224,13 @@ module.exports = React.createClass({
       request
           .put('http://localhost:3000/users/coordinator/' + data.userName)
           .send(data)
-          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzNzI2MzkwLCJleHAiOjE0NjM4MTI3OTB9.DKulbRge-U8HvgfOdMZMSwaYT0i-WEmehmnwocXJ2Mg')
+          .set('x-access-token', this.state.token)
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));
@@ -222,17 +241,19 @@ module.exports = React.createClass({
     reamoveSub : function (data) {
       request
           .delete('http://localhost:3000/users/coordinator/' + data.userName)
-          .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidHlwZSI6ImFkbWluIiwiaWF0IjoxNDYzNzI2MzkwLCJleHAiOjE0NjM4MTI3OTB9.DKulbRge-U8HvgfOdMZMSwaYT0i-WEmehmnwocXJ2Mg')
+          .set('x-access-token', this.state.token)
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));
+                 this.props.updateData(-1);
             }
-          });
+          }.bind(this));
     },
 
     render() {

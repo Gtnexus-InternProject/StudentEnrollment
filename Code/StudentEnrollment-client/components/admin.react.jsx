@@ -4,10 +4,11 @@ import SubjectTabel from './tabel/AdminSubject';
 import StudentTabel from './tabel/AdminStudent';
 import CoordinatorTabel from './tabel/AdminCoordinator';
 
+import Header from './header.react'
+
 import {Panel, Col} from 'react-bootstrap';
 
-import SubjectEnrollment from './tabel/subjectEnrollment';
-import SubjectApprove from './tabel/CoordinatorSubjectApprove';
+
 
 import 'purecss/build/pure.css';
 // var React = require('react'),
@@ -21,21 +22,35 @@ const title = (
 );
 
 module.exports = React.createClass({
+
+    getInitialState() {
+
+        return ({
+            userName: localStorage.getItem('user' ),
+
+            data: {},
+            token: localStorage.getItem('token' )
+
+        });
+    },
+
     // Render the component
     render: function() {
 
-        return (
+
+
+
+            return (
             <div>
-
+                <Col md={12}>
+                    {  <Header userName={this.state.userName} /> || this.props.children}
+                </Col><Col  md={12}>
                 <Panel header={title} bsStyle="primary">
-
-                    <SubjectApprove/>
-                    <SubjectEnrollment/>
-
                     <CoordinatorTabel/>
                     <SubjectTabel/>
                     <StudentTabel/>
                 </Panel>
+            </Col>
             </div>
         );
 

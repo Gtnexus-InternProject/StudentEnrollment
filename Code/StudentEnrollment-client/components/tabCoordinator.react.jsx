@@ -11,61 +11,117 @@ import {Router, Route, Link, browserHistory} from 'react-router';
 
 import {Panel,Tabs,Tab,Col,Row} from 'react-bootstrap';
 import CoordinatorOverview from './coordinatorOverview.react'
+
 var request = require('superagent');
 
-import CoordinatorSubjectList from './coordinatorSubjectList.react'
+import SubjectApprove from './tabel/CoordinatorSubjectApprove';
 
+
+import CoordinatorSubjectList from './coordinatorSubjectList.react'
+var count =[];
 module.exports = React.createClass({
 
         getInitialState: function () {
             return {
                 moduleCode: '',
                 moduleName: '',
-                data: []
+                data: [],
+                count: []
             };
         },
 
         fetchData(callback){
+
+
             request
-                .get('http://localhost:3000/users/coordinator/'+this.props.userName+'/subjects')
+                .get('http://localhost:3000/users/coordinator/' + this.props.userName + '/subjects/timeTable1')
+                //get('http://localhost:3000/subjects/moduleDetails/')
                 .set('Accept', 'application/json')
-                .set('x-access-token',this.props.token)
+                .set('x-access-token', this.props.token)
                 .end(function (err, res) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    else {
+                    if (!err) {
                         if (res == null) {
                             console.log("Empty");
                             return;
                         }
-                        // console.log(res.body);
+                         console.log("timetable"+ res.body);
+                        var jsonObj = res.body.subject;
+                        //console.log(jsonObj);
+                        var csv1 = [];
+                        for (var i = 0; i < jsonObj.length; i++) {
+                            csv1.push(jsonObj[i].moduleCode);
+                        }
+                        console.log(csv1);
 
-                       var jsonObjSub = res.body.subjects;
-                        console.log(jsonObjSub);
-                        callback(jsonObjSub);
-                    } ;
-                });
 
-        },
+                        request
+                            .get('http://localhost:3000/subjects/moduleDetails/' + csv1)
+                            .set('Accept', 'application/json')
+                            .set('x-access-token', this.props.token)
 
-        onEnter(){
+                            .end(function (err, res) {
+                                if (err) {
+                                    console.log(err);
+                                    ErrorHandling.tokenErrorHandling(err.response);
+                                }
+                                else {
+                                    if (res == null) {
+                                        console.log("Empty");
+                                        return;
+                                    }
+                                     console.log( "jopbject "+ res.body);
+                                    var jsonObj1 = res.body;
+                                    console.log(jsonObj1);
 
-            this.fetchData(function (dataSe) {
-                this.setState({data: dataSe});
-                console.log(this.state.data);
-            }.bind(this));
 
+                                    var data = [];
+
+                                    for (var i = 0; i < jsonObj1.modules.length; i++) {
+                                        if (jsonObj1.modules[i].status == 1) {
+                                            var row = {
+                                                count: jsonObj1.modules[i].count,
+                                                moduleCode: jsonObj1.modules[i].moduleCode,
+                                                moduleName: jsonObj1.modules[i].moduleName,
+                                                semester: jsonObj1.modules[i].semester,
+                                                day: jsonObj1.modules[i].day,
+                                                timeSlot: jsonObj1.modules[i].timeSlot,
+                                                description: jsonObj1.modules[i].description,
+
+                                            };
+                                            data.push(row);
+                                            count.push(jsonObj1.modules[i].count)
+                                        }
+
+                                    }
+
+                                    console.log(data);
+
+                                    callback(data);
+
+
+                                }
+                            }
+                        )
+
+
+                    } else {
+                        console.log(err);
+                        ErrorHandling.tokenErrorHandling(err.response);
+                    }
+                    ;
+                }.bind(this));
         },
 
         componentWillMount() {
 
             this.fetchData(function (dataSe) {
-                this.setState({data: dataSe});
+                this.setState({data: dataSe,
+                count:count});
                 console.log(this.state.data);
             }.bind(this));
 
         },
+
 
 
         render(){
@@ -74,37 +130,25 @@ module.exports = React.createClass({
                 <div className="row">
                     <div className="col-lg-12">
                         <Panel>
-                            <Tabs defaultActiveKey={1}>
+                            <Tabs id="coordinator" defaultActiveKey={1}>
                                 <Tab eventKey={1} title="Overview">
                                     <h4>Overview</h4>
 
-                                    <p><CoordinatorOverview userName={this.props.userName}
-                                                            token={this.props.token}/></p>
+                                    <CoordinatorOverview userName={this.props.userName}
+                                                            token={this.props.token} data={this.state.data} count={this.state.count} />
 
                                 </Tab>
                                 <Tab eventKey={2} title="Students" onEnter={this.onEnter}>
                                     <h4>Students list </h4>
-                                    <p><CoordinatorSubjectList userName={this.props.userName}
-                                                            token={this.props.token} data={this.state.data}/></p>
+                                    <CoordinatorSubjectList userName={this.props.userName}
+                                                            token={this.props.token} data={this.state.data} count={this.state.count} />
                                 </Tab>
 
                                 <Tab eventKey={3} title="Student Request">
                                     <h4>Student Requests </h4>
 
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                        tempor
-                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                        quis
-                                        nostrud
-                                        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                        Duis aute
-                                        irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                                        fugiat
-                                        nulla
-                                        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                                        qui
-                                        officia
-                                        deserunt mollit anim id est laborum.</p>
+                                      <SubjectApprove userName={this.props.userName}
+                                                              token={this.props.token}/>
                                 </Tab>
 
                             </Tabs>

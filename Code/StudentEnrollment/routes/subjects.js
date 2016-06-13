@@ -13,7 +13,7 @@ config = require('../config');
 router.use(bodyParser.urlencoded({
     extended: true
 }))
-router.use(methodOverride(function(req, res) {
+router.use(methodOverride(function (req, res) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         // look in urlencoded POST bodies and delete it
         var method = req.body._method
@@ -23,7 +23,7 @@ router.use(methodOverride(function(req, res) {
 }))
 
 // route middleware to verify a token
-router.use(function (req, res, next) {
+router.use(function(req, res, next) {
 
     // check header or url parameters or post parameters for token
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -32,7 +32,7 @@ router.use(function (req, res, next) {
     if (token) {
 
         // verifies secret and checks exp
-        jwt.verify(token, config.secret, function (err, decoded) {
+        jwt.verify(token, config.secret, function(err, decoded) {
             if (err) {
                 return res.status(401).send({
                     success: false,
@@ -57,17 +57,19 @@ router.use(function (req, res, next) {
     }
 });
 
-router.route('/:meta?')
+router.route('/all/:meta?')
+
 
 //GET all blobs
 .get(function(req, res, next) {
-        var errors = req.validationErrors();
-        if (errors) {
-            res.send('There have been validation errors: ' + errors, 400);
-            return;
-        }
+        // var errors = req.validationErrors();
+        // if (errors) {
+        //     res.send('There have been validation errors: ' + errors, 400);
+        //     return;
+        // }
+
         //retrieve all blobs from Monogo
-        mongoose.model('subject_model').find({}, function(err, subjects) {
+        mongoose.model('subject_model').find({}, function (err, subjects) {
             if (err) {
                 return console.error(err);
             } else {
@@ -91,13 +93,18 @@ router.route('/:meta?')
                             }
                         }
                     }, {
+
                         "$unwind": "$subjects"
                     }, {
                         $group: {
-                            _id: '$subjects.moduleCode',
                             counter: {
-                                $sum: 1
-                            }
+                                $sum: {
+                                    $cond: [{
+                                        $eq: ['subjects.state', 1]
+                                    }, 1, 1]
+                                }
+                            },
+                            _id: '$subjects.moduleCode'
                         }
                     }, {
                         $project: {
@@ -105,59 +112,64 @@ router.route('/:meta?')
                             counter: 1
                         }
                     }], function(err, result) {
-                      if (err) {
-                          return console.error(err);
-                      }
+                        if (err) {
+                            return console.error(err);
+                        }
                         console.log('Result Set ' + JSON.stringify(result));
                         var codes = [];
                         // console.log('Count is ' + result.length );
-                        for(var l=0; l < result.length; l++){
-                          codes[result[l]._id] = result[l].counter;
+                        for (var l = 0; l < result.length; l++) {
+                            codes[result[l]._id] = result[l].counter;
 
-                          // console.log(result[l]._id + " " + codes[result[l]._id] + " count " + result[l].counter );
+                            // console.log(result[l]._id + " " + codes[result[l]._id] + " count " + result[l].counter );
                         }
 
-                        // var subjectss = subjects.toObject();
-                        // console.log('Assoiciate array ' + codes['c01'] );
-                        // for (var k =0; k < subjects.length ; k++){
 
-                          subjects = subjects.map(function(subject) {
+                            // var subjectss = subjects.toObject();
+                            // console.log('Assoiciate array ' + codes['c01'] );
+                            // for (var k =0; k < subjects.length ; k++){
+
+
+                        subjects = subjects.map(function(subject) {
                             //  subject.set('thumbnail', 'test', {strict: false});
                             //  console.log('Subject ' + subject );
-                             subject.set('count', codes[subject.moduleCode] || 0 , {strict: false} );
+                            subject.set('count', codes[subject.moduleCode] || 0, {
+                                strict: false
+                            });
                             //  console.log('Subject ' + subject );
-                             return subject;
-                         });
+                            return subject;
+                        });
 
-                          // subjects[k]['count'] = codes[subjects[k].moduleCode];
+                        // subjects[k]['count'] = codes[subjects[k].moduleCode];
                         //   console.log('Count ' +  JSON.stringify(subjects[k]) );
                         // }
 
-                        // console.log('Respond Data ' + JSON.stringify(subjects[0]));
-                        //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
-                        res.format({
 
-                            //JSON response will show all blobs in JSON format
-                            json: function() {
-                                res.json({
-                                    subjects
-                                });
-                            }
+                            // console.log('Respond Data ' + JSON.stringify(subjects[0]));
+                            //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+                            res.format({
+
+                                //JSON response will show all blobs in JSON format
+                                json: function () {
+                                    res.json({
+                                        subjects
+                                    });
+                                }
+                            });
+
                         });
-
-                    });
 
                     return;
                 } else {
 
                     // mongoose.model('student').
-
+                    console.log('GET Retrieving All Subjects: ' + subjects);
                     // console.log(req.params.meta);
                     //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
                     res.format({
 
                         //JSON response will show all blobs in JSON format
-                        json: function() {
+                        json: function () {
                             res.json(subjects);
                         }
                     });
@@ -165,8 +177,8 @@ router.route('/:meta?')
             }
         });
     })
-    //POST a new blob
-router.route('/subjectAdd').post(function(req, res) {
+//POST a new blob
+router.route('/subjectAdd').post(function (req, res) {
     var errors = req.validationErrors();
     if (errors) {
         res.send('There have been validation errors: ' + errors, 400);
@@ -181,7 +193,7 @@ router.route('/subjectAdd').post(function(req, res) {
     var credits = req.body.credits;
     var semester = req.body.semester;
     var day = req.body.day;
-    var timeSlot=req.body.timeSlot;
+    var timeSlot = req.body.timeSlot;
     var description = req.body.description;
     var preRequestSubjects = req.body.preRequestSubjects;
     var status = 1;
@@ -199,12 +211,12 @@ router.route('/subjectAdd').post(function(req, res) {
         credits: credits,
         semester: semester,
         day: day,
-        timeSlot:timeSlot,
+        timeSlot: timeSlot,
         description: description,
         preRequestSubjects: preRequestSubjects,
         status: status,
 
-    }, function(err, subject) {
+    }, function (err, subject) {
         if (err) {
             res.send("There was a problem adding the information to the database.");
         } else {
@@ -212,14 +224,14 @@ router.route('/subjectAdd').post(function(req, res) {
             console.log('POST creating new blob: ' + subject);
             res.format({
                 //HTML response will set the location and redirect back to the home page. You could also create a 'success' page if that's your thing
-                html: function() {
+                html: function () {
                     // If it worked, set the header so the address bar doesn't still say /adduser
                     res.location("subjects");
                     // And forward to success page
                     res.redirect("/subjects");
                 },
                 //JSON response will show the newly created blob
-                json: function() {
+                json: function () {
                     res.json(subject);
                 }
             });
@@ -283,7 +295,7 @@ router.route('/subjectAdd').post(function(req, res) {
 
 
 
-router.get('/moduleDetails/:moduleCodes', function (req, res) {
+router.get('/moduleDetails/:moduleCodes', function(req, res) {
 
     var errors = req.validationErrors();
     if (errors) {
@@ -296,7 +308,7 @@ router.get('/moduleDetails/:moduleCodes', function (req, res) {
         moduleCode: {
             $in: moduleCodeArr
         }
-    }, function (err, modules) {
+    }, function(err, modules) {
         if (err) {
             console.log(err);
         } else {
@@ -311,47 +323,58 @@ router.get('/moduleDetails/:moduleCodes', function (req, res) {
                         "$in": moduleCodes
                     }
                 }
-                    }, {
+            }, {
+
                 "$unwind": "$subjects"
-                    }, {
+            }, {
                 $group: {
-                    _id: '$subjects.moduleCode',
+
                     counter: {
-                        $sum: 1
-                    }
+                        $sum: {
+                            $cond: [{
+                                $eq: ['subjects.state', 1]
+                            }, 1, 1]
+                        }
+                    },
+                    _id: '$subjects.moduleCode'
                 }
-                    }, {
+            }, {
                 $project: {
                     _id: 1,
                     counter: 1
                 }
-                    }], function (err, result) {
+            }], function(err, result) {
                 if (err) {
                     return console.error(err);
                 }
 
-                    var codes = [];
 
-                for (var l = 0; l < result.length; l++) {
-                    codes[result[l]._id] = result[l].counter;
+                var codes = [];
 
-                }
-                modules = modules.map(function (subject) {
-                    subject.set('count', codes[subject.moduleCode] || 0, {
-                        strict: false
+                    for (var l = 0; l < result.length; l++) {
+                        codes[result[l]._id] = result[l].counter;
+
+
+                    }
+                    modules = modules.map(function (subject) {
+                        subject.set('count', codes[subject.moduleCode] || 0, {
+                            strict: false
+                        });
+                        return subject;
+
                     });
-                    return subject;
-                });
+
 
                 res.format({
-                    json: function () {
+                    json: function() {
                         res.json({
                             modules
                         });
                     }
                 });
 
-            });
+
+                });
 
         }
 
@@ -360,7 +383,7 @@ router.get('/moduleDetails/:moduleCodes', function (req, res) {
 
 
 //With meta array of moduleCodes
-router.get('/:moduleCode/:meta?', function(req, res) {
+router.get('/:moduleCode/:meta?', function (req, res) {
 
     var errors = req.validationErrors();
     if (errors) {
@@ -368,59 +391,64 @@ router.get('/:moduleCode/:meta?', function(req, res) {
         return;
     }
 
-    if (req.params.meta){
-
-      console.log('Params moduleCode ' + req.params.moduleCode);
-      var moduleCode = req.params.moduleCode.split(",");
-      console.log('Params moduleCode ' + moduleCode);
-      //search for the blob within Mongo
-      mongoose.model('subject_model').find({
-          moduleCode: {$in : moduleCode}
-      }, function(err, subject) {
-          if (err) {
-              console.log('GET Error: There was a problem retrieving: ' + err);
-          } else {
-              //console.log('GET Retrieving ID: ' + subject.moduleCode);
+    if (req.params.meta) {
 
 
-
-              res.format({
-                  //JSON response will return the JSON output
-                  json: function() {
-                      res.json(subject);
-                  }
-              });
-          }
-      });
-
-    }
-    else{
-      //search for the blob within Mongo
-      mongoose.model('subject_model').findOne({
-          moduleCode: req.params.moduleCode
-      }, function(err, subject) {
-          if (err) {
-              console.log('GET Error: There was a problem retrieving: ' + err);
-          } else {
-              //console.log('GET Retrieving ID: ' + subject.moduleCode);
+        console.log('Params moduleCode ' + req.params.moduleCode);
+        var moduleCode = req.params.moduleCode.split(",");
+        console.log('Params moduleCode ' + moduleCode);
+        //search for the blob within Mongo
+        mongoose.model('subject_model').find({
+            moduleCode: {
+                $in: moduleCode
+            }
+        }, function(err, subject) {
+            if (err) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+                //console.log('GET Retrieving ID: ' + subject.moduleCode);
 
 
 
-              res.format({
-                  //JSON response will return the JSON output
-                  json: function() {
-                      res.json(subject);
-                  }
-              });
-          }
-      });
+
+                res.format({
+                    //JSON response will return the JSON output
+                    json: function() {
+                        res.json(subject);
+                    }
+                });
+            }
+        });
+
+    } else {
+        //search for the blob within Mongo
+        mongoose.model('subject_model').findOne({
+            moduleCode: req.params.moduleCode
+        }, function(err, subject) {
+            if (err) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+                //console.log('GET Retrieving ID: ' + subject.moduleCode);
+
+
+
+
+                res.format({
+                    //JSON response will return the JSON output
+                    json: function() {
+
+                        res.json(subject);
+                    }
+                });
+            }
+        });
     }
 
 });
 
 
 //PUT to update a blob by ID
-router.put('/update/:moduleCode', function(req, res) {
+router.put('/update/:moduleCode', function (req, res) {
     // Get our REST or form values. These rely on the "name" attributes
     var errors = req.validationErrors();
     if (errors) {
@@ -431,18 +459,18 @@ router.put('/update/:moduleCode', function(req, res) {
     //find the document by ID
     mongoose.model('subject_model').findOne({
         moduleCode: req.params.moduleCode
-    }, function(err, subject) {
+    }, function (err, subject) {
         //update it
         if (err) {
             console.log('Error in updating' + err)
         } else {
 
-          if(subject == null){
-            console.log('Null');
-            return;
-          }
+            if (subject == null) {
+                console.log('Null');
+                return;
+            }
 
-          var credits = req.body.credits || 0;
+            var credits = req.body.credits || 0;
 
             subject.update({
                 moduleCode: req.body.moduleCode,
@@ -451,27 +479,27 @@ router.put('/update/:moduleCode', function(req, res) {
                 credits: credits,
                 semester: req.body.semester,
                 day: req.body.day,
-                timeSlot:req.body.timeSlot,
-                description : req.body.description,
+                timeSlot: req.body.timeSlot,
+                description: req.body.description,
                 preRequestSubjects: req.body.preRequestSubjects
-                //status:req.body.status,
+                    //status:req.body.status,
             }, {
-                "upsert": false
-            }, function(err, blobID) {
-                if (err) {
-                    res.send("There was a problem updating the information to the database: " + err);
-                    console.log('Error ' + JSON.stringify(err));
-                } else {
-                    console.log('Updated ' + JSON.stringify(blobID));
-                    res.format({
+                    "upsert": false
+                }, function (err, blobID) {
+                    if (err) {
+                        res.send("There was a problem updating the information to the database: " + err);
+                        console.log('Error ' + JSON.stringify(err));
+                    } else {
+                        console.log('Updated ' + JSON.stringify(blobID));
+                        res.format({
 
-                        //JSON responds showing the updated values
-                        json: function() {
-                            res.json(blobID);
-                        }
-                    });
-                }
-            })
+                            //JSON responds showing the updated values
+                            json: function () {
+                                res.json(blobID);
+                            }
+                        });
+                    }
+                })
         }
     });
 });
@@ -481,58 +509,63 @@ router.put('/update/:moduleCode', function(req, res) {
 
 
 
-router.put('/delete/:moduleCode', function(req, res) { //find blob by ID
+router.put('/delete/:moduleCode', function (req, res) { //find blob by ID
 
     mongoose.model('subject_model').findOne({
         moduleCode: req.params.moduleCode
     }, {
-        status: 1
-    }, function(err, deletesub) {
-        if (err) {
-            console.log('Error occur when deleting');
-            return console.error(err);
+            status: 1
+        }, function (err, deletesub) {
+            if (err) {
+                console.log('Error occur when deleting');
+                return console.error(err);
 
-        } else {
-            console.log('DELETE removing ID: ');
-            deletesub.update({
-                status: 2
-            }, {
-                "upsert": true
-            }, function(err, updt) {
-                if (err) {
-                    console.log(('Error' + err))
-                } else {
-                    res.format({
+            } else {
+                console.log('DELETE removing ID: ');
+                deletesub.update({
+                    status: 2
+                }, {
+                        "upsert": true
+                    }, function (err, updt) {
+                        if (err) {
+                            console.log(('Error' + err))
+                        } else {
+                            res.format({
 
-                        json: function() {
-                            res.json({
-                                message: 'deleted',
-                                item: deletesub
+                                json: function () {
+                                    res.json({
+                                        message: 'deleted',
+                                        item: deletesub
+                                    });
+                                }
                             });
+
                         }
-                    });
 
-                }
+                    })
 
-            })
-
-        }
+            }
 
 
-    });
+        });
 });
 
 
 
 
-router.post('/timeTable/:subjects', function(req, res) {
+router.post('/timeTable/:subjects', function (req, res) {
 
 
     mongoose.model('student').find({
         userName: req.userName
     }, {
+
         "$pull": {
-            subjects:   { moduleCode : { $in: req.body.subjects} }
+            subjects: {
+                moduleCode: {
+                    $in: req.body.subjects
+                }
+            }
         }
     }, {
         new: true
@@ -540,20 +573,21 @@ router.post('/timeTable/:subjects', function(req, res) {
         //update it
 
 
-        if (err) {
-            res.send("There was a problem updating the information to the database: " + err);
-        } else {
 
-            res.format({
+            if (err) {
+                res.send("There was a problem updating the information to the database: " + err);
+            } else {
 
-                //JSON responds showing the updated values
-                json: function() {
-                    res.json(place);
-                }
-            });
-        }
+                res.format({
 
-    });
+                    //JSON responds showing the updated values
+                    json: function () {
+                        res.json(place);
+                    }
+                });
+            }
+
+        });
 
 
 
@@ -565,7 +599,7 @@ router.post('/timeTable/:subjects', function(req, res) {
 
 // get students per particular subject
 
-router.get('/student/:moduleCode/per', (function(req, res) {
+router.get('/student/:moduleCode/per', (function (req, res) {
     //if (req.type == "admin") {
     //    return res.status(404).send({
     //        success: false,
@@ -576,58 +610,65 @@ router.get('/student/:moduleCode/per', (function(req, res) {
     mongoose.model('student').find({
         subjects: {
             $elemMatch: {
-                moduleCode: req.params.moduleCode
+                moduleCode: req.params.moduleCode, 
+                 state: 1,               
             }
+         
         }
     }, {
-        userName: 1,
-        firstName: 1,
-        lastName: 1,
-        email: 1,
-        contactNumber:1
-    }, function(err, resultUser) {
-        if (err) {
-            console.log('GET Error: There was a problem retrieving: ' + err);
-        } else {
-            console.log('GET Retrieving ID: ' + resultUser);
-            res.format({
-                json: function() {
-                    res.json(resultUser);
-                }
-            });
-        }
-    });
+
+            userName: 1,
+            firstName: 1,
+            lastName: 1,
+            email: 1,
+            contactNumber: 1
+        }, function (err, resultUser) {
+            if (err) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+                console.log('GET Retrieving ID: ' + resultUser);
+                res.format({
+                    json: function () {
+                        res.json(resultUser);
+                    }
+                });
+            }
+        });
+
 }));
 
-router.get('/coordinator/:moduleCode', (function(req, res) {
+router.get('/coordinator/:moduleCode', (function (req, res) {
     //if (req.type == "admin") {
     //    return res.status(404).send({
     //        success: false,
     //        message: 'Wrong URL'
     //    });
     //}
-// console.log("gdd");
-    mongoose.model('coordinator').find(
-         { subjects:req.params.moduleCode
+    // console.log("gdd");
 
-    }, {
-        userName: 1,
-        firstName: 1,
-        lastName: 1,
-        email: 1,
-        contactNumber:1
-    }, function(err, resultUser) {
-        if (err) {
-            console.log('GET Error: There was a problem retrieving: ' + err);
-        } else {
-            console.log('GET Retrieving ID: ' + resultUser);
-            res.format({
-                json: function() {
-                    res.json(resultUser);
-                }
-            });
-        }
-    });
+    mongoose.model('coordinator').find(
+        {
+            subjects: req.params.moduleCode
+
+        }, {
+            userName: 1,
+            firstName: 1,
+            lastName: 1,
+            email: 1,
+            contactNumber: 1
+        }, function (err, resultUser) {
+            if (err) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+                console.log('GET Retrieving ID: ' + resultUser);
+                res.format({
+                    json: function () {
+                        res.json(resultUser);
+                    }
+                });
+            }
+        });
+
 }));
 
 

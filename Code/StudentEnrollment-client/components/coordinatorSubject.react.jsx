@@ -12,8 +12,12 @@ import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, 
 
 import {BootstrapTable,TableHeaderColumn} from 'react-bootstrap-table'
 import './../node_modules/react-bootstrap-table/css/react-bootstrap-table.min.css'
+
 var addstd = [];
 var addstd2 = [];
+
+import ErrorHandling from './Utils/ErrorHandling';
+
 
 module.exports = React.createClass({
 
@@ -26,12 +30,22 @@ module.exports = React.createClass({
             showModal: false,
             data1: [],
             data: [],
-            addStd: [],
-            compArry: []
+            compArry: [],
+            count:'',
+            moduleCode:''
 
 
         };
     },
+
+    componentWillReceiveProps(newProps){
+        this.setState({moduleCode: newProps.moduleCode,
+        count:newProps.count});
+        console.log('+++++++' +JSON.stringify(this.state.moduleCode));
+        console.log('+++++++' + newProps.count );
+
+    },
+
 
     getAllStudents(callback){
         //alert('eee');
@@ -43,6 +57,7 @@ module.exports = React.createClass({
                 if (err || !res.ok) {
                     // alert('Oh no! error');
                     console.log('Oh no! error' + err);
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
 
                     var jsonObj = res.body;
@@ -93,12 +108,13 @@ module.exports = React.createClass({
 
 
         request
-            .get('http://localhost:3000/subjects/student/' + this.props.moduleCode + '/per')
+            .get('http://localhost:3000/subjects/student/' + this.props.moduleCode.moduleCode + '/per')
             .set('Accept', 'application/json')
             .set('x-access-token', this.props.token)
             .end(function (err, res) {
                 if (err) {
                     console.log(err)
+                    ErrorHandling.tokenErrorHandling(err.response);
                 }
                 else {
                     var jsonObj = res.body;
@@ -145,29 +161,37 @@ module.exports = React.createClass({
             .delete('http://localhost:3000/users/student/'+ row +'/subjects')
             .set('x-access-token', this.props.token)
             .set('Accept', 'application/json')
-            .send({subjects:this.props.moduleCode})
+            .send({subjects:this.props.moduleCode.moduleCode})
             .end(function (err, res) {
                 if (err || !res.ok) {
                     // alert('Oh no! error');
                     console.log('Oh no! error' + err);
+                    ErrorHandling.tokenErrorHandling(err.response);
                 } else {
                     // alert('yay got ' + JSON.stringify(res.body));
                     console.log('yay got ' + JSON.stringify(res.body));
-                }
-            });
-        var test= this.state.data;
-        var test2=this.state.compArry;
 
-        var remove = removeArray(test, function(o) {
-            return o.userName == row;
-        });
-        var removecomp = removeArray(test2, function(o) {
-            return o == row;
-        })
-        this.setState({
-            data: test,
-            compArry: test2
-        });
+                    var test= this.state.data;
+                    var test2=this.state.compArry;
+
+                    var remove = removeArray(test, function(o) {
+                        return o.userName == row;
+                    });
+                    var removecomp = removeArray(test2, function(o) {
+                        return o == row;
+                    })
+                    var cnt=this.state.count;
+                    cnt--;
+                    console.log("count"+ cnt);
+                   this.setState({
+                        data: test,
+                        compArry: test2,
+                        count:cnt
+                    });
+                    this.props.updateCount(this.state.count, this.props.i);
+                    console.log("count"+ this.state.count);
+                }
+            }.bind(this));
 
 
     },
@@ -188,7 +212,7 @@ module.exports = React.createClass({
         if (isSelected) {
             addstd.push(row.userName);
             addstd2.push(row);
-            // console.log("Added" + JSON.stringify(row));
+
         } else {
             var remove = removeArray(addstd2, function(o) {
                 return o.userName == row.userName;
@@ -196,7 +220,7 @@ module.exports = React.createClass({
             var removeuserName = removeArray(addstd, function(o) {
                 return o == row.userName;
             });
-            // console.log("Removed" + JSON.stringify(remove));
+
         }
 
 
@@ -216,25 +240,39 @@ module.exports = React.createClass({
             addstd=[];
             addstd2=[];
         }
+
+
     },
 
     addStudent(event){
         event.preventDefault();
-
-        for (var i = 0; i < this.state.addStd.length; i++) {
+        // var cnt=this.state.count;
+        for (var i = 0; i < addstd.length; i++) {
 
             request
-                .put('http://localhost:3000/users/student/' + this.state.addStd[i] + '/subjectsSS')
-                .send({subjects: {moduleCode: this.props.moduleCode, state: 1}})
+                .put('http://localhost:3000/users/student/' + addstd[i] + '/subjectsSS')
+                .send({subjects: {moduleCode: this.props.moduleCode.moduleCode, state: 1}})
                 .set('x-access-token', this.props.token)
                 .set('Accept', 'application/json')
                 .end(function (err, res) {
                     if (err || !res.ok) {
                         // alert('Oh no! error');
                         console.log('Oh no! error' + err);
+                        ErrorHandling.tokenErrorHandling(err.response);
                     } else {
                         console.log('ok');
+                        var cnt=this.state.count;
+                        cnt++;
 
+                        // if(i === addstd.length -1 ){
+
+
+                          this.setState({
+                              count:cnt
+                          });
+                          this.props.updateCount(this.state.count, this.props.i);
+
+                        // }
 
                     }
                 }.bind(this));
@@ -243,10 +281,11 @@ module.exports = React.createClass({
         var tablelData = this.state.data.concat(addstd2);
         var comparry = this.state.compArry.concat(addstd);
         this.setState({
-            addStd: addstd,
+            
             data: tablelData,
             compArry: comparry
         });
+        this.props.updateCount(this.state.count, this.props.i);
         console.log('rfvrvrvvrvr  ' + this.state.compArry);
         addstd = [];
         addstd2 = [];
@@ -291,7 +330,7 @@ module.exports = React.createClass({
             <div>
                 <div><Col mdOffset={10} md={2}> <Button bsStyle="success" bsSize="xsmall" onClick={this.open}>Add
                     Students</Button></Col></div>
-                <h1>Subject List</h1>
+                <h1>Student List </h1>
 
 
                 <BootstrapTable

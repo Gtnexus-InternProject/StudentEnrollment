@@ -21,8 +21,8 @@ import './skylight.css';
 var request = require('superagent');
 var nocache = require('superagent-no-cache');
 import {Panel, Form, FormControl, FormGroup, ControlLabel, HelpBlock, Checkbox, Radio, Button, PageHeader, Modal, Col} from 'react-bootstrap';
-
-import token from  '../../config';
+import ErrorHandling from '../Utils/ErrorHandling';
+// import token from  '../../config';
 
 module.exports = React.createClass({
     displayName: 'App',
@@ -42,9 +42,11 @@ module.exports = React.createClass({
       boxShadow: '0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28)'
     },
 
+
     getInitialState: function() {
       // var data = [];
-
+      // token = localStorage.getItem('token' );
+      console.log("\n\ntoken" +  localStorage.getItem('token' ) + "\n\n");
         return {
             moduleCode: '',
             moduleName: '',
@@ -53,13 +55,10 @@ module.exports = React.createClass({
             timeSlot: '',
             credits: '',
             description: '',
-
+            token: localStorage.getItem('token' ),
             data: []
         };
     },
-
-
-
 
 
 
@@ -67,7 +66,9 @@ module.exports = React.createClass({
 
         // var me = this;
 
-        request.get('http://localhost:3000/subjects/asa').set('Accept', 'application/json').accept('application/json').set('x-access-token', token).use(nocache). // Prevents caching of *only* this request
+        request.get('http://localhost:3000/subjects/all/asa')//
+        .set('Accept', 'application/json').accept('application/json') //
+        .set('x-access-token', this.state.token).use(nocache). // Prevents caching of *only* this request
         end(function(err, res) {
             if (!err) {
 
@@ -101,6 +102,7 @@ module.exports = React.createClass({
 
             } else {
                 console.log(err);
+                ErrorHandling.tokenErrorHandling(err.response);
             }
 
             // console.log(JSON.parse(res.text));
@@ -133,12 +135,13 @@ module.exports = React.createClass({
       request
           .put('http://localhost:3000/subjects/update/' + data.moduleCode)
           .send(data)
-          .set('x-access-token',token)
+          .set('x-access-token',this.state.token)
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));
@@ -149,12 +152,13 @@ module.exports = React.createClass({
     reamoveSub : function (data) {
       request
           .put('http://localhost:3000/subjects/delete/' + data.moduleCode)
-          .set('x-access-token',token)
+          .set('x-access-token',this.state.token)
           .set('Accept', 'application/json')
           .end(function(err, res){
             if (err || !res.ok) {
               // alert('Oh no! error');
               console.log('Oh no! error' + err);
+              ErrorHandling.tokenErrorHandling(err.response);
             } else {
               // alert('yay got ' + JSON.stringify(res.body));
               console.log('yay got ' + JSON.stringify(res.body));
