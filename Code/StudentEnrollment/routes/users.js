@@ -398,7 +398,7 @@ router.param('userName', function (req, res, next, userName) {
 
 
 // RFID validation
-router.route('/:type/:userName/rfidvalidate/:rfid')
+router.route('/:type/rfidvalidate/:rfid')
     .get(function (req, res) {
 
         if (req.type != "student") {
@@ -409,9 +409,9 @@ router.route('/:type/:userName/rfidvalidate/:rfid')
         }
 
         mongoose.model('student').findOne({
-            userName: req.userName,
+            // userName: req.userName,
             rfid: req.params.rfid
-        }, 'rfid', function (err, student) {
+        }, 'userName', function (err, student) {
             // console.log('ID: ' + req.params.id);
             if (err) {
                 console.log('GET Error: There was a problem retrieving: ' + err);
@@ -420,10 +420,10 @@ router.route('/:type/:userName/rfidvalidate/:rfid')
                 console.log('GET Retrieving ID: ' + student);
                 var message, status;
                 if (student != null) {
-                    message = "Ok";
+                    message = "Accepted";
                     status = true;
                 } else {
-                    message = "Invalid";
+                    message = "rejected";
                     status = false;
                 }
 
