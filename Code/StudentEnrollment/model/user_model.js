@@ -37,6 +37,11 @@ var subjectsChild = mongoose.Schema({
   state : {type:Number, default:0}
 }, { _id: false});
 
+var attendanceChild = mongoose.Schema({
+  dateTime : { type: String},
+  attendanceState : {type:Number, default:0}
+}, { _id: false});
+
 var coordinator = userSchema.extend({
 
     Department: Number,
@@ -61,7 +66,8 @@ var student = userSchema.extend({
     profileImage: String,
     rfid: String,
     subjects:[subjectsChild],
-    profileImage:String
+    profileImage:String,
+    attendance:[attendanceChild]
 
 });
 
