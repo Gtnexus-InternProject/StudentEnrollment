@@ -104,6 +104,52 @@ var checkUserName = function (userName, res, cb) {
     });
 }
 
+// riid validation
+router.route('/:type/rfidvalidate/:rfid')
+    .get(function (req, res) {
+
+        if (req.type != "student") {
+            return res.status(404).send({
+                success: false,
+                message: 'Wrong URL'
+            });
+        }
+
+        mongoose.model('student').findOne({
+            // userName: req.userName,
+            rfid: req.params.rfid
+        }, 'userName', function (err, student) {
+            // console.log('ID: ' + req.params.id);
+            if (err) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+
+                console.log('GET Retrieving ID: ' + student);
+                var message, status;
+                if (student != null) {
+                    message = "Accepted";
+                    status = true;
+                } else {
+                    message = "Rejected";
+                    status = false;
+                }
+             
+                res.format({
+                    json: function () {
+                        res.json({
+                            message: message,
+                            status: status
+                        });
+                    }
+                });
+                // res.send(message);
+            }
+        });
+    });
+
+
+
+
 
 //Create a new student
 router.route('/student').post(function (req, res) {
@@ -398,49 +444,6 @@ router.param('userName', function (req, res, next, userName) {
 
 
 // RFID validation
-router.route('/:type/rfidvalidate/:rfid')
-    .get(function (req, res) {
-
-        if (req.type != "student") {
-            return res.status(404).send({
-                success: false,
-                message: 'Wrong URL'
-            });
-        }
-
-        mongoose.model('student').findOne({
-            // userName: req.userName,
-            rfid: req.params.rfid
-        }, 'userName', function (err, student) {
-            // console.log('ID: ' + req.params.id);
-            if (err) {
-                console.log('GET Error: There was a problem retrieving: ' + err);
-            } else {
-
-                console.log('GET Retrieving ID: ' + student);
-                var message, status;
-                if (student != null) {
-                    message = "Accepted";
-                    status = true;
-                } else {
-                    message = "rejected";
-                    status = false;
-                }
-
-                //var blobdob = student.userName.toISOString();
-                //blobdob = blobdob.substring(0, blobdob.indexOf('T'))
-                res.format({
-                    json: function () {
-                        res.json({
-                            message: message,
-                            status: status
-                        });
-                    }
-                });
-            }
-        });
-    });
-
 
 router.route('/:type/:user/validate')
 
@@ -475,39 +478,39 @@ router.route('/:type/:user/validate')
 
 
 // route middleware to verify a token
-router.use(function (req, res, next) {
+// router.use(function (req, res, next) {
 
-    // check header or url parameters or post parameters for token
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+//     // check header or url parameters or post parameters for token
+//     var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-    // decode token
-    if (token) {
+//     // decode token
+//     if (token) {
 
-        // verifies secret and checks exp
-        jwt.verify(token, config.secret, function (err, decoded) {
-            if (err) {
-                return res.status(401).send({
-                    success: false,
-                    message: 'Failed to authenticate token.'
-                });
-            } else {
-                // if everything is good, save to request for use in other routes
-                req.decoded = decoded;
-                next();
-            }
-        });
+//         // verifies secret and checks exp
+//         jwt.verify(token, config.secret, function (err, decoded) {
+//             if (err) {
+//                 return res.status(401).send({
+//                     success: false,
+//                     message: 'Failed to authenticate token.'
+//                 });
+//             } else {
+//                 // if everything is good, save to request for use in other routes
+//                 req.decoded = decoded;
+//                 next();
+//             }
+//         });
 
-    } else {
+//     } else {
 
-        // if there is no token
-        // return an error
-        return res.status(403).send({
-            success: false,
-            message: 'No token provided.'
-        });
+//         // if there is no token
+//         // return an error
+//         return res.status(403).send({
+//             success: false,
+//             message: 'No token provided.'
+//         });
 
-    }
-});
+//     }
+// });
 
 
 //Create a new coordinator
